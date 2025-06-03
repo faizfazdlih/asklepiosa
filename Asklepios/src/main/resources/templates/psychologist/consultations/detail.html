@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Detail Konsultasi - Asklepios</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .consultation-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .consultation-card {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .consultation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .consultation-title {
+            font-size: 24px;
+            margin: 0;
+        }
+        .consultation-status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .status-confirmed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status-completed {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .detail-section {
+            margin-bottom: 30px;
+        }
+        .detail-section h3 {
+            margin-top: 0;
+            color: #555;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .detail-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .detail-label {
+            width: 150px;
+            font-weight: bold;
+            color: #666;
+        }
+        .detail-value {
+            flex: 1;
+        }
+        .update-form {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        .update-button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .update-button:hover {
+            background-color: #218838;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="consultation-container">
+        <div class="header">
+            <h1>Detail Konsultasi</h1>
+            <div class="nav-links">
+                <a href="/psychologist/dashboard">Dashboard</a>
+                <a href="/psychologist/profile">Profil</a>
+                <a href="/psychologist/schedules">Jadwal</a>
+                <a href="/psychologist/consultations">Konsultasi</a>
+            </div>
+        </div>
+
+        <div class="consultation-card">
+            <div class="consultation-header">
+                <h2 class="consultation-title">Konsultasi dengan <span th:text="${consultation.client.fullName}">Nama Klien</span></h2>
+                <span th:class="'consultation-status status-' + ${consultation.status.toString().toLowerCase()}" 
+                      th:text="${consultation.status}">Status</span>
+            </div>
+
+            <div class="detail-section">
+                <h3>Informasi Jadwal</h3>
+                <div class="detail-row">
+                    <div class="detail-label">Tanggal</div>
+                    <div class="detail-value" th:text="${consultation.schedule.date}">2023-06-01</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Waktu</div>
+                    <div class="detail-value" th:text="${consultation.schedule.startTime} + ' - ' + ${consultation.schedule.endTime}">09:00 - 10:00</div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h3>Informasi Klien</h3>
+                <div class="detail-row">
+                    <div class="detail-label">Nama</div>
+                    <div class="detail-value" th:text="${consultation.client.fullName}">Nama Klien</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Email</div>
+                    <div class="detail-value" th:text="${consultation.client.email}">email@example.com</div>
+                </div>
+                <div class="detail-row" th:if="${consultation.client.phone != null}">
+                    <div class="detail-label">Telepon</div>
+                    <div class="detail-value" th:text="${consultation.client.phone}">08123456789</div>
+                </div>
+                <div class="detail-row" th:if="${consultation.client.gender != null}">
+                    <div class="detail-label">Jenis Kelamin</div>
+                    <div class="detail-value" th:text="${consultation.client.gender}">Laki-laki</div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h3>Catatan</h3>
+                <div th:if="${consultation.notes != null}" th:text="${consultation.notes}">Catatan konsultasi</div>
+                <div th:if="${consultation.notes == null}">Belum ada catatan</div>
+            </div>
+        </div>
+
+        <div class="update-form">
+            <h3>Update Status Konsultasi</h3>
+            <form th:action="@{'/psychologist/consultations/' + ${consultation.id} + '/update-status'}" method="post">
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" name="status">
+                        <option th:each="status : ${statuses}" 
+                                th:value="${status}" 
+                                th:text="${status}"
+                                th:selected="${status == consultation.status}">Status</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes">Catatan</label>
+                    <textarea id="notes" name="notes" th:text="${consultation.notes}"></textarea>
+                </div>
+                
+                <button type="submit" class="update-button">Update</button>
+            </form>
+        </div>
+
+        <a href="/psychologist/consultations" class="back-link">← Kembali ke Daftar Konsultasi</a>
+    </div>
+</body>
+</html>

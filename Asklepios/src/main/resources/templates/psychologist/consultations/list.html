@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Daftar Konsultasi - Asklepios</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .consultations-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .consultations-table {
+            width: 100%;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table th, table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            color: #333;
+        }
+        table tr:last-child td {
+            border-bottom: none;
+        }
+        .status-pending {
+            color: #ffc107;
+            font-weight: bold;
+        }
+        .status-confirmed {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .status-completed {
+            color: #6c757d;
+            font-weight: bold;
+        }
+        .status-cancelled {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .action-links a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        .action-links a:hover {
+            text-decoration: underline;
+        }
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="consultations-container">
+        <div class="header">
+            <h1>Daftar Konsultasi</h1>
+            <div class="nav-links">
+                <a href="/psychologist/dashboard">Dashboard</a>
+                <a href="/psychologist/profile">Profil</a>
+                <a href="/psychologist/schedules">Jadwal</a>
+                <a href="/auth/logout">Logout</a>
+            </div>
+        </div>
+
+        <div class="consultations-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tanggal & Waktu</th>
+                        <th>Klien</th>
+                        <th>Status</th>
+                        <th>Catatan</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="consultation : ${consultations}">
+                        <td th:text="${consultation.schedule.date} + ' ' + ${consultation.schedule.startTime} + ' - ' + ${consultation.schedule.endTime}">Waktu</td>
+                        <td th:text="${consultation.client.fullName}">Klien</td>
+                        <td>
+                            <span th:class="'status-' + ${consultation.status.toString().toLowerCase()}" 
+                                  th:text="${consultation.status}">Status</span>
+                        </td>
+                        <td th:text="${consultation.notes != null ? consultation.notes : '-'}">Catatan</td>
+                        <td class="action-links">
+                            <a th:href="@{'/psychologist/consultations/' + ${consultation.id}}">Detail</a>
+                        </td>
+                    </tr>
+                    <tr th:if="${consultations.empty}">
+                        <td colspan="5" class="empty-message">Belum ada konsultasi</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

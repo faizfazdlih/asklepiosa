@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Psikolog</title>
+    <meta charset="UTF-8" />
+</head>
+<body>
+<h1>Edit Psikolog</h1>
+
+<form th:action="@{/admin/psychologists/update}" method="post">
+
+    <input type="hidden" name="id" th:value="${psychologist.id}" />
+
+    <label for="userId">Pilih User:</label>
+    <select id="userId" name="userId" required>
+        <option value="" disabled>Pilih user...</option>
+        <option th:each="u : ${users}"
+                th:value="${u.id}"
+                th:text="${u.fullName + ' (' + u.email + ')'}"
+                th:selected="${u.id == psychologist.user.id}">
+        </option>
+    </select>
+    <br><br>
+
+    <label for="licenseNumber">License Number:</label>
+    <input type="text" id="licenseNumber" name="licenseNumber" required th:value="${psychologist.licenseNumber}">
+    <br><br>
+
+    <label for="specialization">Spesialisasi:</label>
+    <input type="text" id="specialization" name="specialization" th:value="${psychologist.specialization}">
+    <br><br>
+
+    <label for="experienceYears">Pengalaman (tahun):</label>
+    <input type="number" id="experienceYears" name="experienceYears" min="0" th:value="${psychologist.experienceYears}">
+    <br><br>
+
+    <label for="price">Harga per sesi:</label>
+    <input type="number" id="price" name="price" step="0.01" required th:value="${psychologist.price}">
+    <br><br>
+
+    <label for="bio">Bio:</label><br>
+    <textarea id="bio" name="bio" rows="4" cols="50" th:text="${psychologist.bio}"></textarea>
+    <br><br>
+
+    <label for="profilePicture">Foto (URL):</label>
+    <input type="text" id="profilePicture" name="profilePicture" th:value="${psychologist.profilePicture}">
+    <br><br>
+
+    <button type="submit">Update</button>
+</form>
+
+<br>
+<a href="/admin/psychologists">← Kembali ke daftar</a>
+
+</body>
+</html>

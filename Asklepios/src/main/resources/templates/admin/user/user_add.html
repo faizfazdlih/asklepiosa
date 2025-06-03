@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tambah Pengguna</title>
+</head>
+<body>
+    <h1>Tambah Pengguna Baru</h1>
+
+    <form th:action="@{/admin/users/add}" method="post">
+        <label>Email:</label><br>
+        <input type="email" name="email" required><br><br>
+
+        <label>Password:</label><br>
+        <input type="password" name="password" required><br><br>
+
+        <label>Nama Lengkap:</label><br>
+        <input type="text" name="fullName" required><br><br>
+
+        <label>No HP:</label><br>
+        <input type="text" name="phone"><br><br>
+
+        <label>Jenis Kelamin:</label><br>
+        <select name="gender">
+            <option th:each="g : ${genders}" th:value="${g}" th:text="${g}"></option>
+        </select><br><br>
+
+        <label>Role:</label><br>
+        <select name="role">
+            <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
+        </select><br><br>
+
+        <button type="submit">Simpan</button>
+    </form>
+
+    <br>
+    <a href="/admin/users">Kembali ke daftar pengguna</a>
+</body>
+</html>

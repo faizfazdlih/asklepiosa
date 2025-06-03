@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Detail Transaksi</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+    <h1>Detail Transaksi</h1>
+
+    <div>
+        <p><strong>ID Transaksi:</strong> <span th:text="${transaction.id}"></span></p>
+        
+        <p><strong>Tanggal Konsultasi:</strong> 
+            <span th:text="${#temporals.format(transaction.consultation.schedule.date, 'dd/MM/yyyy')} + ' ' + ${transaction.consultation.schedule.startTime}"></span>
+        </p>
+        
+        <p><strong>Psikolog:</strong> 
+            <span th:text="${transaction.consultation.schedule?.psychologist?.user?.fullName}">Dr. Psikolog</span>
+        </p>
+        
+        <p><strong>Jumlah (Rp):</strong> 
+            <span th:text="${#numbers.formatDecimal(transaction.amount, 0, 'COMMA', 2, 'POINT')}"></span>
+        </p>
+        
+        <p><strong>Status:</strong> <span th:text="${transaction.status}"></span></p>
+        
+        <div th:if="${transaction.status == 'PENDING'}">
+            <h3>Lakukan Pembayaran</h3>
+            <form th:action="@{'/client/transactions/' + ${transaction.id} + '/pay'}" method="post">
+                <label for="paymentMethod">Pilih Metode Pembayaran:</label>
+                <select id="paymentMethod" name="paymentMethod" required>
+                    <option value="BANK_TRANSFER">Transfer Bank</option>
+                    <option value="E_WALLET">E-Wallet</option>
+                    <option value="CREDIT_CARD">Kartu Kredit</option>
+                </select>
+                <br/><br/>
+                <button type="submit">Konfirmasi Pembayaran</button>
+            </form>
+        </div>
+        
+        <div th:if="${transaction.status == 'PAID'}">
+            <p><strong>Tanggal Pembayaran:</strong> 
+                <span th:text="${#dates.format(transaction.paymentDate, 'dd/MM/yyyy HH:mm')}"></span>
+            </p>
+            <p><strong>Metode Pembayaran:</strong> 
+                <span th:text="${transaction.paymentMethod}"></span>
+            </p>
+        </div>
+    </div>
+    
+    <br/>
+    <a href="/client/transactions">Kembali ke Daftar Transaksi</a>
+</body>
+</html>

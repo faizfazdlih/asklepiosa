@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Buat Transaksi Baru</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+    <h1>Buat Transaksi Baru</h1>
+
+    <form th:action="@{/admin/transactions/create}" method="post">
+        <div>
+            <label for="consultationId">Pilih Konsultasi:</label>
+            <select id="consultationId" name="consultationId" required>
+                <option value="">-- Pilih Konsultasi --</option>
+                <option th:each="consultation : ${consultations}" 
+                        th:value="${consultation.id}"
+                        th:text="${consultation.id + ' - ' + consultation.client.name + ' - ' + consultation.schedule.date}"
+                        th:unless="${consultation.id == null}">Consultation ID - Client - Date</option>
+            </select>
+        </div>
+        <br/>
+        <div>
+            <label for="paymentMethod">Metode Pembayaran:</label>
+            <select id="paymentMethod" name="paymentMethod" required>
+                <option value="BANK_TRANSFER">Bank Transfer</option>
+                <option value="E_WALLET">E-Wallet</option>
+                <option value="CREDIT_CARD">Credit Card</option>
+            </select>
+        </div>
+        <br/>
+        <button type="submit">Buat Transaksi</button>
+    </form>
+    
+    <br/>
+    <a href="/admin/transactions">Kembali ke Daftar Transaksi</a>
+</body>
+</html>

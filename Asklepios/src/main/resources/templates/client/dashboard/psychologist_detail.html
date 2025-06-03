@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Detail Psikolog - Asklepios</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .profile-container {
+            display: flex;
+            margin-bottom: 30px;
+        }
+        .profile-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 30px;
+        }
+        .profile-info {
+            flex: 1;
+        }
+        .profile-info h1 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        .profile-info p {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #555;
+            width: 120px;
+            display: inline-block;
+        }
+        .price {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #28a745;
+            margin: 15px 0;
+        }
+        .bio {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        .schedule-container {
+            margin-top: 30px;
+        }
+        .schedule-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .schedule-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        .schedule-date {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .schedule-time {
+            color: #555;
+            margin-bottom: 15px;
+        }
+        .book-button {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .book-button:hover {
+            background-color: #218838;
+        }
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .nav-links a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="/client/dashboard">Dashboard</a>
+            <a href="/client/consultations">Konsultasi Saya</a>
+            <a href="/client/profile">Profil Saya</a>
+            <a href="/auth/logout">Logout</a>
+        </div>
+
+        <a href="/client/dashboard" class="back-link">← Kembali ke Dashboard</a>
+
+        <div class="profile-container">
+            <img th:src="${psychologist.profilePicture != null ? psychologist.profilePicture : '/images/default-profile.png'}" 
+                 alt="Foto Profil" class="profile-image" onerror="this.src='/images/default-profile.png'">
+            
+            <div class="profile-info">
+                <h1 th:text="${psychologist.user.fullName}">Nama Psikolog</h1>
+                
+                <p><span class="info-label">Spesialisasi:</span> <span th:text="${psychologist.specialization}">Spesialisasi</span></p>
+                <p><span class="info-label">Pengalaman:</span> <span th:text="${psychologist.experienceYears} + ' tahun'">Pengalaman</span></p>
+                <p><span class="info-label">Lisensi:</span> <span th:text="${psychologist.licenseNumber}">Nomor Lisensi</span></p>
+                
+                <p class="price" th:text="'Biaya Konsultasi: Rp ' + ${#numbers.formatDecimal(psychologist.price, 0, 'COMMA', 0, 'POINT')}">Harga</p>
+            </div>
+        </div>
+
+        <div class="bio">
+            <h2>Tentang Psikolog</h2>
+            <p th:text="${psychologist.bio}">Biografi psikolog akan ditampilkan di sini.</p>
+        </div>
+
+        <div class="schedule-container">
+            <h2>Jadwal Tersedia</h2>
+            
+            <div th:if="${#lists.isEmpty(schedules)}">
+                <p>Tidak ada jadwal tersedia saat ini.</p>
+            </div>
+            
+            <div class="schedule-list" th:unless="${#lists.isEmpty(schedules)}">
+                <div th:each="schedule : ${schedules}" class="schedule-item">
+                    <div class="schedule-date" th:text="${schedule.date}">Tanggal</div>
+                    <div class="schedule-time" th:text="${schedule.startTime} + ' - ' + ${schedule.endTime}">Waktu</div>
+                    <!-- Ubah URL ini -->
+                    <a th:href="@{/client/consultations/book/{id}(id=${schedule.id})}" class="book-button">Booking</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

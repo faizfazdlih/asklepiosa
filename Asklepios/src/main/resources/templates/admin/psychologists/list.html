@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Daftar Psikolog</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <h1>Daftar Psikolog</h1>
+
+    <a href="/admin/psychologists/create">+ Tambah Psikolog</a>
+
+    <table border="1" cellpadding="10" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Nama</th>
+                <th>License</th>
+                <th>Spesialisasi</th>
+                <th>Pengalaman</th>
+                <th>Harga</th>
+                <th>Foto</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="psych : ${psychologists}">
+                <td th:text="${psych.user.fullName}">Nama</td>
+                <td th:text="${psych.licenseNumber}">License</td>
+                <td th:text="${psych.specialization}">Spesialisasi</td>
+                <td th:text="${psych.experienceYears} + ' tahun'">Tahun</td>
+                <td th:text="${#numbers.formatDecimal(psych.price, 0, 'COMMA', 2, 'POINT')}">Harga</td>
+                <td>
+                    <img th:src="@{${psych.profilePicture}}" alt="Foto" width="80" height="80"
+                         onerror="this.onerror=null;this.src='/images/default-profile.png';">
+                </td>
+                <td>
+                    <a th:href="@{'/admin/psychologists/edit/' + ${psych.id}}">Edit</a> |
+                    <a th:href="@{'/admin/psychologists/delete/' + ${psych.id}}"
+                       onclick="return confirm('Yakin ingin menghapus?');">Hapus</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

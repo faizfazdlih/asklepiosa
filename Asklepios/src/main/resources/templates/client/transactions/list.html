@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Daftar Transaksi Saya</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+
+<h1>Daftar Transaksi Saya</h1>
+
+<div th:if="${not #lists.isEmpty(transactions)}">
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+        <tr>
+            <th>ID Transaksi</th>
+            <th>Tanggal Konsultasi</th>
+            <th>Psikolog</th>
+            <th>Jumlah (Rp)</th>
+            <th>Status</th>
+            <th>Aksi</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="tx : ${transactions}">
+            <td th:text="${tx.id}">TX123</td>
+            <td th:text="${#temporals.format(tx.consultation.schedule.date, 'dd/MM/yyyy') + ' ' + tx.consultation.schedule.startTime}">01/01/2023 10:00</td>
+            <td th:text="${tx.consultation.schedule?.psychologist?.user?.fullName}">Dr. Psikolog</td>
+            <td th:text="${#numbers.formatDecimal(tx.amount, 0, 'COMMA', 2, 'POINT')}">100,000.00</td>
+            <td th:text="${tx.status}">PENDING</td>
+            <td>
+                <a th:href="@{'/client/transactions/' + ${tx.id}}">Detail</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:if="${#lists.isEmpty(transactions)}">
+    <p>Tidak ada transaksi ditemukan.</p>
+</div>
+
+<a href="/client/dashboard">Kembali ke Dashboard</a>
+
+</body>
+</html>

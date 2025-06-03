@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit User</title>
+</head>
+<body>
+    <h1>Edit Pengguna</h1>
+
+    <form th:action="@{'/admin/users/' + ${user.id} + '/edit'}" method="post">
+        <p>Email: <span th:text="${user.email}"></span></p>
+
+        <label>Nama Lengkap:</label><br>
+        <input type="text" name="fullName" th:value="${user.fullName}" required><br><br>
+
+        <label>No HP:</label><br>
+        <input type="text" name="phone" th:value="${user.phone}"><br><br>
+
+        <label>Jenis Kelamin:</label><br>
+        <select name="gender">
+            <option th:each="g : ${genders}"
+                    th:value="${g}"
+                    th:text="${g}"
+                    th:selected="${g == user.gender}">
+            </option>
+        </select><br><br>
+
+        <label>Role:</label><br>
+        <select name="role">
+            <option th:each="r : ${roles}"
+                    th:value="${r}"
+                    th:text="${r}"
+                    th:selected="${r == user.role}">
+            </option>
+        </select><br><br>
+
+        <button type="submit">Simpan</button>
+    </form>
+
+    <br>
+    <a th:href="@{'/admin/users/' + ${user.id}}">Kembali ke detail</a>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manajemen Jadwal Psikolog</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>Daftar Jadwal Psikolog</h1>
+
+    <a th:href="@{/admin/schedules/add}">Tambah Jadwal</a>
+
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Psikolog</th>
+                <th>Tanggal</th>
+                <th>Waktu Mulai</th>
+                <th>Waktu Selesai</th>
+                <th>Status</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="schedule : ${schedules}">
+                <td th:text="${schedule.psychologist.user.fullName}"></td>
+                <td th:text="${schedule.date}"></td>
+                <td th:text="${schedule.startTime}"></td>
+                <td th:text="${schedule.endTime}"></td>
+                <td th:text="${schedule.isBooked ? 'Sudah Dipesan' : 'Tersedia'}"></td>
+                <td>
+                    <a th:href="@{'/admin/schedules/edit/' + ${schedule.id}}">Edit</a>
+                    <a th:href="@{'/admin/schedules/delete/' + ${schedule.id}}">Hapus</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

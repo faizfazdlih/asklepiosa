@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Daftar Transaksi</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<h1>Daftar Transaksi</h1>
+
+<div>
+    <a href="/admin/transactions/create" class="button">Buat Transaksi Baru</a>
+</div>
+<br/>
+
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+    <tr>
+        <th>ID Transaksi</th>
+        <th>ID Konsultasi</th>
+        <th>Jumlah (Rp)</th>
+        <th>Metode Pembayaran</th>
+        <th>Status</th>
+        <th>Tanggal Bayar</th>
+        <th>Aksi</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="tx : ${transactions}">
+        <td th:text="${tx.id}">TX123</td>
+        <td th:text="${tx.consultation.id}">CONSULT123</td>
+        <td th:text="${#numbers.formatDecimal(tx.amount, 0, 'COMMA', 2, 'POINT')}">100,000.00</td>
+        <td th:text="${tx.paymentMethod}">BANK_TRANSFER</td>
+        <td th:text="${tx.status}">PENDING</td>
+        <!-- Solution 1: Using #temporals utility for LocalDateTime -->
+        <td th:text="${tx.paymentDate != null} ? ${#temporals.format(tx.paymentDate, 'dd/MM/yyyy HH:mm')} : 'Belum Bayar'">-</td>
+        
+        <!-- Alternative Solution 2: Using toString() method with custom formatting
+        <td th:text="${tx.paymentDate != null} ? ${tx.paymentDate.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy HH:mm'))} : 'Belum Bayar'">-</td>
+        -->
+        
+        <td>
+            <a th:href="@{'/admin/transactions/detail/' + ${tx.id}}">Detail</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

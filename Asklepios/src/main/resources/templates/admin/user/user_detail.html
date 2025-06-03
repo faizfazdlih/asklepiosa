@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Detail Pengguna</title>
+</head>
+<body>
+    <h1>Detail Pengguna</h1>
+    <p>Email: <span th:text="${user.email}"></span></p>
+    <p>Full Name: <span th:text="${user.fullName}"></span></p>
+    <p>Role: <span th:text="${user.role}"></span></p>
+
+    <a href="/admin/users">Kembali ke daftar pengguna</a>
+</body>
+</html>

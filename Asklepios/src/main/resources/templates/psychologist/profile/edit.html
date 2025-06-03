@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Profil Psikolog - Asklepios</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .profile-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .profile-form {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"], input[type="number"], input[type="url"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        .required {
+            color: #dc3545;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+        .save-button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .save-button:hover {
+            background-color: #218838;
+        }
+        .cancel-button {
+            padding: 10px 20px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .cancel-button:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="header">
+            <h1>Edit Profil Psikolog</h1>
+            <div class="nav-links">
+                <a href="/psychologist/dashboard">Dashboard</a>
+                <a href="/psychologist/schedules">Jadwal</a>
+                <a href="/psychologist/consultations">Konsultasi</a>
+                <a href="/auth/logout">Logout</a>
+            </div>
+        </div>
+
+        <div class="profile-form">
+            <form th:action="@{/psychologist/profile/edit}" method="post">
+                <input type="hidden" name="id" th:value="${profile.id}" />
+                
+                <div class="form-group">
+                    <label for="licenseNumber">Nomor Lisensi <span class="required">*</span></label>
+                    <input type="text" id="licenseNumber" name="licenseNumber" th:value="${profile.licenseNumber}" required />
+                </div>
+                
+                <div class="form-group">
+                    <label for="specialization">Spesialisasi</label>
+                    <input type="text" id="specialization" name="specialization" th:value="${profile.specialization}" />
+                </div>
+                
+                <div class="form-group">
+                    <label for="experienceYears">Pengalaman (tahun) <span class="required">*</span></label>
+                    <input type="number" id="experienceYears" name="experienceYears" th:value="${profile.experienceYears}" min="0" required />
+                </div>
+                
+                <div class="form-group">
+                    <label for="price">Harga Konsultasi <span class="required">*</span></label>
+                    <input type="number" id="price" name="price" th:value="${profile.price}" min="0" step="1000" required />
+                </div>
+                
+                <div class="form-group">
+                    <label for="profilePicture">URL Foto Profil</label>
+                    <input type="url" id="profilePicture" name="profilePicture" th:value="${profile.profilePicture}" />
+                </div>
+                
+                <div class="form-group">
+                    <label for="bio">Bio</label>
+                    <textarea id="bio" name="bio" th:text="${profile.bio}"></textarea>
+                </div>
+                
+                <div class="button-group">
+                    <a href="/psychologist/profile" class="cancel-button">Batal</a>
+                    <button type="submit" class="save-button">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

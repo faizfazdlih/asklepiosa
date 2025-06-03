@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Jadwal Konsultasi - Asklepios</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .schedules-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .add-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .add-button:hover {
+            background-color: #218838;
+        }
+        .schedules-table {
+            width: 100%;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table th, table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            color: #333;
+        }
+        table tr:last-child td {
+            border-bottom: none;
+        }
+        .status-booked {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .status-available {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .action-links a {
+            margin-right: 10px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        .action-links a:hover {
+            text-decoration: underline;
+        }
+        .error {
+            color: #dc3545;
+            padding: 10px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="schedules-container">
+        <div class="header">
+            <h1>Jadwal Konsultasi</h1>
+            <div class="nav-links">
+                <a href="/psychologist/dashboard">Dashboard</a>
+                <a href="/psychologist/profile">Profil</a>
+                <a href="/psychologist/consultations">Konsultasi</a>
+                <a href="/auth/logout">Logout</a>
+            </div>
+        </div>
+
+        <div th:if="${error}" th:text="${error}" class="error"></div>
+
+        <a href="/psychologist/schedules/add" class="add-button">+ Tambah Jadwal</a>
+
+        <div class="schedules-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Waktu Mulai</th>
+                        <th>Waktu Selesai</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="schedule : ${schedules}">
+                        <td th:text="${schedule.date}">2023-06-01</td>
+                        <td th:text="${schedule.startTime}">09:00</td>
+                        <td th:text="${schedule.endTime}">10:00</td>
+                        <td>
+                            <span th:class="${schedule.isBooked ? 'status-booked' : 'status-available'}"
+                                  th:text="${schedule.isBooked ? 'Sudah Dipesan' : 'Tersedia'}">Status</span>
+                        </td>
+                        <td class="action-links">
+                            <a th:if="${!schedule.isBooked}" th:href="@{'/psychologist/schedules/edit/' + ${schedule.id}}">Edit</a>
+                            <a th:if="${!schedule.isBooked}" th:href="@{'/psychologist/schedules/delete/' + ${schedule.id}}" 
+                               onclick="return confirm('Yakin ingin menghapus jadwal ini?');">Hapus</a>
+                            <span th:if="${schedule.isBooked}">Tidak dapat diubah</span>
+                        </td>
+                    </tr>
+                    <tr th:if="${schedules.empty}">
+                        <td colspan="5" class="empty-message">Belum ada jadwal yang ditambahkan</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

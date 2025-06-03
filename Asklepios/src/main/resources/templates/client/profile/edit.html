@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Profil - Asklepios</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        .save-button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .save-button:hover {
+            background-color: #218838;
+        }
+        .cancel-button {
+            padding: 10px 20px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        .cancel-button:hover {
+            background-color: #5a6268;
+        }
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .nav-links a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="/client/dashboard">Dashboard</a>
+            <a href="/client/consultations">Konsultasi Saya</a>
+            <a href="/client/profile">Profil Saya</a>
+            <a href="/auth/logout">Logout</a>
+        </div>
+
+        <h1>Edit Profil</h1>
+        
+        <form th:action="@{/client/profile/update}" method="post">
+            <input type="hidden" name="id" th:value="${user.id}" />
+            
+            <div class="form-group">
+                <label for="fullName">Nama Lengkap</label>
+                <input type="text" id="fullName" name="fullName" th:value="${user.fullName}" required />
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" th:value="${user.email}" required readonly />
+                <small>Email tidak dapat diubah</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Nomor Telepon</label>
+                <input type="tel" id="phone" name="phone" th:value="${user.phone}" required />
+            </div>
+            
+            <div class="form-group">
+                <label for="gender">Jenis Kelamin</label>
+                <select id="gender" name="gender" required>
+                    <option value="MALE" th:selected="${user.gender == 'MALE'}">Laki-laki</option>
+                    <option value="FEMALE" th:selected="${user.gender == 'FEMALE'}">Perempuan</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password Baru (Kosongkan jika tidak ingin mengubah)</label>
+                <input type="password" id="password" name="password" />
+            </div>
+            
+            <div class="button-group">
+                <a href="/client/profile" class="cancel-button">Batal</a>
+                <button type="submit" class="save-button">Simpan Perubahan</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

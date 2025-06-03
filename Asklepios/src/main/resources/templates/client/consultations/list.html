@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Daftar Konsultasi - Asklepios</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        .status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .status-pending {
+            background-color: #ffeeba;
+            color: #856404;
+        }
+        .status-confirmed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status-completed {
+            background-color: #c3e6cb;
+            color: #155724;
+        }
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .nav-links a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="/client/dashboard">Dashboard</a>
+            <a href="/client/consultations">Konsultasi Saya</a>
+            <a href="/client/profile">Profil Saya</a>
+            <a href="/auth/logout">Logout</a>
+        </div>
+        <h1>Daftar Konsultasi Anda</h1>
+        <div th:if="${#lists.isEmpty(consultations)}" class="empty-message">
+            <p>Anda belum memiliki jadwal konsultasi.</p>
+            <a href="/client/dashboard">Cari Psikolog</a>
+        </div>
+
+        <table th:unless="${#lists.isEmpty(consultations)}">
+            <thead>
+                <tr>
+                    <th>Tanggal & Waktu</th>
+                    <th>Psikolog</th>
+                    <th>Status</th>
+                    <th>Catatan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="consultation : ${consultations}">
+                    <td th:text="${consultation.schedule.date} + ' ' + ${consultation.schedule.startTime} + ' - ' + ${consultation.schedule.endTime}">Waktu</td>
+                    <td th:text="${consultation.schedule.psychologist.user.fullName}">Psikolog</td>
+                    <td>
+                        <span th:class="'status ' + 'status-' + ${#strings.toLowerCase(consultation.status)}" 
+                              th:text="${consultation.status}">Status</span>
+                    </td>
+                    <td th:text="${consultation.notes}">Catatan</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

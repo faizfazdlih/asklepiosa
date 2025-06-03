@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Daftar Konsultasi - Admin</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Daftar Konsultasi</h1>
+        
+        <a href="/admin/dashboard" class="btn btn-secondary mb-3">Kembali ke Dashboard</a>
+        
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Klien</th>
+                    <th>Psikolog</th>
+                    <th>Tanggal</th>
+                    <th>Waktu</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="consultation : ${consultations}">
+                    <td th:text="${consultation.id}"></td>
+                    <td th:text="${consultation.client.fullName}"></td>
+                    <td th:text="${consultation.schedule.psychologist.user.fullName}"></td>
+                    <td th:text="${consultation.schedule.date}"></td>
+                    <td th:text="${consultation.schedule.startTime} + ' - ' + ${consultation.schedule.endTime}"></td>
+                    <td th:text="${consultation.status}"></td>
+                    <td>
+                        <a th:href="@{/admin/consultations/{id}(id=${consultation.id})}" class="btn btn-primary btn-sm">Detail</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <script src="/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

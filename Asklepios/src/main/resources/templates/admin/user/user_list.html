@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Daftar Pengguna</title>
+</head>
+<body>
+    <h1>Daftar Pengguna</h1>
+    <table border="1">
+        <tr>
+            <th>Email</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Aksi</th>
+        </tr>
+        <a href="/admin/users/add">+ Tambah Pengguna</a>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.fullName}"></td>
+            <td th:text="${user.role}"></td>
+            <td>
+                <a th:href="@{|/admin/users/${user.id}|}">Detail</a>
+                <a th:href="@{|/admin/users/${user.id}/edit|}">Edit</a>
+                <form th:action="@{|/admin/users/${user.id}/delete|}" method="post" style="display:inline">
+                    <button type="submit" onclick="return confirm('Yakin hapus user ini?')">Hapus</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

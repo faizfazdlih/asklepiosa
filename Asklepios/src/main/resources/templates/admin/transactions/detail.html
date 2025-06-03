@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Detail Transaksi</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+    <h1>Detail Transaksi</h1>
+
+    <div>
+        <p><strong>ID Transaksi:</strong> <span th:text="${transaction.id}"></span></p>
+        <p><strong>ID Konsultasi:</strong> <span th:text="${transaction.consultation.id}"></span></p>
+        <p><strong>Jumlah (Rp):</strong> <span th:text="${#numbers.formatDecimal(transaction.amount, 0, 'COMMA', 2, 'POINT')}"></span></p>
+    
+        <form th:action="@{'/admin/transactions/update/' + ${transaction.id}}" method="post">
+            <label for="paymentMethod">Metode Pembayaran:</label>
+            <select id="paymentMethod" name="paymentMethod" required>
+                <option th:selected="${transaction.paymentMethod == 'BANK_TRANSFER'}" value="BANK_TRANSFER">Bank Transfer</option>
+                <option th:selected="${transaction.paymentMethod == 'E_WALLET'}" value="E_WALLET">E-Wallet</option>
+                <option th:selected="${transaction.paymentMethod == 'CREDIT_CARD'}" value="CREDIT_CARD">Credit Card</option>
+            </select>
+            <br/><br/>
+    
+            <label for="status">Status Pembayaran:</label>
+            <select id="status" name="status" required>
+                <option th:selected="${transaction.status == 'PENDING'}" value="PENDING">Pending</option>
+                <option th:selected="${transaction.status == 'PAID'}" value="PAID">Paid</option>
+                <option th:selected="${transaction.status == 'FAILED'}" value="FAILED">Failed</option>
+            </select>
+            <br/><br/>
+    
+            <label for="paymentDate">Tanggal Bayar:</label>
+            <input type="datetime-local" id="paymentDate" name="paymentDate"
+                   th:value="${transaction.paymentDate != null} ? ${#temporals.format(transaction.paymentDate, 'yyyy-MM-dd''T''HH:mm')} : ''" />
+            <br/><br/>
+    
+            <button type="submit">Update</button>
+        </form>
+    </div>
+    
+    <br/>
+    <a href="/admin/transactions">Kembali ke Daftar Transaksi</a>
+</body>
+</html>

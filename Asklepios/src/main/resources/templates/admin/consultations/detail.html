@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detail Konsultasi - Admin</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Detail Konsultasi</h1>
+        
+        <a th:href="@{/admin/consultations}" class="btn btn-secondary mb-3">Kembali ke Daftar</a>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Informasi Konsultasi</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-2">
+                    <div class="col-md-3 fw-bold">ID:</div>
+                    <div class="col-md-9" th:text="${consultation.id}"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-3 fw-bold">Klien:</div>
+                    <div class="col-md-9" th:text="${consultation.client.fullName}"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-3 fw-bold">Email Klien:</div>
+                    <div class="col-md-9" th:text="${consultation.client.email}"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-3 fw-bold">Psikolog:</div>
+                    <div class="col-md-9" th:text="${consultation.schedule.psychologist.user.fullName}"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-3 fw-bold">Email Psikolog:</div>
+                    <div class="col-md-9" th:text="${consultation.schedule.psychologist.user.email}"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-3 fw-bold">Tanggal:</div>
+                    <div class="col-md-9" th:text="${consultation.schedule.date}"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-3 fw-bold">Waktu:</div>
+                    <div class="col-md-9" th:text="${consultation.schedule.startTime} + ' - ' + ${consultation.schedule.endTime}"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-3 fw-bold">Status:</div>
+                    <div class="col-md-9" th:text="${consultation.status}"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-3 fw-bold">Catatan:</div>
+                    <div class="col-md-9" th:text="${consultation.notes != null ? consultation.notes : '-'}"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-3 fw-bold">Dibuat pada:</div>
+                    <div class="col-md-9" th:text="${consultation.createdAt}"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5>Update Status</h5>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/admin/consultations/{id}/update-status(id=${consultation.id})}" method="post">
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-select" id="status" name="status" required>
+                            <option th:each="status : ${statuses}" 
+                                    th:value="${status}" 
+                                    th:text="${status}"
+                                    th:selected="${consultation.status == status}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Catatan</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="3" th:text="${consultation.notes}"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Status</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
