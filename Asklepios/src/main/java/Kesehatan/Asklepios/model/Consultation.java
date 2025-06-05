@@ -17,7 +17,7 @@ import jakarta.persistence.Table;
 public class Consultation {
     @Id
     private String id;
-
+    
     @OneToOne
     @JoinColumn(name = "schedule_id", nullable = false)
     private Schedule schedule;
@@ -33,6 +33,16 @@ public class Consultation {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+    @OneToOne(mappedBy = "consultation")
+    private Transaction transaction;
+
+    public Transaction getTransaction() {
+        return transaction;
+    }
+
+    public void setTransaction(Transaction transaction) {
+        this.transaction = transaction;
+    }
 
     public enum Status {
         PENDING, CONFIRMED, COMPLETED, CANCELLED

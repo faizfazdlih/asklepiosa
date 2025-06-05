@@ -1,19 +1,24 @@
 package Kesehatan.Asklepios.controller.client;
 
-import Kesehatan.Asklepios.model.Consultation;
-import Kesehatan.Asklepios.model.Schedule;
-import Kesehatan.Asklepios.model.User;
-import Kesehatan.Asklepios.service.ConsultationService;
-import Kesehatan.Asklepios.service.ScheduleService;
-import Kesehatan.Asklepios.service.UserService;
+import java.security.Principal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.security.Principal;
-import java.util.List;
+import Kesehatan.Asklepios.model.Consultation;
+import Kesehatan.Asklepios.model.Schedule;
+import Kesehatan.Asklepios.model.Transaction;
+import Kesehatan.Asklepios.model.User;
+import Kesehatan.Asklepios.service.ConsultationService;
+import Kesehatan.Asklepios.service.ScheduleService;
+import Kesehatan.Asklepios.service.UserService;
 
 @Controller
 @RequestMapping("/client/consultations")
@@ -47,7 +52,7 @@ public class ConsultationController {
     public String showBookingForm(@PathVariable String scheduleId, Model model) {
         Schedule schedule = scheduleService.getById(scheduleId);
         model.addAttribute("schedule", schedule);
-        return "client/consultations/book"; // Ubah dari "consultation/book" ke "client/consultations/book"
+        return "client/consultations/book";
     }
 
     // Simpan booking konsultasi
@@ -62,5 +67,34 @@ public class ConsultationController {
         consultationService.bookConsultation(scheduleId, client.getId());
         return "redirect:/client/consultations";
     }
-}
 
+    // Detail konsultasi
+    @GetMapping("/detail/{id}")
+    public String consultationDetail(@PathVariable String id, Model model, Principal principal) {
+        Consultation consultation = consultationService.getById(id);
+
+        // Validasi agar hanya client yang punya consultation ini yang bisa mengakses
+        String email = principal.getName();
+        User client = userService.getAllUsers().stream()
+                            .filter(u -> u.getEmail().equals(email))
+                            .findFirst()
+                            .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!consultation.getClient().getId().equals(client.getId())) {
+            model.addAttribute("error", "Anda tidak memiliki akses ke konsultasi ini.");
+            return "redirect:/client/consultations";
+        }
+
+        model.addAttribute("consultation", consultation);
+
+        Transaction transaction = consultation.getTransaction();
+        if (transaction != null) {
+            model.addAttribute("transaction", transaction);
+            model.addAttribute("hasTransaction", true);
+        } else {
+            model.addAttribute("hasTransaction", false);
+        }
+
+        return "client/consultations/detail";
+    }
+}

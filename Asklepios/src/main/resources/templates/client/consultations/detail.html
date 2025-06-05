@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Detail Konsultasi</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 1.5rem;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+        .card {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 6px;
+        }
+        .title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .info-group {
+            margin-top: 1rem;
+        }
+        .info-label {
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .info-value {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        .status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: white;
+        }
+        .status.CONFIRMED { background-color: #10b981; }
+        .status.PENDING { background-color: #f59e0b; }
+        .status.CANCELLED { background-color: #ef4444; }
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+        .alert-error {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        .alert-success {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #3b82f6;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="title">Detail Konsultasi</div>
+            <p>Status Konsultasi: 
+                <span th:text="${consultation.status}" th:class="'status ' + ${consultation.status}">PENDING</span>
+            </p>
+        </div>
+
+        <div th:if="${error}" class="alert alert-error" th:text="${error}">Terjadi kesalahan.</div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}">Berhasil melakukan aksi.</div>
+
+        <div class="card">
+            <div class="subtitle">Informasi Konsultasi</div>
+            <div class="info-group">
+                <p class="info-label">Dokter/Psikolog</p>
+                <p class="info-value" th:text="${consultation.schedule.psychologist.user.fullName}">Dr. John Doe</p>
+            </div>
+            <div class="info-group">
+                <p class="info-label">Tanggal</p>
+                <p class="info-value" th:text="${#temporals.format(consultation.schedule.date, 'dd MMMM yyyy')}">04 Juni 2025</p>
+            </div>
+            <div class="info-group">
+                <p class="info-label">Waktu</p>
+                <p class="info-value">
+                    <span th:text="${#temporals.format(consultation.schedule.startTime, 'HH:mm')}">10:00</span> - 
+                    <span th:text="${#temporals.format(consultation.schedule.endTime, 'HH:mm')}">11:00</span>
+                </p>
+            </div>
+        </div>
+
+        <div th:if="${hasTransaction}" class="card">
+            <div class="subtitle">Informasi Pembayaran</div>
+            <div class="info-group">
+                <p class="info-label">ID Transaksi</p>
+                <p class="info-value" th:text="${transaction.id}">TRX123456</p>
+            </div>
+            <div class="info-group">
+                <p class="info-label">Metode Pembayaran</p>
+                <p class="info-value" th:text="${transaction.paymentMethod}">Bank Transfer</p>
+            </div>
+            <div class="info-group">
+                <p class="info-label">Status Pembayaran</p>
+                <span class="status CONFIRMED" th:text="${transaction.status}">PAID</span>
+            </div>
+            <div class="info-group">
+                <p class="info-label">Tanggal Pembayaran</p>
+                <p class="info-value" th:text="${#temporals.format(transaction.paymentDate, 'dd MMMM yyyy HH:mm')}">04 Juni 2025 14:30</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="subtitle">Tindakan</div>
+            <div th:if="${consultation.status == T(Kesehatan.Asklepios.model.Consultation.Status).PENDING and 
+                (!hasTransaction or (hasTransaction and transaction.status == T(Kesehatan.Asklepios.model.Transaction.Status).PENDING))}">
+                <a th:href="@{'/client/payment/consultation/' + ${consultation.id}}" class="btn">Lanjutkan Pembayaran</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

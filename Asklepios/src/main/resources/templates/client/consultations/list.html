@@ -12,7 +12,7 @@
             background-color: #f5f5f5;
         }
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
             background-color: white;
@@ -61,6 +61,29 @@
             background-color: #f8d7da;
             color: #721c24;
         }
+        /* Tambahkan style untuk status pembayaran */
+        .payment-status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .payment-status-pending {
+            background-color: #ffeeba;
+            color: #856404;
+        }
+        .payment-status-paid {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .payment-status-failed {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .payment-status-none {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
         .nav-links {
             display: flex;
             justify-content: space-between;
@@ -77,6 +100,43 @@
             text-align: center;
             padding: 30px;
             color: #6c757d;
+        }
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.85em;
+            font-weight: bold;
+            display: inline-block;
+            margin-right: 5px;
+            text-align: center;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        .action-column {
+            width: 180px;
+            text-align: center;
         }
     </style>
 </head>
@@ -100,7 +160,9 @@
                     <th>Tanggal & Waktu</th>
                     <th>Psikolog</th>
                     <th>Status</th>
+                    <th>Status Pembayaran</th>
                     <th>Catatan</th>
+                    <th class="action-column">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -111,7 +173,19 @@
                         <span th:class="'status ' + 'status-' + ${#strings.toLowerCase(consultation.status)}" 
                               th:text="${consultation.status}">Status</span>
                     </td>
+                    <td>
+                        <!-- Status Pembayaran -->
+                        <span th:if="${consultation.transaction != null}" 
+                              th:class="'payment-status ' + 'payment-status-' + ${#strings.toLowerCase(consultation.transaction.status)}" 
+                              th:text="${consultation.transaction.status}">Status Pembayaran</span>
+                        <span th:if="${consultation.transaction == null}" 
+                              class="payment-status payment-status-none">BELUM ADA</span>
+                    </td>
                     <td th:text="${consultation.notes}">Catatan</td>
+                    <td class="action-column">
+                        <!-- Detail Button - always available -->
+                        <a th:href="@{/client/consultations/detail/{id}(id=${consultation.id})}" class="btn btn-primary">Detail</a>
+                    </td>
                 </tr>
             </tbody>
         </table>
