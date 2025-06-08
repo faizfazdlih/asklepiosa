@@ -1,44 +1,201 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
 <head>
-    <title>Daftar Psikolog</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Psikolog - Admin | Asklepios</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/admin/psychologists/list.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Daftar Psikolog</h1>
+<body class="bg-slate-50 text-gray-800 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-slate-200">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-brain text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-teal-800">Asklepios</h1>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center space-x-2 text-gray-600">
+                        <i class="fas fa-user-shield"></i>
+                        <span class="text-sm">Administrator</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 
-    <a href="/admin/psychologists/create">+ Tambah Psikolog</a>
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <!-- Page Header -->
+        <div class="mb-8 page-header">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-2">Daftar Psikolog</h2>
+                    <p class="text-gray-600">Kelola dan pantau semua psikolog terdaftar</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <a href="/admin/dashboard" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Kembali ke Dashboard
+                    </a>
+                    <a href="/admin/psychologists/create" class="btn-primary inline-flex items-center px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-all duration-300">
+                        <i class="fas fa-plus mr-2"></i>
+                        Tambah Psikolog
+                    </a>
+                </div>
+            </div>
+        </div>
 
-    <table border="1" cellpadding="10" cellspacing="0">
-        <thead>
-            <tr>
-                <th>Nama</th>
-                <th>License</th>
-                <th>Spesialisasi</th>
-                <th>Pengalaman</th>
-                <th>Harga</th>
-                <th>Foto</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="psych : ${psychologists}">
-                <td th:text="${psych.user.fullName}">Nama</td>
-                <td th:text="${psych.licenseNumber}">License</td>
-                <td th:text="${psych.specialization}">Spesialisasi</td>
-                <td th:text="${psych.experienceYears} + ' tahun'">Tahun</td>
-                <td th:text="${#numbers.formatDecimal(psych.price, 0, 'COMMA', 2, 'POINT')}">Harga</td>
-                <td>
-                    <img th:src="@{${psych.profilePicture}}" alt="Foto" width="80" height="80"
-                         onerror="this.onerror=null;this.src='/images/default-profile.png';">
-                </td>
-                <td>
-                    <a th:href="@{'/admin/psychologists/edit/' + ${psych.id}}">Edit</a> |
-                    <a th:href="@{'/admin/psychologists/delete/' + ${psych.id}}"
-                       onclick="return confirm('Yakin ingin menghapus?');">Hapus</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+
+        <!-- Psychologists Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div th:each="psych : ${psychologists}" class="bg-white rounded-xl border border-slate-200 overflow-hidden psychologist-card transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+                <!-- Card Header with Profile Picture -->
+                <div class="relative bg-gradient-to-br from-teal-50 to-emerald-50 p-6 text-center">
+                    <div class="relative inline-block">
+                        <img th:src="@{${psych.profilePicture}}" 
+                             alt="Foto Profil" 
+                             class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg mx-auto profile-image"
+                             onerror="this.onerror=null;this.src='/images/default-profile.png';">
+                        <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-500 rounded-full border-2 border-white flex items-center justify-center">
+                            <i class="fas fa-check text-white text-xs"></i>
+                        </div>
+                    </div>
+                    <h3 class="mt-3 text-lg font-semibold text-gray-900" th:text="${psych.user.fullName}">Nama Psikolog</h3>
+                    <p class="text-sm text-gray-600" th:text="${psych.specialization}">Spesialisasi</p>
+                </div>
+
+                <!-- Card Body -->
+                <div class="p-6 space-y-4">
+                    <!-- License & Experience -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="info-item">
+                            <label class="text-xs font-medium text-gray-500 uppercase tracking-wider">Lisensi</label>
+                            <p class="mt-1 text-sm font-medium text-gray-900" th:text="${psych.licenseNumber}">LIC001</p>
+                        </div>
+                        <div class="info-item">
+                            <label class="text-xs font-medium text-gray-500 uppercase tracking-wider">Pengalaman</label>
+                            <p class="mt-1 text-sm font-medium text-gray-900">
+                                <span th:text="${psych.experienceYears}">5</span> tahun
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="info-item">
+                        <label class="text-xs font-medium text-gray-500 uppercase tracking-wider">Tarif Konsultasi</label>
+                        <p class="mt-1 text-lg font-bold text-teal-600">
+                            Rp <span th:text="${#numbers.formatDecimal(psych.price, 0, 'COMMA', 2, 'POINT')}">150.000</span>
+                        </p>
+                    </div>
+
+                    <!-- Status Badge -->
+                    <div class="flex items-center justify-between">
+                        <span class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200 status-badge">
+                            <i class="fas fa-circle mr-1 text-emerald-500"></i>
+                            Aktif
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Card Footer with Actions -->
+                <div class="px-6 py-4 bg-gray-50 border-t border-gray-100">
+                    <div class="flex items-center justify-between space-x-2">
+                        <a th:href="@{'/admin/psychologists/edit/' + ${psych.id}}" 
+                           class="btn-secondary flex-1 inline-flex items-center justify-center px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300">
+                            <i class="fas fa-edit mr-1"></i>
+                            Edit
+                        </a>
+                        <button onclick="confirmDelete(this)" 
+                                th:data-url="@{'/admin/psychologists/delete/' + ${psych.id}}"
+                                th:data-name="${psych.user.fullName}"
+                                class="btn-danger inline-flex items-center justify-center px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-300">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div th:if="${psychologists.isEmpty()}" class="text-center py-12">
+            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-user-md text-gray-400 text-3xl"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Belum ada psikolog terdaftar</h3>
+            <p class="text-gray-600 mb-6">Mulai dengan menambahkan psikolog pertama ke sistem</p>
+            <a href="/admin/psychologists/create" class="btn-primary inline-flex items-center px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-all duration-300">
+                <i class="fas fa-plus mr-2"></i>
+                Tambah Psikolog Pertama
+            </a>
+        </div>
+    </main>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-md w-full p-6 delete-modal">
+            <div class="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
+                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 text-center mb-2">Konfirmasi Penghapusan</h3>
+            <p class="text-gray-600 text-center mb-6">
+                Apakah Anda yakin ingin menghapus psikolog <strong id="psychologistName"></strong>? 
+                Tindakan ini tidak dapat dibatalkan.
+            </p>
+            <div class="flex space-x-3">
+                <button onclick="closeDeleteModal()" 
+                        class="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all duration-300">
+                    Batal
+                </button>
+                <a id="confirmDeleteBtn" href="#" 
+                   class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-300 text-center">
+                    Hapus
+                </a>
+            </div>
+        </div>
+    </div>
+
+        <script>
+        function confirmDelete(button) {
+            const modal = document.getElementById('deleteModal');
+            const psychologistName = button.getAttribute('data-name');
+            const deleteUrl = button.getAttribute('data-url');
+            
+            // Set nama psikolog di modal
+            document.getElementById('psychologistName').textContent = psychologistName;
+            
+            // Set URL untuk tombol konfirmasi delete
+            document.getElementById('confirmDeleteBtn').href = deleteUrl;
+            
+            // Tampilkan modal
+            modal.classList.remove('hidden');
+        }
+
+        function closeDeleteModal() {
+            const modal = document.getElementById('deleteModal');
+            modal.classList.add('hidden');
+        }
+
+        // Tutup modal jika mengklik background
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDeleteModal();
+            }
+        });
+
+        // Tutup modal dengan tombol ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeDeleteModal();
+            }
+        });
+        </script>
 </body>
 </html>

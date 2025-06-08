@@ -1,53 +1,222 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
 <head>
-    <title>Tambah Psikolog</title>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Psikolog - Admin | Asklepios</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-<h1>Tambah Psikolog</h1>
+<body class="bg-slate-50 text-gray-800 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-slate-200">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-brain text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-teal-800">Asklepios</h1>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center space-x-2 text-gray-600">
+                        <i class="fas fa-user-shield"></i>
+                        <span class="text-sm">Administrator</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 
-<form th:action="@{/admin/psychologists/save}" method="post">
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <!-- Page Header -->
+        <div class="mb-8 page-header">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-2">Tambah Psikolog</h2>
+                    <p class="text-gray-600">Daftarkan psikolog baru ke dalam sistem</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <a href="/admin/psychologists" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Kembali ke Daftar
+                    </a>
+                </div>
+            </div>
+        </div>
 
-    <label for="userId">Pilih User:</label>
-    <select id="userId" name="userId" required>
-        <option value="" disabled selected>Pilih user...</option>
-        <option th:each="u : ${users}"
-                th:value="${u.id}"
-                th:text="${u.fullName + ' (' + u.email + ')'}">
-        </option>
-    </select>
-    <br><br>
+        <!-- Form Container -->
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden form-container">
+                <!-- Form Header -->
+                <div class="bg-gradient-to-br from-teal-50 to-emerald-50 p-6 border-b border-slate-200">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-teal-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user-plus text-white text-xl"></i>
+                        </div>
+                    </div>
+                </div>
 
-    <label for="licenseNumber">License Number:</label>
-    <input type="text" id="licenseNumber" name="licenseNumber" required>
-    <br><br>
+                <!-- Form Body -->
+                <form th:action="@{/admin/psychologists/save}" method="post" class="p-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Left Column -->
+                        <div class="space-y-6">
+                            <!-- User Selection -->
+                            <div class="form-group">
+                                <label for="userId" class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-user mr-2 text-teal-600"></i>
+                                    Pilih User Client
+                                </label>
+                                <select id="userId" name="userId" required 
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300 bg-white">
+                                    <option value="" disabled selected>Pilih user client yang akan dijadikan psikolog...</option>
+                                    <option th:each="u : ${users}"
+                                            th:value="${u.id}"
+                                            th:text="${u.fullName + ' (' + u.email + ') - CLIENT'}">
+                                    </option>
+                                </select>
+                                <p class="mt-1 text-xs text-gray-500">Hanya user dengan role CLIENT yang dapat dijadikan psikolog. Role akan otomatis diubah menjadi PSYCHOLOGIST.</p>
+                            </div>
 
-    <label for="specialization">Spesialisasi:</label>
-    <input type="text" id="specialization" name="specialization">
-    <br><br>
+                            <!-- License Number -->
+                            <div class="form-group">
+                                <label for="licenseNumber" class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-certificate mr-2 text-teal-600"></i>
+                                    Nomor Lisensi
+                                </label>
+                                <input type="text" id="licenseNumber" name="licenseNumber" required 
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300"
+                                       placeholder="Contoh: PSI-001-2024">
+                            </div>
 
-    <label for="experienceYears">Pengalaman (tahun):</label>
-    <input type="number" id="experienceYears" name="experienceYears" min="0">
-    <br><br>
+                            <!-- Specialization -->
+                            <div class="form-group">
+                                <label for="specialization" class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-stethoscope mr-2 text-teal-600"></i>
+                                    Spesialisasi
+                                </label>
+                                <input type="text" id="specialization" name="specialization" 
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300"
+                                       placeholder="Contoh: Psikologi Klinis, Konseling, dll">
+                            </div>
 
-    <label for="price">Harga per sesi:</label>
-    <input type="number" id="price" name="price" step="0.01" required>
-    <br><br>
+                            <!-- Experience Years -->
+                            <div class="form-group">
+                                <label for="experienceYears" class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-chart-line mr-2 text-teal-600"></i>
+                                    Pengalaman (Tahun)
+                                </label>
+                                <input type="number" id="experienceYears" name="experienceYears" min="0" max="50"
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300"
+                                       placeholder="0">
+                            </div>
+                        </div>
 
-    <label for="bio">Bio:</label><br>
-    <textarea id="bio" name="bio" rows="4" cols="50"></textarea>
-    <br><br>
+                        <!-- Right Column -->
+                        <div class="space-y-6">
+                            <!-- Price -->
+                            <div class="form-group">
+                                <label for="price" class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-money-bill-wave mr-2 text-teal-600"></i>
+                                    Tarif Konsultasi (Rupiah)
+                                </label>
+                                <div class="relative">
+                                    <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500">Rp</span>
+                                    <input type="number" id="price" name="price" step="1000" min="0" required 
+                                           class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300"
+                                           placeholder="150000">
+                                </div>
+                            </div>
 
-    <label for="profilePicture">Foto (URL):</label>
-    <input type="text" id="profilePicture" name="profilePicture">
-    <br><br>
+                            <!-- Profile Picture -->
+                            <div class="form-group">
+                                <label for="profilePicture" class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-image mr-2 text-teal-600"></i>
+                                    Foto Profil (URL)
+                                </label>
+                                <input type="url" id="profilePicture" name="profilePicture" 
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300"
+                                       placeholder="https://example.com/foto.jpg">
+                                <p class="mt-1 text-xs text-gray-500">Kosongkan jika ingin menggunakan foto default</p>
+                            </div>
 
-    <button type="submit">Simpan</button>
-</form>
+                            <!-- Bio -->
+                            <div class="form-group">
+                                <label for="bio" class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-align-left mr-2 text-teal-600"></i>
+                                    Biografi
+                                </label>
+                                <textarea id="bio" name="bio" rows="4" 
+                                          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300 resize-none"
+                                          placeholder="Ceritakan latar belakang dan pengalaman psikolog..."></textarea>
+                            </div>
+                        </div>
+                    </div>
 
-<br>
-<a href="/admin/psychologists">← Kembali ke daftar</a>
+                    <!-- Form Actions -->
+                    <div class="mt-8 pt-6 border-t border-gray-200">
+                        <div class="flex flex-col sm:flex-row gap-3 sm:justify-end">
+                            <a href="/admin/psychologists" 
+                               class="inline-flex items-center justify-center px-6 py-3 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300">
+                                <i class="fas fa-times mr-2"></i>
+                                Batal
+                            </a>
+                            <button type="submit" 
+                                    class="btn-primary inline-flex items-center justify-center px-8 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-all duration-300">
+                                <i class="fas fa-save mr-2"></i>
+                                Simpan Psikolog
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+    </main>
 
+    <script>
+        // Form validation and enhancement
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const priceInput = document.getElementById('price');
+            const userSelect = document.getElementById('userId');
+
+            // Format price input
+            priceInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                e.target.value = value;
+            });
+
+            // Enhanced form validation
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+                const requiredFields = form.querySelectorAll('[required]');
+
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        field.classList.add('border-red-500');
+                        isValid = false;
+                    } else {
+                        field.classList.remove('border-red-500');
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Mohon lengkapi semua field yang wajib diisi');
+                }
+            });
+
+            // Remove error styling on input
+            const inputs = form.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    this.classList.remove('border-red-500');
+                });
+            });
+        });
+    </script>
 </body>
 </html>

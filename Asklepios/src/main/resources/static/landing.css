@@ -1,0 +1,277 @@
+/* Custom animations and styles for Asklepios */
+
+/* Navigation Animation */
+.nav-slide-down {
+    animation: slideDown 0.8s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Hero Section Animations */
+.hero-text {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: all 0.8s ease-out;
+}
+
+.hero-text.animate {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.hero-image {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: all 0.8s ease-out 0.3s;
+}
+
+.hero-image.animate {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Floating Card Animation */
+.floating-card {
+    animation: floatCard 3s ease-in-out infinite;
+}
+
+@keyframes floatCard {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-10px) rotate(1deg);
+    }
+}
+
+/* Floating Elements */
+.floating-element {
+    animation: floatElement 4s ease-in-out infinite;
+}
+
+.floating-element-reverse {
+    animation: floatElementReverse 3s ease-in-out infinite;
+}
+
+@keyframes floatElement {
+    0%, 100% {
+        transform: translateY(0px) scale(1);
+    }
+    50% {
+        transform: translateY(-20px) scale(1.1);
+    }
+}
+
+@keyframes floatElementReverse {
+    0%, 100% {
+        transform: translateY(0px) scale(1);
+    }
+    50% {
+        transform: translateY(15px) scale(0.9);
+    }
+}
+
+/* Section Fade In */
+.section-fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease-out;
+}
+
+.section-fade-in.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Service Cards Animation */
+.service-card {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.6s ease-out;
+}
+
+.service-card:nth-child(1) {
+    transition-delay: 0.1s;
+}
+
+.service-card:nth-child(2) {
+    transition-delay: 0.2s;
+}
+
+.service-card:nth-child(3) {
+    transition-delay: 0.3s;
+}
+
+.service-card.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Service Card Hover Effects */
+.service-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Stats Animation */
+.stat-item {
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.6s ease-out;
+}
+
+.stat-item:nth-child(1) {
+    transition-delay: 0.1s;
+}
+
+.stat-item:nth-child(2) {
+    transition-delay: 0.2s;
+}
+
+.stat-item:nth-child(3) {
+    transition-delay: 0.3s;
+}
+
+.stat-item:nth-child(4) {
+    transition-delay: 0.4s;
+}
+
+.stat-item.animate {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Floating Shapes in CTA */
+.floating-shape {
+    animation: floatShape 6s ease-in-out infinite;
+}
+
+.floating-shape-reverse {
+    animation: floatShapeReverse 8s ease-in-out infinite;
+}
+
+@keyframes floatShape {
+    0%, 100% {
+        transform: rotate(0deg) translateY(0px);
+    }
+    33% {
+        transform: rotate(5deg) translateY(-10px);
+    }
+    66% {
+        transform: rotate(-3deg) translateY(5px);
+    }
+}
+
+@keyframes floatShapeReverse {
+    0%, 100% {
+        transform: rotate(0deg) translateY(0px);
+    }
+    50% {
+        transform: rotate(-8deg) translateY(-15px);
+    }
+}
+
+/* Button Hover Effects */
+.hover\:scale-105:hover {
+    transform: scale(1.05);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #0d9488;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #0f766e;
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Focus states for accessibility */
+button:focus,
+a:focus {
+    outline: 2px solid #14b8a6;
+    outline-offset: 2px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-text, .hero-image {
+        transform: translateY(30px);
+    }
+    
+    .hero-text.animate, .hero-image.animate {
+        transform: translateY(0);
+    }
+    
+    .floating-card {
+        animation-duration: 4s;
+    }
+}
+
+/* Loading animation for images */
+img {
+    opacity: 0;
+    animation: fadeInImage 0.5s ease-out forwards;
+}
+
+@keyframes fadeInImage {
+    to {
+        opacity: 1;
+    }
+}
+
+/* Card shadows enhancement */
+.hover\:shadow-2xl:hover {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.hover\:shadow-xl:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Text selection styling */
+::selection {
+    background-color: #14b8a6;
+    color: white;
+}
+
+/* Backdrop blur support */
+@supports (backdrop-filter: blur(10px)) {
+    .backdrop-blur-sm {
+        backdrop-filter: blur(4px);
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .text-gray-600 {
+        color: #374151;
+    }
+    
+    .text-gray-400 {
+        color: #6b7280;
+    }
+}

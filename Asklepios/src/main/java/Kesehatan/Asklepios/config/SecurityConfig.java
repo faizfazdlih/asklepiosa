@@ -21,11 +21,12 @@ public class SecurityConfig {
         return http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/client/**").hasRole("CLIENT")
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/psychologist/**").hasRole("PSYCHOLOGIST")
-                .anyRequest().authenticated()
+            .requestMatchers("/", "/landing", "/css/**", "/js/**", "/images/**", "/auth/**").permitAll()
+            .requestMatchers("/client/**").hasRole("CLIENT")
+            .requestMatchers("/admin/**").hasRole("ADMIN")
+            .requestMatchers("/psychologist/**").hasRole("PSYCHOLOGIST")
+            .anyRequest().authenticated()
+            
             )
             .formLogin(form -> form
                 .loginPage("/auth/login")

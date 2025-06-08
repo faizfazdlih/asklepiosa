@@ -8,18 +8,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
-    @GetMapping("/")
-    public String home(Authentication authentication) {
-        // Redirect berdasarkan role pengguna
-        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CLIENT"))) {
-            return "redirect:/client/dashboard";
-        } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_PSYCHOLOGIST"))) {
-            return "redirect:/psychologist/dashboard";
-        } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-            return "redirect:/admin/dashboard";
+        @GetMapping("/")
+        public String home(Authentication authentication) {
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return "landing"; // tampilkan landing.html untuk user belum login
+            }
+
+            if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CLIENT"))) {
+                return "redirect:/client/dashboard";
+            } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_PSYCHOLOGIST"))) {
+                return "redirect:/psychologist/dashboard";
+            } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+                return "redirect:/admin/dashboard";
+            }
+
+            return "landing"; // fallback jika tidak punya role apa pun
         }
-        
-        // Default fallback
-        return "redirect:/auth/login";
-    }
+
 }

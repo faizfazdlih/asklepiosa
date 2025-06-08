@@ -1,56 +1,334 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
 <head>
-    <title>Edit Psikolog</title>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Psikolog - Admin | Asklepios</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/admin/psychologists/edit.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-<h1>Edit Psikolog</h1>
+<body class="bg-slate-50 text-gray-800 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-slate-200">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-brain text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-teal-800">Asklepios</h1>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center space-x-2 text-gray-600">
+                        <i class="fas fa-user-shield"></i>
+                        <span class="text-sm">Administrator</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 
-<form th:action="@{/admin/psychologists/update}" method="post">
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <!-- Page Header -->
+        <div class="mb-8 page-header">
+            <div class="flex items-center space-x-3 mb-6">
+                <a href="/admin/psychologists" 
+                   class="inline-flex items-center text-teal-600 hover:text-teal-800 transition-colors duration-300">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    <span class="text-sm font-medium">Kembali ke Daftar</span>
+                </a>
+            </div>
+            <div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Edit Psikolog</h2>
+                <p class="text-gray-600">Perbarui informasi psikolog yang terdaftar</p>
+            </div>
+        </div>
 
-    <input type="hidden" name="id" th:value="${psychologist.id}" />
+        <!-- Edit Form -->
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden form-container">
+                <!-- Form Header -->
+                <div class="bg-gradient-to-br from-teal-50 to-emerald-50 px-8 py-6 border-b border-slate-200">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-teal-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-user-edit text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-900">Informasi Psikolog</h3>
+                            <p class="text-sm text-gray-600">Lengkapi semua field yang diperlukan</p>
+                        </div>
+                    </div>
+                </div>
 
-    <label for="userId">Pilih User:</label>
-    <select id="userId" name="userId" required>
-        <option value="" disabled>Pilih user...</option>
-        <option th:each="u : ${users}"
-                th:value="${u.id}"
-                th:text="${u.fullName + ' (' + u.email + ')'}"
-                th:selected="${u.id == psychologist.user.id}">
-        </option>
-    </select>
-    <br><br>
+                <!-- Form Body -->
+                <form th:action="@{/admin/psychologists/update}" method="post" class="p-8">
+                    <input type="hidden" name="id" th:value="${psychologist.id}" />
 
-    <label for="licenseNumber">License Number:</label>
-    <input type="text" id="licenseNumber" name="licenseNumber" required th:value="${psychologist.licenseNumber}">
-    <br><br>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Left Column -->
+                        <div class="space-y-6">
+                            <!-- User Selection -->
+                            <div class="form-group">
+                                <label for="userId" class="form-label">
+                                    <i class="fas fa-user mr-2 text-teal-600"></i>
+                                    Pilih User
+                                    <span class="text-red-500">*</span>
+                                </label>
+                                <select id="userId" name="userId" required class="form-select">
+                                    <option value="" disabled>Pilih user...</option>
+                                    <option th:each="u : ${users}"
+                                            th:value="${u.id}"
+                                            th:text="${u.fullName + ' (' + u.email + ')'}"
+                                            th:selected="${u.id == psychologist.user.id}">
+                                    </option>
+                                </select>
+                            </div>
 
-    <label for="specialization">Spesialisasi:</label>
-    <input type="text" id="specialization" name="specialization" th:value="${psychologist.specialization}">
-    <br><br>
+                            <!-- License Number -->
+                            <div class="form-group">
+                                <label for="licenseNumber" class="form-label">
+                                    <i class="fas fa-certificate mr-2 text-teal-600"></i>
+                                    Nomor Lisensi
+                                    <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" 
+                                       id="licenseNumber" 
+                                       name="licenseNumber" 
+                                       required 
+                                       th:value="${psychologist.licenseNumber}"
+                                       class="form-input"
+                                       placeholder="Masukkan nomor lisensi">
+                            </div>
 
-    <label for="experienceYears">Pengalaman (tahun):</label>
-    <input type="number" id="experienceYears" name="experienceYears" min="0" th:value="${psychologist.experienceYears}">
-    <br><br>
+                            <!-- Specialization -->
+                            <div class="form-group">
+                                <label for="specialization" class="form-label">
+                                    <i class="fas fa-stethoscope mr-2 text-teal-600"></i>
+                                    Spesialisasi
+                                </label>
+                                <input type="text" 
+                                       id="specialization" 
+                                       name="specialization" 
+                                       th:value="${psychologist.specialization}"
+                                       class="form-input"
+                                       placeholder="Contoh: Psikologi Klinis, Terapi Keluarga">
+                            </div>
 
-    <label for="price">Harga per sesi:</label>
-    <input type="number" id="price" name="price" step="0.01" required th:value="${psychologist.price}">
-    <br><br>
+                            <!-- Experience Years -->
+                            <div class="form-group">
+                                <label for="experienceYears" class="form-label">
+                                    <i class="fas fa-clock mr-2 text-teal-600"></i>
+                                    Pengalaman (tahun)
+                                </label>
+                                <input type="number" 
+                                       id="experienceYears" 
+                                       name="experienceYears" 
+                                       min="0" 
+                                       th:value="${psychologist.experienceYears}"
+                                       class="form-input"
+                                       placeholder="0">
+                            </div>
+                        </div>
 
-    <label for="bio">Bio:</label><br>
-    <textarea id="bio" name="bio" rows="4" cols="50" th:text="${psychologist.bio}"></textarea>
-    <br><br>
+                        <!-- Right Column -->
+                        <div class="space-y-6">
+                            <!-- Price -->
+                            <div class="form-group">
+                                <label for="price" class="form-label">
+                                    <i class="fas fa-money-bill-wave mr-2 text-teal-600"></i>
+                                    Tarif per Sesi (Rp)
+                                    <span class="text-red-500">*</span>
+                                </label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-medium">Rp</span>
+                                    <input type="number" 
+                                           id="price" 
+                                           name="price" 
+                                           step="1000" 
+                                           required 
+                                           th:value="${psychologist.price}"
+                                           class="form-input pl-12"
+                                           placeholder="150000">
+                                </div>
+                            </div>
 
-    <label for="profilePicture">Foto (URL):</label>
-    <input type="text" id="profilePicture" name="profilePicture" th:value="${psychologist.profilePicture}">
-    <br><br>
+                            <!-- Profile Picture URL -->
+                            <div class="form-group">
+                                <label for="profilePicture" class="form-label">
+                                    <i class="fas fa-image mr-2 text-teal-600"></i>
+                                    URL Foto Profil
+                                </label>
+                                <input type="url" 
+                                       id="profilePicture" 
+                                       name="profilePicture" 
+                                       th:value="${psychologist.profilePicture}"
+                                       class="form-input"
+                                       placeholder="https://example.com/photo.jpg">
+                                <p class="text-xs text-gray-500 mt-2">
+                                    <i class="fas fa-info-circle mr-1"></i>
+                                    Masukkan URL foto profil yang valid
+                                </p>
+                            </div>
 
-    <button type="submit">Update</button>
-</form>
+                            <!-- Bio -->
+                            <div class="form-group">
+                                <label for="bio" class="form-label">
+                                    <i class="fas fa-file-alt mr-2 text-teal-600"></i>
+                                    Biografi
+                                </label>
+                                <textarea id="bio" 
+                                          name="bio" 
+                                          rows="4" 
+                                          th:text="${psychologist.bio}"
+                                          class="form-textarea"
+                                          placeholder="Ceritakan sedikit tentang latar belakang dan pengalaman..."></textarea>
+                            </div>
+                        </div>
+                    </div>
 
-<br>
-<a href="/admin/psychologists">← Kembali ke daftar</a>
+                    <!-- Form Actions -->
+                    <div class="flex items-center justify-end space-x-4 mt-8 pt-6 border-t border-gray-200">
+                        <a href="/admin/psychologists" 
+                           class="btn-secondary inline-flex items-center px-6 py-3 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300">
+                            <i class="fas fa-times mr-2"></i>
+                            Batal
+                        </a>
+                        <button type="submit" 
+                                class="btn-primary inline-flex items-center px-8 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-all duration-300">
+                            <i class="fas fa-save mr-2"></i>
+                            Simpan Perubahan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
 
+    <!-- Success/Error Messages -->
+    <div id="notification" class="fixed top-4 right-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg border border-gray-200 p-4 max-w-sm">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <i id="notificationIcon" class="text-xl"></i>
+                </div>
+                <div class="ml-3">
+                    <p id="notificationMessage" class="text-sm font-medium text-gray-900"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Form validation and enhancement
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const inputs = form.querySelectorAll('input[required], select[required]');
+            
+            // Add real-time validation
+            inputs.forEach(input => {
+                input.addEventListener('blur', validateField);
+                input.addEventListener('input', clearFieldError);
+            });
+            
+            // Form submission handler
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+                
+                inputs.forEach(input => {
+                    if (!validateField.call(input)) {
+                        isValid = false;
+                    }
+                });
+                
+                if (!isValid) {
+                    e.preventDefault();
+                    showNotification('Mohon lengkapi semua field yang diperlukan', 'error');
+                }
+            });
+        });
+        
+        function validateField() {
+            const field = this;
+            const value = field.value.trim();
+            
+            if (field.hasAttribute('required') && !value) {
+                showFieldError(field, 'Field ini wajib diisi');
+                return false;
+            }
+            
+            if (field.type === 'email' && value && !isValidEmail(value)) {
+                showFieldError(field, 'Format email tidak valid');
+                return false;
+            }
+            
+            if (field.type === 'url' && value && !isValidURL(value)) {
+                showFieldError(field, 'Format URL tidak valid');
+                return false;
+            }
+            
+            clearFieldError(field);
+            return true;
+        }
+        
+        function showFieldError(field, message) {
+            clearFieldError(field);
+            field.classList.add('border-red-500', 'focus:ring-red-500');
+            
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'field-error text-red-500 text-xs mt-1';
+            errorDiv.innerHTML = `<i class="fas fa-exclamation-circle mr-1"></i>${message}`;
+            
+            field.parentNode.appendChild(errorDiv);
+        }
+        
+        function clearFieldError(field) {
+            if (typeof field === 'object' && field.target) {
+                field = field.target;
+            }
+            
+            field.classList.remove('border-red-500', 'focus:ring-red-500');
+            const errorDiv = field.parentNode.querySelector('.field-error');
+            if (errorDiv) {
+                errorDiv.remove();
+            }
+        }
+        
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+        
+        function isValidURL(url) {
+            try {
+                new URL(url);
+                return true;
+            } catch {
+                return false;
+            }
+        }
+        
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            const icon = document.getElementById('notificationIcon');
+            const messageEl = document.getElementById('notificationMessage');
+            
+            messageEl.textContent = message;
+            
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle text-green-500 text-xl';
+            } else {
+                icon.className = 'fas fa-exclamation-circle text-red-500 text-xl';
+            }
+            
+            notification.classList.remove('hidden');
+            
+            setTimeout(() => {
+                notification.classList.add('hidden');
+            }, 5000);
+        }
+    </script>
 </body>
 </html>

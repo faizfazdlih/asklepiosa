@@ -1,0 +1,404 @@
+/* Consultation Detail Styles for Asklepios */
+
+/* Base animations and transitions */
+* {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Page header animation */
+.page-header {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Card animations */
+.info-card {
+    animation: slideUp 0.8s ease-out 0.2s both;
+    transition: all 0.3s ease-out;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+.update-card {
+    animation: slideUp 0.8s ease-out 0.4s both;
+    transition: all 0.3s ease-out;
+}
+
+.action-card {
+    animation: slideUp 0.8s ease-out 0.6s both;
+    transition: all 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Info item animations */
+.info-item {
+    transition: all 0.3s ease-out;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+.info-item:hover {
+    background-color: #f8fafc;
+    transform: translateX(5px);
+}
+
+/* Status badge animations */
+.status-badge {
+    transition: all 0.3s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.status-badge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.5s ease-out;
+}
+
+.status-badge:hover::before {
+    left: 100%;
+}
+
+/* Button animations */
+.btn-primary {
+    transition: all 0.3s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(20, 184, 166, 0.4);
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease-out;
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+.btn-secondary {
+    transition: all 0.3s ease-out;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Form animations */
+.form-group {
+    transition: all 0.3s ease-out;
+}
+
+.form-select, .form-textarea {
+    transition: all 0.3s ease-out;
+}
+
+.form-select:focus, .form-textarea:focus {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+}
+
+.form-group:hover {
+    transform: translateY(-2px);
+}
+
+/* Avatar animations */
+.info-card .w-16 {
+    transition: all 0.3s ease-out;
+}
+
+.info-card:hover .w-16 {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Floating animation for icons */
+.info-card i {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+/* Card header gradient effects */
+.info-card .bg-teal-50 {
+    background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+}
+
+.info-card .bg-emerald-50 {
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+}
+
+.info-card .bg-slate-50 {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+/* Enhanced button ripple effect */
+.btn-primary.btn-ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary.btn-ripple::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease-out, height 0.3s ease-out;
+}
+
+.btn-primary.btn-ripple:active::after {
+    width: 300px;
+    height: 300px;
+}
+
+/* Loading states */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+    position: relative;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #14b8a6;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Text animations */
+.info-item p {
+    transition: all 0.3s ease-out;
+}
+
+.info-item:hover p {
+    color: #0f766e;
+}
+
+/* Card border hover effects */
+.info-card {
+    position: relative;
+}
+
+.info-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 0.75rem;
+    background: linear-gradient(45deg, #14b8a6, #0d9488, #0f766e);
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.3s ease-out;
+}
+
+.info-card:hover::before {
+    opacity: 0.1;
+}
+
+/* Print styles */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    .info-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+    
+    .info-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .btn-primary, .btn-secondary {
+        display: none;
+    }
+    
+    .update-card, .action-card {
+        display: none;
+    }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .info-card {
+        margin: 0 -0.5rem;
+    }
+    
+    .info-card:hover {
+        transform: translateY(-2px);
+    }
+    
+    .grid {
+        gap: 1rem;
+    }
+    
+    .info-item:hover {
+        transform: none;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .info-card {
+        border: 2px solid #374151;
+    }
+    
+    .status-badge {
+        border-width: 2px;
+    }
+    
+    .btn-primary {
+        border: 2px solid #0f766e;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .info-card:hover {
+        transform: none;
+    }
+    
+    .btn-primary:hover {
+        transform: none;
+    }
+}
+
+/* Dark mode support (if needed) */
+@media (prefers-color-scheme: dark) {
+    .info-card {
+        background-color: #1f2937;
+        border-color: #374151;
+    }
+    
+    .info-item:hover {
+        background-color: #374151;
+    }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #0d9488;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #0f766e;
+}
+
+/* Enhanced focus states for accessibility */
+button:focus,
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid #14b8a6;
+    outline-offset: 2px;
+}
+
+/* Smooth appearance for dynamic content */
+.dynamic-content {
+    animation: slideInFade 0.5s ease-out;
+}
+
+@keyframes slideInFade {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Enhanced card transitions */
+.info-card, .update-card, .action-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+

@@ -1,0 +1,327 @@
+/* Consultation List Styles for Asklepios */
+
+/* Base animations and transitions */
+* {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Page header animation */
+.page-header {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Stats cards hover effects */
+.stats-card {
+    transition: all 0.3s ease-out;
+    cursor: pointer;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+/* Table container animation */
+.table-container {
+    animation: slideUp 0.8s ease-out 0.3s both;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Table row hover effects */
+.consultation-row {
+    transition: all 0.2s ease-out;
+}
+
+.consultation-row:hover {
+    background-color: #f8fafc;
+    transform: translateX(5px);
+}
+
+/* Status badge animations */
+.status-badge {
+    transition: all 0.3s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.status-badge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.5s ease-out;
+}
+
+.status-badge:hover::before {
+    left: 100%;
+}
+
+/* Button hover effects */
+button, .btn {
+    transition: all 0.3s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+button:hover, .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Focus states for accessibility */
+button:focus,
+a:focus,
+input:focus,
+select:focus {
+    outline: 2px solid #14b8a6;
+    outline-offset: 2px;
+}
+
+/* Loading states */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #14b8a6;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive table */
+@media (max-width: 768px) {
+    .table-container {
+        margin: 0 -1rem;
+        border-radius: 0;
+    }
+    
+    table {
+        font-size: 0.875rem;
+    }
+    
+    th, td {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .consultation-row:hover {
+        transform: none;
+    }
+}
+
+/* Custom scrollbar for table */
+.table-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: #0d9488;
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: #0f766e;
+}
+
+/* Floating animation for icons */
+.stats-card i {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Pagination hover effects */
+.pagination button {
+    transition: all 0.2s ease-out;
+}
+
+.pagination button:hover {
+    transform: scale(1.1);
+    background-color: #0d9488;
+    color: white;
+}
+
+/* Enhanced button ripple effect */
+.btn-ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-ripple::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease-out, height 0.3s ease-out;
+}
+
+.btn-ripple:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Filter section animation */
+.filter-section {
+    animation: fadeIn 0.6s ease-out 0.4s both;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Enhanced form elements */
+input[type="date"], select {
+    transition: all 0.3s ease-out;
+}
+
+input[type="date"]:focus, select:focus {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+}
+
+/* Table header animation */
+thead th {
+    position: relative;
+    overflow: hidden;
+}
+
+thead th::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #14b8a6;
+    transition: width 0.3s ease-out;
+}
+
+thead th:hover::after {
+    width: 100%;
+}
+
+/* Action buttons enhancement */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    opacity: 0.7;
+    transition: opacity 0.3s ease-out;
+}
+
+.consultation-row:hover .action-buttons {
+    opacity: 1;
+}
+
+/* Smooth appearance for dynamic content */
+.dynamic-content {
+    animation: slideInFade 0.5s ease-out;
+}
+
+@keyframes slideInFade {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .stats-card {
+        border: 2px solid #374151;
+    }
+    
+    .consultation-row:hover {
+        background-color: #e5e7eb;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Print styles */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    .table-container {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+    
+    .consultation-row:hover {
+        background-color: transparent;
+        transform: none;
+    }
+}
