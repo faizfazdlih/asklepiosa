@@ -1,137 +1,241 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
 <head>
     <title>Tambah Jadwal - Asklepios</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
-        .schedule-container {
-            max-width: 600px;
-            margin: 0 auto;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-        .nav-links a {
-            text-decoration: none;
-            color: #007bff;
-            font-weight: bold;
-        }
-        .schedule-form {
-            background: white;
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
-        input[type="date"], input[type="time"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-        .required {
-            color: #dc3545;
-        }
-        .button-group {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-            margin-top: 30px;
-        }
-        .save-button {
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .save-button:hover {
-            background-color: #218838;
-        }
-        .cancel-button {
-            padding: 10px 20px;
-            background-color: #6c757d;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-        .cancel-button:hover {
-            background-color: #5a6268;
-        }
-        .error {
-            color: #dc3545;
-            padding: 10px;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            border-radius: 4px;
-            margin-bottom: 20px;
+        .floating-element { animation: float 3s ease-in-out infinite; }
+        .nav-slide-down { animation: slideDown 0.5s ease-out; }
+        .section-fade-in { animation: fadeIn 0.8s ease-out; }
+        .form-fade-in { animation: fadeIn 1s ease-out; }
+        .floating-shape { animation: float 4s ease-in-out infinite; }
+        .floating-shape-reverse { animation: float 4s ease-in-out infinite reverse; }
+
+        .input-field:focus {
+            box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
         }
     </style>
 </head>
-<body>
-    <div class="schedule-container">
-        <div class="header">
-            <h1>Tambah Jadwal</h1>
-            <div class="nav-links">
-                <a href="/psychologist/dashboard">Dashboard</a>
-                <a href="/psychologist/profile">Profil</a>
-                <a href="/psychologist/schedules">Jadwal</a>
-                <a href="/psychologist/consultations">Konsultasi</a>
+<body class="bg-slate-50 text-gray-800 overflow-x-hidden">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50 nav-slide-down">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-brain text-white text-lg"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-teal-800">Asklepios</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/psychologist/dashboard" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                    </a>
+                    <a href="/psychologist/profile" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
+                        <i class="fas fa-user mr-2"></i>Profil
+                    </a>
+                    <a href="/psychologist/schedules" class="bg-teal-50 text-teal-700 font-semibold px-3 py-2 rounded-lg transition-all duration-300">
+                        <i class="fas fa-clock mr-2"></i>Jadwal
+                    </a>
+                    <a href="/psychologist/consultations" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
+                        <i class="fas fa-comments mr-2"></i>Konsultasi
+                    </a>
+                    <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
             </div>
         </div>
+    </nav>
 
-        <div th:if="${error}" th:text="${error}" class="error"></div>
+    <!-- Floating Background Elements -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="absolute top-20 left-10 w-20 h-20 bg-teal-100 rounded-full opacity-50 floating-shape"></div>
+        <div class="absolute top-40 right-20 w-16 h-16 bg-emerald-100 rounded-full opacity-40 floating-shape-reverse"></div>
+        <div class="absolute bottom-20 left-1/4 w-24 h-24 bg-blue-100 rounded-full opacity-30 floating-shape"></div>
+        <div class="absolute bottom-40 right-1/3 w-12 h-12 bg-green-100 rounded-full opacity-50 floating-shape-reverse"></div>
+    </div>
 
-        <div class="schedule-form">
-            <form th:action="@{/psychologist/schedules/add}" method="post">
-                <div class="form-group">
-                    <label for="date">Tanggal <span class="required">*</span></label>
-                    <input type="date" id="date" name="date" required />
+    <div class="pt-24 pb-8 relative z-10">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <!-- Error Message -->
+            <div th:if="${error}" class="mb-6 section-fade-in">
+                <div class="bg-red-100 border border-red-300 text-red-700 px-6 py-4 rounded-2xl">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-triangle text-red-500 mr-3"></i>
+                        <span th:text="${error}">Error message</span>
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="startTime">Waktu Mulai <span class="required">*</span></label>
-                    <input type="time" id="startTime" name="startTime" required />
+            </div>
+
+            <!-- Main Form Container -->
+            <div class="form-fade-in">
+                <div class="bg-white rounded-2xl border border-slate-200 hover:border-teal-300 transition-all duration-500 hover:shadow-2xl overflow-hidden">
+                    <!-- Header -->
+                    <div class="bg-gradient-to-r from-teal-50 to-emerald-50 p-6 border-b border-slate-200">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-900 flex items-center">
+                                    <i class="fas fa-plus-circle text-teal-600 mr-3"></i>
+                                    Tambah Jadwal Baru
+                                </h2>
+                                <p class="text-gray-600 mt-2">Buat slot waktu konsultasi yang tersedia untuk klien</p>
+                            </div>
+                            <div class="hidden md:block">
+                                <div class="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-calendar-plus text-teal-600 text-2xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Content -->
+                    <div class="p-8">
+                        <form th:action="@{/psychologist/schedules/add}" method="post" class="space-y-6">
+                            <!-- Date Input -->
+                            <div class="form-group">
+                                <label for="date" class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                    <i class="fas fa-calendar-day text-teal-600 mr-2"></i>
+                                    Tanggal Konsultasi
+                                    <span class="text-red-500 ml-1">*</span>
+                                </label>
+                                <input type="date" 
+                                       id="date" 
+                                       name="date" 
+                                       required 
+                                       class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300 bg-white hover:border-teal-300 focus:shadow-lg"
+                                       placeholder="Pilih tanggal konsultasi" />
+                                <p class="text-xs text-gray-500 mt-2">
+                                    <i class="fas fa-info-circle mr-1"></i>
+                                    Pilih tanggal untuk slot konsultasi yang akan dibuat
+                                </p>
+                            </div>
+
+                            <!-- Time Inputs Grid -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Start Time -->
+                                <div class="form-group">
+                                    <label for="startTime" class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                        <i class="fas fa-clock text-green-600 mr-2"></i>
+                                        Waktu Mulai
+                                        <span class="text-red-500 ml-1">*</span>
+                                    </label>
+                                    <input type="time" 
+                                           id="startTime" 
+                                           name="startTime" 
+                                           required 
+                                           class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300 bg-white hover:border-teal-300 focus:shadow-lg"
+                                           placeholder="Waktu mulai konsultasi" />
+                                    <p class="text-xs text-gray-500 mt-2">
+                                        <i class="fas fa-play text-green-500 mr-1"></i>
+                                        Jam dimulainya sesi konsultasi
+                                    </p>
+                                </div>
+
+                                <!-- End Time -->
+                                <div class="form-group">
+                                    <label for="endTime" class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                        <i class="fas fa-clock text-red-600 mr-2"></i>
+                                        Waktu Selesai
+                                        <span class="text-red-500 ml-1">*</span>
+                                    </label>
+                                    <input type="time" 
+                                           id="endTime" 
+                                           name="endTime" 
+                                           required 
+                                           class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300 bg-white hover:border-teal-300 focus:shadow-lg"
+                                           placeholder="Waktu selesai konsultasi" />
+                                    <p class="text-xs text-gray-500 mt-2">
+                                        <i class="fas fa-stop text-red-500 mr-1"></i>
+                                        Jam berakhirnya sesi konsultasi
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Guidelines Card -->
+                            <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 mt-6">
+                                <div class="flex items-start space-x-3">
+                                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                        <i class="fas fa-lightbulb text-blue-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-blue-900 mb-2">Panduan Membuat Jadwal</h4>
+                                        <ul class="text-blue-800 text-sm space-y-1">
+                                            <li class="flex items-start">
+                                                <i class="fas fa-check text-blue-600 mr-2 mt-0.5 text-xs"></i>
+                                                Durasi konsultasi yang direkomendasikan adalah 45-60 menit
+                                            </li>
+                                            <li class="flex items-start">
+                                                <i class="fas fa-check text-blue-600 mr-2 mt-0.5 text-xs"></i>
+                                                Berikan jeda minimal 15 menit antara sesi untuk persiapan
+                                            </li>
+                                            <li class="flex items-start">
+                                                <i class="fas fa-check text-blue-600 mr-2 mt-0.5 text-xs"></i>
+                                                Pastikan tanggal dan waktu tidak bertabrakan dengan jadwal lain
+                                            </li>
+                                            <li class="flex items-start">
+                                                <i class="fas fa-check text-blue-600 mr-2 mt-0.5 text-xs"></i>
+                                                Jadwal yang sudah dibuat dapat diubah selama belum ada yang memesan
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="flex flex-col sm:flex-row gap-4 justify-end pt-6 border-t border-slate-200">
+                                <a href="/psychologist/schedules" 
+                                   class="order-2 sm:order-1 inline-flex items-center justify-center px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-all duration-300 hover:shadow-lg">
+                                    <i class="fas fa-times mr-2"></i>
+                                    Batal
+                                </a>
+                                <button type="submit" 
+                                        class="order-1 sm:order-2 inline-flex items-center justify-center px-8 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white font-bold rounded-xl transition-all duration-300 hover:shadow-xl hover:scale-105 transform">
+                                    <i class="fas fa-save mr-2"></i>
+                                    Simpan Jadwal
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="endTime">Waktu Selesai <span class="required">*</span></label>
-                    <input type="time" id="endTime" name="endTime" required />
-                </div>
-                
-                <div class="button-group">
-                    <a href="/psychologist/schedules" class="cancel-button">Batal</a>
-                    <button type="submit" class="save-button">Simpan</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
+
+    <script>
+        // Set minimum date to today
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateInput = document.getElementById('date');
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+            dateInput.setAttribute('min', todayStr);
+            
+            // Add smooth focus effects
+            const inputs = document.querySelectorAll('input[type="date"], input[type="time"]');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.classList.add('scale-105');
+                });
+                input.addEventListener('blur', function() {
+                    this.parentElement.classList.remove('scale-105');
+                });
+            });
+        });
+    </script>
 </body>
 </html>

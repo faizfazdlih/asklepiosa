@@ -1,147 +1,210 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
 <head>
     <title>Edit Profil Psikolog - Asklepios</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
-        .profile-container {
-            max-width: 800px;
-            margin: 0 auto;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-        .nav-links a {
-            text-decoration: none;
-            color: #007bff;
-            font-weight: bold;
-        }
-        .profile-form {
-            background: white;
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
-        input[type="text"], input[type="number"], input[type="url"], textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-        textarea {
-            height: 120px;
-            resize: vertical;
-        }
-        .required {
-            color: #dc3545;
-        }
-        .button-group {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-            margin-top: 30px;
-        }
-        .save-button {
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .save-button:hover {
-            background-color: #218838;
-        }
-        .cancel-button {
-            padding: 10px 20px;
-            background-color: #6c757d;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-        .cancel-button:hover {
-            background-color: #5a6268;
-        }
+        .floating-element { animation: float 3s ease-in-out infinite; }
+        .nav-slide-down { animation: slideDown 0.5s ease-out; }
+        .section-fade-in { animation: fadeIn 0.8s ease-out; }
+        .form-fade-in { animation: fadeIn 1s ease-out; }
+        .floating-shape { animation: float 4s ease-in-out infinite; }
+        .floating-shape-reverse { animation: float 4s ease-in-out infinite reverse; }
     </style>
 </head>
-<body>
-    <div class="profile-container">
-        <div class="header">
-            <h1>Edit Profil Psikolog</h1>
-            <div class="nav-links">
-                <a href="/psychologist/dashboard">Dashboard</a>
-                <a href="/psychologist/schedules">Jadwal</a>
-                <a href="/psychologist/consultations">Konsultasi</a>
-                <a href="/auth/logout">Logout</a>
+<body class="bg-slate-50 text-gray-800 overflow-x-hidden">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50 nav-slide-down">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-brain text-white text-lg"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-teal-800">Asklepios</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/psychologist/dashboard" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                    </a>
+                    <a href="/psychologist/profile" class="bg-teal-50 text-teal-700 font-semibold px-3 py-2 rounded-lg transition-all duration-300">
+                        <i class="fas fa-user mr-2"></i>Profil
+                    </a>
+                    <a href="/psychologist/schedules" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
+                        <i class="fas fa-clock mr-2"></i>Jadwal
+                    </a>
+                    <a href="/psychologist/consultations" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
+                        <i class="fas fa-comments mr-2"></i>Konsultasi
+                    </a>
+                    <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
             </div>
         </div>
+    </nav>
 
-        <div class="profile-form">
-            <form th:action="@{/psychologist/profile/edit}" method="post">
-                <input type="hidden" name="id" th:value="${profile.id}" />
-                
-                <div class="form-group">
-                    <label for="licenseNumber">Nomor Lisensi <span class="required">*</span></label>
-                    <input type="text" id="licenseNumber" name="licenseNumber" th:value="${profile.licenseNumber}" required />
+    <div class="pt-24 pb-8">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <!-- Profile Form -->
+            <div class="form-fade-in">
+                <div class="bg-white rounded-2xl border border-slate-200 hover:border-teal-300 transition-all duration-500 hover:shadow-2xl overflow-hidden">
+                    <div class="bg-gradient-to-r from-teal-50 to-emerald-50 p-6 border-b border-slate-200">
+                        <h2 class="text-2xl font-bold text-gray-900 flex items-center">
+                            <i class="fas fa-id-card text-teal-600 mr-3"></i>
+                            Informasi Profil
+                        </h2>
+                        <p class="text-gray-600 mt-2">Lengkapi data profil Anda dengan informasi yang akurat</p>
+                    </div>
+
+                    <div class="p-8">
+                        <form th:action="@{/psychologist/profile/edit}" method="post" class="space-y-6">
+                            <input type="hidden" name="id" th:value="${profile.id}" />
+                            
+                            <!-- License Number -->
+                            <div class="form-group">
+                                <label for="licenseNumber" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    <i class="fas fa-certificate text-teal-600 mr-2"></i>
+                                    Nomor Lisensi 
+                                    <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" 
+                                       id="licenseNumber" 
+                                       name="licenseNumber" 
+                                       th:value="${profile.licenseNumber}" 
+                                       required 
+                                       class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300 hover:border-teal-300" 
+                                       placeholder="Masukkan nomor lisensi Anda" />
+                            </div>
+                            
+                            <!-- Specialization -->
+                            <div class="form-group">
+                                <label for="specialization" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    <i class="fas fa-star text-teal-600 mr-2"></i>
+                                    Spesialisasi
+                                </label>
+                                <input type="text" 
+                                       id="specialization" 
+                                       name="specialization" 
+                                       th:value="${profile.specialization}" 
+                                       class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300 hover:border-teal-300" 
+                                       placeholder="Contoh: Psikologi Klinis, Psikologi Anak, dll." />
+                            </div>
+                            
+                            <!-- Experience Years -->
+                            <div class="form-group">
+                                <label for="experienceYears" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    <i class="fas fa-clock text-teal-600 mr-2"></i>
+                                    Pengalaman (tahun) 
+                                    <span class="text-red-500">*</span>
+                                </label>
+                                <input type="number" 
+                                       id="experienceYears" 
+                                       name="experienceYears" 
+                                       th:value="${profile.experienceYears}" 
+                                       min="0" 
+                                       required 
+                                       class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300 hover:border-teal-300" 
+                                       placeholder="Masukkan jumlah tahun pengalaman" />
+                            </div>
+                            
+                            <!-- Price -->
+                            <div class="form-group">
+                                <label for="price" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    <i class="fas fa-money-bill-wave text-teal-600 mr-2"></i>
+                                    Harga Konsultasi (Rp) 
+                                    <span class="text-red-500">*</span>
+                                </label>
+                                <input type="number" 
+                                       id="price" 
+                                       name="price" 
+                                       th:value="${profile.price}" 
+                                       min="0" 
+                                       step="1000" 
+                                       required 
+                                       class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300 hover:border-teal-300" 
+                                       placeholder="Contoh: 150000" />
+                            </div>
+                            
+                            <!-- Profile Picture URL -->
+                            <div class="form-group">
+                                <label for="profilePicture" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    <i class="fas fa-image text-teal-600 mr-2"></i>
+                                    URL Foto Profil
+                                </label>
+                                <input type="url" 
+                                       id="profilePicture" 
+                                       name="profilePicture" 
+                                       th:value="${profile.profilePicture}" 
+                                       class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300 hover:border-teal-300" 
+                                       placeholder="https://example.com/foto-profil.jpg" />
+                            </div>
+                            
+                            <!-- Bio -->
+                            <div class="form-group">
+                                <label for="bio" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    <i class="fas fa-user-circle text-teal-600 mr-2"></i>
+                                    Bio Profesional
+                                </label>
+                                <textarea id="bio" 
+                                          name="bio" 
+                                          th:text="${profile.bio}" 
+                                          rows="5" 
+                                          class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300 hover:border-teal-300 resize-vertical" 
+                                          placeholder="Ceritakan tentang diri Anda, pendidikan, pengalaman, dan pendekatan dalam konseling..."></textarea>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-slate-200">
+                                <a href="/psychologist/profile" 
+                                   class="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-all duration-300 hover:shadow-lg">
+                                    <i class="fas fa-times mr-2"></i>
+                                    Batal
+                                </a>
+                                <button type="submit" 
+                                        class="flex-1 inline-flex items-center justify-center px-8 py-3 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-bold rounded-xl transition-all duration-300 hover:shadow-xl hover:scale-105 transform">
+                                    <i class="fas fa-save mr-2"></i>
+                                    Simpan Perubahan
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="specialization">Spesialisasi</label>
-                    <input type="text" id="specialization" name="specialization" th:value="${profile.specialization}" />
+                <!-- Help Section -->
+                <div class="mt-8 bg-blue-50 border border-blue-200 rounded-2xl p-6">
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                            <i class="fas fa-lightbulb text-blue-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-blue-900 mb-2">Tips Mengisi Profil</h3>
+                            <ul class="text-blue-800 text-sm space-y-1">
+                                <li>• Pastikan nomor lisensi valid dan aktif</li>
+                                <li>• Tulis spesialisasi yang spesifik untuk menarik klien yang tepat</li>
+                                <li>• Tetapkan harga yang kompetitif sesuai pengalaman Anda</li>
+                                <li>• Gunakan foto profil yang profesional dan berkualitas baik</li>
+                                <li>• Bio yang informatif akan meningkatkan kepercayaan klien</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="experienceYears">Pengalaman (tahun) <span class="required">*</span></label>
-                    <input type="number" id="experienceYears" name="experienceYears" th:value="${profile.experienceYears}" min="0" required />
-                </div>
-                
-                <div class="form-group">
-                    <label for="price">Harga Konsultasi <span class="required">*</span></label>
-                    <input type="number" id="price" name="price" th:value="${profile.price}" min="0" step="1000" required />
-                </div>
-                
-                <div class="form-group">
-                    <label for="profilePicture">URL Foto Profil</label>
-                    <input type="url" id="profilePicture" name="profilePicture" th:value="${profile.profilePicture}" />
-                </div>
-                
-                <div class="form-group">
-                    <label for="bio">Bio</label>
-                    <textarea id="bio" name="bio" th:text="${profile.bio}"></textarea>
-                </div>
-                
-                <div class="button-group">
-                    <a href="/psychologist/profile" class="cancel-button">Batal</a>
-                    <button type="submit" class="save-button">Simpan</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </body>
