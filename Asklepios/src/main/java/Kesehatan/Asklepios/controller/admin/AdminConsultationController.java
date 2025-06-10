@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import Kesehatan.Asklepios.model.Consultation;
+import Kesehatan.Asklepios.repository.ConsultationRepository;
 import Kesehatan.Asklepios.service.ConsultationService;
 import Kesehatan.Asklepios.service.UserService;
 
@@ -20,6 +21,9 @@ public class AdminConsultationController {
     
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private ConsultationRepository consultationRepository;
 
     // Menampilkan semua konsultasi
     @GetMapping
@@ -47,12 +51,13 @@ public class AdminConsultationController {
         
         Consultation consultation = consultationService.getById(id);
         
-        // Update status dan catatan
-        consultation.setStatus(status);
+        // Hanya update catatan
         if (notes != null && !notes.trim().isEmpty()) {
             consultation.setNotes(notes);
+            consultationRepository.save(consultation);
         }
         
+        // Biarkan updateStatus menangani perubahan status
         consultationService.updateStatus(id, status);
         return "redirect:/admin/consultations/" + id;
     }

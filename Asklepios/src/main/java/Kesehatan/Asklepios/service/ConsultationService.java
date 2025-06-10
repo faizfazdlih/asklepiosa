@@ -27,10 +27,10 @@ public class ConsultationService {
 
     @Autowired
     private UserRepository userRepository;
-    
+
     @Autowired
     private TransactionService transactionService;
-    
+
     @Autowired
     private UserService userService;
 
@@ -57,10 +57,10 @@ public class ConsultationService {
         scheduleRepository.save(schedule);
 
         Consultation savedConsultation = consultationRepository.save(consultation);
-        
+
         // Buat transaksi otomatis dengan status PENDING
         transactionService.createTransaction(savedConsultation.getId(), "BANK_TRANSFER");
-        
+
         return savedConsultation;
     }
 
@@ -76,36 +76,37 @@ public class ConsultationService {
     public Consultation updateStatus(String consultationId, Consultation.Status status) {
         Consultation consultation = getById(consultationId);
         Consultation.Status oldStatus = consultation.getStatus();
-        consultation.setStatus(status);
         
-        // Jika status diubah menjadi CANCELLED, tambahkan saldo ke client
+        System.out.println("Updating consultation status from " + oldStatus + " to " + status);
+    
+        consultation.setStatus(status);
+        Consultation updatedConsultation = consultationRepository.save(consultation);
+    
+        // Jika status diubah menjadi CANCELLED, ubah status transaksi menjadi REFUND
         if (status == Consultation.Status.CANCELLED && oldStatus != Consultation.Status.CANCELLED) {
+            System.out.println("Consultation cancelled, checking transaction...");
             // Cari transaksi terkait
             Transaction transaction = transactionService.getTransactionByConsultationId(consultationId);
-            
-            System.out.println("Consultation " + consultationId + " cancelled");
-            System.out.println("Transaction found: " + (transaction != null));
-            
-            // Jika transaksi sudah dibayar, kembalikan dana ke saldo client
+    
             if (transaction != null) {
-                System.out.println("Transaction status: " + transaction.getStatus());
+                System.out.println("Found transaction with status: " + transaction.getStatus());
+                
                 if (transaction.getStatus() == Transaction.Status.PAID) {
-                    User client = consultation.getClient();
-                    BigDecimal oldBalance = client.getBalance();
-                    User updatedClient = userService.addBalance(client.getId(), transaction.getAmount());
-                    // Update client reference in consultation
-                    consultation.setClient(updatedClient);
-                    
-                    System.out.println("Added balance: " + transaction.getAmount() + 
-                                     " to client " + client.getFullName() + 
-                                     ". Old balance: " + oldBalance + 
-                                     ", New balance: " + updatedClient.getBalance());
+                    // Ubah status transaksi menjadi REFUND
+                    transactionService.updatePaymentStatus(transaction.getId(), Transaction.Status.REFUND, LocalDateTime.now());
+                    System.out.println("Transaction status updated to REFUND");
+                } else {
+                    System.out.println("Transaction status is not PAID, no update needed");
                 }
+            } else {
+                System.out.println("No transaction found for consultation ID: " + consultationId);
             }
         }
-        
-        return consultationRepository.save(consultation);
+    
+        return updatedConsultation;
     }
+    
+    
 
     public List<Consultation> getAllConsultations() {
         return consultationRepository.findAll();

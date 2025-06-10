@@ -35,14 +35,4 @@ public class UserService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
-    
-    // Method untuk menambah saldo user
-    public User addBalance(String userId, BigDecimal amount) {
-        User user = getUserById(userId);
-        BigDecimal oldBalance = user.getBalance();
-        user.addBalance(amount);
-        User savedUser = userRepository.save(user);
-        System.out.println("User " + user.getFullName() + " balance updated: " + oldBalance + " -> " + savedUser.getBalance());
-        return savedUser;
-    }
 }

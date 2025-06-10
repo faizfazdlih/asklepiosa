@@ -36,9 +36,6 @@ public class User {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-    
-    @Column(name = "balance")
-    private BigDecimal balance = BigDecimal.ZERO; // Inisialisasi saldo dengan 0
 
     // enum
     public enum Role { CLIENT, PSYCHOLOGIST, ADMIN }
@@ -68,15 +65,4 @@ public class User {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-    
-    public BigDecimal getBalance() { return balance; }
-    public void setBalance(BigDecimal balance) { this.balance = balance; }
-    
-    // Method untuk menambah saldo
-    public void addBalance(BigDecimal amount) {
-        if (this.balance == null) {
-            this.balance = BigDecimal.ZERO;
-        }
-        this.balance = this.balance.add(amount);
-    }
 }

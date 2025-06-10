@@ -40,7 +40,7 @@ public class Transaction {
     }
 
     public enum Status {
-        PENDING, PAID, FAILED
+        PENDING, PAID, FAILED, REFUND
     }
 
     // Getters & Setters

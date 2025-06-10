@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Daftar Konsultasi - Asklepios</title>
     <meta charset="UTF-8">
@@ -11,56 +12,70 @@
             padding: 20px;
             background-color: #f5f5f5;
         }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
             background-color: white;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        h1, h2 {
+
+        h1,
+        h2 {
             color: #333;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
-        th, td {
+
+        th,
+        td {
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
+
         th {
             background-color: #f2f2f2;
             font-weight: bold;
         }
+
         tr:hover {
             background-color: #f9f9f9;
         }
+
         .status {
             padding: 5px 10px;
             border-radius: 4px;
             font-size: 0.9em;
             font-weight: bold;
         }
+
         .status-pending {
             background-color: #ffeeba;
             color: #856404;
         }
+
         .status-confirmed {
             background-color: #d4edda;
             color: #155724;
         }
+
         .status-completed {
             background-color: #c3e6cb;
             color: #155724;
         }
+
         .status-cancelled {
             background-color: #f8d7da;
             color: #721c24;
         }
+
         /* Tambahkan style untuk status pembayaran */
         .payment-status {
             padding: 5px 10px;
@@ -68,39 +83,53 @@
             font-size: 0.9em;
             font-weight: bold;
         }
+
         .payment-status-pending {
             background-color: #ffeeba;
             color: #856404;
         }
+
         .payment-status-paid {
             background-color: #d4edda;
             color: #155724;
         }
+
         .payment-status-failed {
             background-color: #f8d7da;
             color: #721c24;
         }
+
+        .payment-status-refund {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+
         .payment-status-none {
             background-color: #e2e3e5;
             color: #383d41;
         }
+
         .nav-links {
             display: flex;
             justify-content: space-between;
             margin-bottom: 20px;
         }
+
         .nav-links a {
             color: #007bff;
             text-decoration: none;
         }
+
         .nav-links a:hover {
             text-decoration: underline;
         }
+
         .empty-message {
             text-align: center;
             padding: 30px;
             color: #6c757d;
         }
+
         .btn {
             padding: 6px 12px;
             border: none;
@@ -113,33 +142,41 @@
             margin-right: 5px;
             text-align: center;
         }
+
         .btn-primary {
             background-color: #007bff;
             color: white;
         }
+
         .btn-primary:hover {
             background-color: #0056b3;
         }
+
         .btn-danger {
             background-color: #dc3545;
             color: white;
         }
+
         .btn-danger:hover {
             background-color: #c82333;
         }
+
         .btn-success {
             background-color: #28a745;
             color: white;
         }
+
         .btn-success:hover {
             background-color: #218838;
         }
+
         .action-column {
             width: 180px;
             text-align: center;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="nav-links">
@@ -167,28 +204,33 @@
             </thead>
             <tbody>
                 <tr th:each="consultation : ${consultations}">
-                    <td th:text="${consultation.schedule.date} + ' ' + ${consultation.schedule.startTime} + ' - ' + ${consultation.schedule.endTime}">Waktu</td>
+                    <td
+                        th:text="${consultation.schedule.date} + ' ' + ${consultation.schedule.startTime} + ' - ' + ${consultation.schedule.endTime}">
+                        Waktu</td>
                     <td th:text="${consultation.schedule.psychologist.user.fullName}">Psikolog</td>
                     <td>
-                        <span th:class="'status ' + 'status-' + ${#strings.toLowerCase(consultation.status)}" 
-                              th:text="${consultation.status}">Status</span>
+                        <span th:class="'status ' + 'status-' + ${#strings.toLowerCase(consultation.status)}"
+                            th:text="${consultation.status}">Status</span>
                     </td>
                     <td>
                         <!-- Status Pembayaran -->
-                        <span th:if="${consultation.transaction != null}" 
-                              th:class="'payment-status ' + 'payment-status-' + ${#strings.toLowerCase(consultation.transaction.status)}" 
-                              th:text="${consultation.transaction.status}">Status Pembayaran</span>
-                        <span th:if="${consultation.transaction == null}" 
-                              class="payment-status payment-status-none">BELUM ADA</span>
+                        <span th:if="${consultation.transaction != null}"
+                            th:class="'payment-status ' + 'payment-status-' + ${#strings.toLowerCase(consultation.transaction.status)}"
+                            th:text="${consultation.transaction.status}">Status Pembayaran</span>
+
+                        <span th:if="${consultation.transaction == null}"
+                            class="payment-status payment-status-none">BELUM ADA</span>
                     </td>
                     <td th:text="${consultation.notes}">Catatan</td>
                     <td class="action-column">
                         <!-- Detail Button - always available -->
-                        <a th:href="@{/client/consultations/detail/{id}(id=${consultation.id})}" class="btn btn-primary">Detail</a>
+                        <a th:href="@{/client/consultations/detail/{id}(id=${consultation.id})}"
+                            class="btn btn-primary">Detail</a>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
 </body>
+
 </html>
