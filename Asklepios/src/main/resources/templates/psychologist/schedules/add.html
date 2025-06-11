@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="id">
+
 <head>
     <title>Tambah Jadwal - Asklepios</title>
     <meta charset="UTF-8">
@@ -8,29 +9,82 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @keyframes slideDown {
-            from { transform: translateY(-100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
         }
-        .floating-element { animation: float 3s ease-in-out infinite; }
-        .nav-slide-down { animation: slideDown 0.5s ease-out; }
-        .section-fade-in { animation: fadeIn 0.8s ease-out; }
-        .form-fade-in { animation: fadeIn 1s ease-out; }
-        .floating-shape { animation: float 4s ease-in-out infinite; }
-        .floating-shape-reverse { animation: float 4s ease-in-out infinite reverse; }
+
+        @keyframes fadeInModal {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .floating-element {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .nav-slide-down {
+            animation: slideDown 0.5s ease-out;
+        }
+
+        .modal-fade-in { animation: fadeInModal 0.3s ease-out; }
+
+        .section-fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .form-fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+
+        .floating-shape {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .floating-shape-reverse {
+            animation: float 4s ease-in-out infinite reverse;
+        }
 
         .input-field:focus {
             box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
         }
+
+        .modal-backdrop {
+            backdrop-filter: blur(2px);
+        }
     </style>
 </head>
+
 <body class="bg-slate-50 text-gray-800 overflow-x-hidden">
     <!-- Navigation -->
     <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50 nav-slide-down">
@@ -43,32 +97,71 @@
                     <h1 class="text-2xl font-bold text-teal-800">Asklepios</h1>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="/psychologist/dashboard" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
+                    <a href="/psychologist/dashboard"
+                        class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
                         <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
                     </a>
-                    <a href="/psychologist/profile" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
+                    <a href="/psychologist/profile"
+                        class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
                         <i class="fas fa-user mr-2"></i>Profil
                     </a>
-                    <a href="/psychologist/schedules" class="bg-teal-50 text-teal-700 font-semibold px-3 py-2 rounded-lg transition-all duration-300">
+                    <a href="/psychologist/schedules"
+                        class="bg-teal-50 text-teal-700 font-semibold px-3 py-2 rounded-lg transition-all duration-300">
                         <i class="fas fa-clock mr-2"></i>Jadwal
                     </a>
-                    <a href="/psychologist/consultations" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
+                    <a href="/psychologist/consultations"
+                        class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
                         <i class="fas fa-comments mr-2"></i>Konsultasi
                     </a>
-                    <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105">
+                    <button onclick="showLogoutModal()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105">
                         <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
 
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModal" class="fixed inset-0 z-[100] hidden">
+        <div class="fixed inset-0 bg-black/40 modal-backdrop" onclick="hideLogoutModal()"></div>
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-3xl p-8 max-w-md w-full mx-4 modal-fade-in shadow-2xl relative z-10">
+                <div class="text-center">
+                    <!-- Warning Icon -->
+                    <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-exclamation-triangle text-3xl text-red-500"></i>
+                    </div>
+                    
+                    <!-- Modal Content -->
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Konfirmasi Logout</h3>
+                    <p class="text-gray-600 mb-8 leading-relaxed">
+                        Apakah Anda yakin ingin keluar dari sistem?
+                    </p>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                        <button onclick="hideLogoutModal()" 
+                                class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-full transition-all duration-300 hover:scale-105 order-2 sm:order-1">
+                            <i class="fas fa-times mr-2"></i>Batal
+                        </button>
+                        <button onclick="confirmLogout()" 
+                                class="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105 order-1 sm:order-2">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Floating Background Elements -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <div class="absolute top-20 left-10 w-20 h-20 bg-teal-100 rounded-full opacity-50 floating-shape"></div>
-        <div class="absolute top-40 right-20 w-16 h-16 bg-emerald-100 rounded-full opacity-40 floating-shape-reverse"></div>
+        <div class="absolute top-40 right-20 w-16 h-16 bg-emerald-100 rounded-full opacity-40 floating-shape-reverse">
+        </div>
         <div class="absolute bottom-20 left-1/4 w-24 h-24 bg-blue-100 rounded-full opacity-30 floating-shape"></div>
-        <div class="absolute bottom-40 right-1/3 w-12 h-12 bg-green-100 rounded-full opacity-50 floating-shape-reverse"></div>
+        <div class="absolute bottom-40 right-1/3 w-12 h-12 bg-green-100 rounded-full opacity-50 floating-shape-reverse">
+        </div>
     </div>
 
     <div class="pt-24 pb-8 relative z-10">
@@ -85,7 +178,8 @@
 
             <!-- Main Form Container -->
             <div class="form-fade-in">
-                <div class="bg-white rounded-2xl border border-slate-200 hover:border-teal-300 transition-all duration-500 hover:shadow-2xl overflow-hidden">
+                <div
+                    class="bg-white rounded-2xl border border-slate-200 hover:border-teal-300 transition-all duration-500 hover:shadow-2xl overflow-hidden">
                     <!-- Header -->
                     <div class="bg-gradient-to-r from-teal-50 to-emerald-50 p-6 border-b border-slate-200">
                         <div class="flex items-center justify-between">
@@ -109,17 +203,15 @@
                         <form th:action="@{/psychologist/schedules/add}" method="post" class="space-y-6">
                             <!-- Date Input -->
                             <div class="form-group">
-                                <label for="date" class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                <label for="date"
+                                    class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
                                     <i class="fas fa-calendar-day text-teal-600 mr-2"></i>
                                     Tanggal Konsultasi
                                     <span class="text-red-500 ml-1">*</span>
                                 </label>
-                                <input type="date" 
-                                       id="date" 
-                                       name="date" 
-                                       required 
-                                       class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300 bg-white hover:border-teal-300 focus:shadow-lg"
-                                       placeholder="Pilih tanggal konsultasi" />
+                                <input type="date" id="date" name="date" required
+                                    class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300 bg-white hover:border-teal-300 focus:shadow-lg"
+                                    placeholder="Pilih tanggal konsultasi" />
                                 <p class="text-xs text-gray-500 mt-2">
                                     <i class="fas fa-info-circle mr-1"></i>
                                     Pilih tanggal untuk slot konsultasi yang akan dibuat
@@ -130,17 +222,15 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- Start Time -->
                                 <div class="form-group">
-                                    <label for="startTime" class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                    <label for="startTime"
+                                        class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
                                         <i class="fas fa-clock text-green-600 mr-2"></i>
                                         Waktu Mulai
                                         <span class="text-red-500 ml-1">*</span>
                                     </label>
-                                    <input type="time" 
-                                           id="startTime" 
-                                           name="startTime" 
-                                           required 
-                                           class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300 bg-white hover:border-teal-300 focus:shadow-lg"
-                                           placeholder="Waktu mulai konsultasi" />
+                                    <input type="time" id="startTime" name="startTime" required
+                                        class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300 bg-white hover:border-teal-300 focus:shadow-lg"
+                                        placeholder="Waktu mulai konsultasi" />
                                     <p class="text-xs text-gray-500 mt-2">
                                         <i class="fas fa-play text-green-500 mr-1"></i>
                                         Jam dimulainya sesi konsultasi
@@ -149,17 +239,15 @@
 
                                 <!-- End Time -->
                                 <div class="form-group">
-                                    <label for="endTime" class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                    <label for="endTime"
+                                        class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
                                         <i class="fas fa-clock text-red-600 mr-2"></i>
                                         Waktu Selesai
                                         <span class="text-red-500 ml-1">*</span>
                                     </label>
-                                    <input type="time" 
-                                           id="endTime" 
-                                           name="endTime" 
-                                           required 
-                                           class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300 bg-white hover:border-teal-300 focus:shadow-lg"
-                                           placeholder="Waktu selesai konsultasi" />
+                                    <input type="time" id="endTime" name="endTime" required
+                                        class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300 bg-white hover:border-teal-300 focus:shadow-lg"
+                                        placeholder="Waktu selesai konsultasi" />
                                     <p class="text-xs text-gray-500 mt-2">
                                         <i class="fas fa-stop text-red-500 mr-1"></i>
                                         Jam berakhirnya sesi konsultasi
@@ -170,7 +258,8 @@
                             <!-- Guidelines Card -->
                             <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 mt-6">
                                 <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                    <div
+                                        class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                                         <i class="fas fa-lightbulb text-blue-600 text-sm"></i>
                                     </div>
                                     <div>
@@ -199,13 +288,13 @@
 
                             <!-- Action Buttons -->
                             <div class="flex flex-col sm:flex-row gap-4 justify-end pt-6 border-t border-slate-200">
-                                <a href="/psychologist/schedules" 
-                                   class="order-2 sm:order-1 inline-flex items-center justify-center px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-all duration-300 hover:shadow-lg">
+                                <a href="/psychologist/schedules"
+                                    class="order-2 sm:order-1 inline-flex items-center justify-center px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-all duration-300 hover:shadow-lg">
                                     <i class="fas fa-times mr-2"></i>
                                     Batal
                                 </a>
-                                <button type="submit" 
-                                        class="order-1 sm:order-2 inline-flex items-center justify-center px-8 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white font-bold rounded-xl transition-all duration-300 hover:shadow-xl hover:scale-105 transform">
+                                <button type="submit"
+                                    class="order-1 sm:order-2 inline-flex items-center justify-center px-8 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white font-bold rounded-xl transition-all duration-300 hover:shadow-xl hover:scale-105 transform">
                                     <i class="fas fa-save mr-2"></i>
                                     Simpan Jadwal
                                 </button>
@@ -219,23 +308,64 @@
 
     <script>
         // Set minimum date to today
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const dateInput = document.getElementById('date');
             const today = new Date();
             const todayStr = today.toISOString().split('T')[0];
             dateInput.setAttribute('min', todayStr);
-            
+
             // Add smooth focus effects
             const inputs = document.querySelectorAll('input[type="date"], input[type="time"]');
             inputs.forEach(input => {
-                input.addEventListener('focus', function() {
+                input.addEventListener('focus', function () {
                     this.parentElement.classList.add('scale-105');
                 });
-                input.addEventListener('blur', function() {
+                input.addEventListener('blur', function () {
                     this.parentElement.classList.remove('scale-105');
                 });
             });
         });
     </script>
+
+    <script>
+        function showLogoutModal() {
+            const modal = document.getElementById('logoutModal');
+            modal.classList.remove('hidden');
+            // Prevent body scroll when modal is open
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideLogoutModal() {
+            const modal = document.getElementById('logoutModal');
+            modal.classList.add('hidden');
+            // Restore body scroll
+            document.body.style.overflow = 'auto';
+        }
+
+        function confirmLogout() {
+            // Add loading state to button
+            const logoutBtn = document.querySelector('#logoutModal button[onclick="confirmLogout()"]');
+            logoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Logging out...';
+            logoutBtn.disabled = true;
+
+            // Redirect to logout after a short delay for better UX
+            setTimeout(() => {
+                window.location.href = '/logout';
+            }, 500);
+        }
+
+        // Close modal when pressing Escape key
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                hideLogoutModal();
+            }
+        });
+
+        // Prevent modal close when clicking on modal content
+        document.querySelector('#logoutModal .bg-white').addEventListener('click', function (event) {
+            event.stopPropagation();
+        });
+    </script>
 </body>
+
 </html>

@@ -19,12 +19,16 @@
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
         }
+        .modal-fade-in { animation: fadeInModal 0.3s ease-out; }
         .floating-element { animation: float 3s ease-in-out infinite; }
         .nav-slide-down { animation: slideDown 0.5s ease-out; }
         .section-fade-in { animation: fadeIn 0.8s ease-out; }
         .form-fade-in { animation: fadeIn 1s ease-out; }
         .floating-shape { animation: float 4s ease-in-out infinite; }
         .floating-shape-reverse { animation: float 4s ease-in-out infinite reverse; }
+        .modal-backdrop {
+            backdrop-filter: blur(2px);
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-gray-800 overflow-x-hidden">
@@ -51,13 +55,45 @@
                     <a href="/psychologist/consultations" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
                         <i class="fas fa-comments mr-2"></i>Konsultasi
                     </a>
-                    <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105">
+                    <button onclick="showLogoutModal()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105">
                         <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModal" class="fixed inset-0 z-[100] hidden">
+        <div class="fixed inset-0 bg-black/40 modal-backdrop" onclick="hideLogoutModal()"></div>
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-3xl p-8 max-w-md w-full mx-4 modal-fade-in shadow-2xl relative z-10">
+                <div class="text-center">
+                    <!-- Warning Icon -->
+                    <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-exclamation-triangle text-3xl text-red-500"></i>
+                    </div>
+                    
+                    <!-- Modal Content -->
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Konfirmasi Logout</h3>
+                    <p class="text-gray-600 mb-8 leading-relaxed">
+                        Apakah Anda yakin ingin keluar dari sistem?
+                    </p>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                        <button onclick="hideLogoutModal()" 
+                                class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-full transition-all duration-300 hover:scale-105 order-2 sm:order-1">
+                            <i class="fas fa-times mr-2"></i>Batal
+                        </button>
+                        <button onclick="confirmLogout()" 
+                                class="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105 order-1 sm:order-2">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="pt-24 pb-8">
         <div class="container mx-auto px-6 max-w-4xl">
@@ -207,5 +243,44 @@
             </div>
         </div>
     </div>
+    <script>
+        function showLogoutModal() {
+            const modal = document.getElementById('logoutModal');
+            modal.classList.remove('hidden');
+            // Prevent body scroll when modal is open
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideLogoutModal() {
+            const modal = document.getElementById('logoutModal');
+            modal.classList.add('hidden');
+            // Restore body scroll
+            document.body.style.overflow = 'auto';
+        }
+
+        function confirmLogout() {
+            // Add loading state to button
+            const logoutBtn = document.querySelector('#logoutModal button[onclick="confirmLogout()"]');
+            logoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Logging out...';
+            logoutBtn.disabled = true;
+            
+            // Redirect to logout after a short delay for better UX
+            setTimeout(() => {
+                window.location.href = '/logout';
+            }, 500);
+        }
+
+        // Close modal when pressing Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                hideLogoutModal();
+            }
+        });
+
+        // Prevent modal close when clicking on modal content
+        document.querySelector('#logoutModal .bg-white').addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+    </script>
 </body>
 </html>

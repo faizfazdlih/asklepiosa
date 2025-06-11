@@ -13,6 +13,7 @@
                 transform: translateY(-100%);
                 opacity: 0;
             }
+
             to {
                 transform: translateY(0);
                 opacity: 1;
@@ -24,6 +25,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -31,14 +33,24 @@
         }
 
         @keyframes float {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translateY(0px);
             }
+
             50% {
                 transform: translateY(-10px);
             }
         }
 
+        @keyframes fadeInModal {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-fade-in { animation: fadeInModal 0.3s ease-out; }
+        
         .floating-element {
             animation: float 3s ease-in-out infinite;
         }
@@ -63,7 +75,9 @@
             animation: float 4s ease-in-out infinite reverse;
         }
 
-
+        .modal-backdrop {
+            backdrop-filter: blur(2px);
+        }
     </style>
 </head>
 
@@ -79,30 +93,68 @@
                     <h1 class="text-2xl font-bold text-teal-800">Asklepios</h1>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="/psychologist/dashboard" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
+                    <a href="/psychologist/dashboard"
+                        class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
                         <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
                     </a>
-                    <a href="/psychologist/profile" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
+                    <a href="/psychologist/profile"
+                        class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
                         <i class="fas fa-user mr-2"></i>Profil
                     </a>
-                    <a href="/psychologist/schedules" class="bg-teal-50 text-teal-700 font-semibold px-3 py-2 rounded-lg transition-all duration-300">
+                    <a href="/psychologist/schedules"
+                        class="bg-teal-50 text-teal-700 font-semibold px-3 py-2 rounded-lg transition-all duration-300">
                         <i class="fas fa-clock mr-2"></i>Jadwal
                     </a>
-                    <a href="/psychologist/consultations" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
+                    <a href="/psychologist/consultations"
+                        class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
                         <i class="fas fa-comments mr-2"></i>Konsultasi
                     </a>
-                    <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105">
+                    <button onclick="showLogoutModal()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105">
                         <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
 
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModal" class="fixed inset-0 z-[100] hidden">
+        <div class="fixed inset-0 bg-black/40 modal-backdrop" onclick="hideLogoutModal()"></div>
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-3xl p-8 max-w-md w-full mx-4 modal-fade-in shadow-2xl relative z-10">
+                <div class="text-center">
+                    <!-- Warning Icon -->
+                    <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-exclamation-triangle text-3xl text-red-500"></i>
+                    </div>
+                    
+                    <!-- Modal Content -->
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Konfirmasi Logout</h3>
+                    <p class="text-gray-600 mb-8 leading-relaxed">
+                        Apakah Anda yakin ingin keluar dari sistem?
+                    </p>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                        <button onclick="hideLogoutModal()" 
+                                class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-full transition-all duration-300 hover:scale-105 order-2 sm:order-1">
+                            <i class="fas fa-times mr-2"></i>Batal
+                        </button>
+                        <button onclick="confirmLogout()" 
+                                class="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105 order-1 sm:order-2">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="pt-24 pb-8">
         <div class="container mx-auto px-6 max-w-4xl">
             <!-- Error Message -->
-            <div th:if="${error}" class="bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded-xl mb-4 section-fade-in">
+            <div th:if="${error}"
+                class="bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded-xl mb-4 section-fade-in">
                 <div class="flex items-center">
                     <i class="fas fa-exclamation-triangle text-red-500 mr-3"></i>
                     <span th:text="${error}">Error message</span>
@@ -110,7 +162,8 @@
             </div>
 
             <!-- Success Message -->
-            <div th:if="${success}" class="bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-xl mb-4 section-fade-in">
+            <div th:if="${success}"
+                class="bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-xl mb-4 section-fade-in">
                 <div class="flex items-center">
                     <i class="fas fa-check-circle text-green-500 mr-3"></i>
                     <span th:text="${success}">Success message</span>
@@ -119,7 +172,8 @@
 
             <!-- Edit Form -->
             <div class="form-fade-in">
-                <div class="bg-white rounded-2xl border border-slate-200 hover:border-teal-300 transition-all duration-500 hover:shadow-2xl overflow-hidden">
+                <div
+                    class="bg-white rounded-2xl border border-slate-200 hover:border-teal-300 transition-all duration-500 hover:shadow-2xl overflow-hidden">
                     <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-6 border-b border-slate-200">
                         <h2 class="text-2xl font-bold text-gray-900 flex items-center">
                             <i class="fas fa-calendar-edit text-blue-600 mr-3"></i>
@@ -129,7 +183,8 @@
                     </div>
 
                     <div class="p-8">
-                        <form th:action="@{'/psychologist/schedules/edit/' + ${schedule.id}}" method="post" class="space-y-6">
+                        <form th:action="@{'/psychologist/schedules/edit/' + ${schedule.id}}" method="post"
+                            class="space-y-6">
                             <!-- Current Schedule Info -->
                             <div class="bg-gray-50 rounded-xl p-6 mb-6">
                                 <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
@@ -139,15 +194,18 @@
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div class="bg-white rounded-lg p-4 border border-gray-200">
                                         <div class="text-sm text-gray-600 mb-1">Tanggal</div>
-                                        <div class="font-semibold text-gray-800" th:text="${schedule.date}">2024-01-15</div>
+                                        <div class="font-semibold text-gray-800" th:text="${schedule.date}">2024-01-15
+                                        </div>
                                     </div>
                                     <div class="bg-white rounded-lg p-4 border border-gray-200">
                                         <div class="text-sm text-gray-600 mb-1">Waktu Mulai</div>
-                                        <div class="font-semibold text-gray-800" th:text="${schedule.startTime}">09:00</div>
+                                        <div class="font-semibold text-gray-800" th:text="${schedule.startTime}">09:00
+                                        </div>
                                     </div>
                                     <div class="bg-white rounded-lg p-4 border border-gray-200">
                                         <div class="text-sm text-gray-600 mb-1">Waktu Selesai</div>
-                                        <div class="font-semibold text-gray-800" th:text="${schedule.endTime}">10:00</div>
+                                        <div class="font-semibold text-gray-800" th:text="${schedule.endTime}">10:00
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -158,12 +216,9 @@
                                     <i class="fas fa-calendar-day text-teal-600 mr-2"></i>
                                     Tanggal Konsultasi
                                 </label>
-                                <input type="date" 
-                                       id="date" 
-                                       name="date" 
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-300 bg-white" 
-                                       th:value="${schedule.date}"
-                                       required>
+                                <input type="date" id="date" name="date"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-300 bg-white"
+                                    th:value="${schedule.date}" required>
                                 <p class="text-sm text-gray-500 mt-1">
                                     <i class="fas fa-lightbulb text-yellow-500 mr-1"></i>
                                     Pilih tanggal yang akan datang untuk sesi konsultasi
@@ -176,12 +231,9 @@
                                     <i class="fas fa-play text-green-600 mr-2"></i>
                                     Waktu Mulai
                                 </label>
-                                <input type="time" 
-                                       id="startTime" 
-                                       name="startTime" 
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-300 bg-white" 
-                                       th:value="${schedule.startTime}"
-                                       required>
+                                <input type="time" id="startTime" name="startTime"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-300 bg-white"
+                                    th:value="${schedule.startTime}" required>
                                 <p class="text-sm text-gray-500 mt-1">
                                     <i class="fas fa-clock text-blue-500 mr-1"></i>
                                     Tentukan waktu mulai sesi konsultasi
@@ -194,12 +246,9 @@
                                     <i class="fas fa-stop text-red-600 mr-2"></i>
                                     Waktu Selesai
                                 </label>
-                                <input type="time" 
-                                       id="endTime" 
-                                       name="endTime" 
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-300 bg-white" 
-                                       th:value="${schedule.endTime}"
-                                       required>
+                                <input type="time" id="endTime" name="endTime"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-300 bg-white"
+                                    th:value="${schedule.endTime}" required>
                                 <p class="text-sm text-gray-500 mt-1">
                                     <i class="fas fa-hourglass-end text-purple-500 mr-1"></i>
                                     Tentukan waktu selesai sesi konsultasi
@@ -208,11 +257,13 @@
 
                             <!-- Form Actions -->
                             <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
-                                <button type="submit" class="bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-xl hover:scale-105 transform flex items-center justify-center">
+                                <button type="submit"
+                                    class="bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-xl hover:scale-105 transform flex items-center justify-center">
                                     <i class="fas fa-save mr-2"></i>
                                     Simpan Perubahan
                                 </button>
-                                <a href="/psychologist/schedules" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-lg flex items-center justify-center">
+                                <a href="/psychologist/schedules"
+                                    class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-lg flex items-center justify-center">
                                     <i class="fas fa-arrow-left mr-2"></i>
                                     Kembali ke Daftar Jadwal
                                 </a>
@@ -227,46 +278,47 @@
     <!-- Floating Background Elements -->
     <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         <div class="absolute top-20 right-10 w-20 h-20 bg-teal-100 rounded-full opacity-20 floating-shape"></div>
-        <div class="absolute bottom-20 left-10 w-16 h-16 bg-emerald-100 rounded-full opacity-30 floating-shape-reverse"></div>
+        <div class="absolute bottom-20 left-10 w-16 h-16 bg-emerald-100 rounded-full opacity-30 floating-shape-reverse">
+        </div>
         <div class="absolute top-1/2 left-1/4 w-12 h-12 bg-blue-100 rounded-full opacity-25 floating-shape"></div>
     </div>
 
     <script>
         // Form validation
-        document.querySelector('form').addEventListener('submit', function(e) {
+        document.querySelector('form').addEventListener('submit', function (e) {
             const startTime = document.getElementById('startTime').value;
             const endTime = document.getElementById('endTime').value;
             const date = document.getElementById('date').value;
-            
+
             // Validate date is not in the past
             const selectedDate = new Date(date);
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-            
+
             if (selectedDate < today) {
                 e.preventDefault();
                 alert('Tanggal tidak boleh di masa lalu. Silakan pilih tanggal hari ini atau yang akan datang.');
                 return;
             }
-            
+
             // Validate time range
             if (startTime >= endTime) {
                 e.preventDefault();
                 alert('Waktu mulai harus lebih awal dari waktu selesai.');
                 return;
             }
-            
+
             // Calculate duration
             const start = new Date('2000-01-01 ' + startTime);
             const end = new Date('2000-01-01 ' + endTime);
             const diffMinutes = (end - start) / (1000 * 60);
-            
+
             if (diffMinutes < 30) {
                 e.preventDefault();
                 alert('Durasi konsultasi minimal 30 menit.');
                 return;
             }
-            
+
             if (diffMinutes > 180) {
                 const confirmed = confirm('Durasi konsultasi lebih dari 3 jam. Apakah Anda yakin?');
                 if (!confirmed) {
@@ -278,9 +330,9 @@
 
         // Set minimum date to today
         document.getElementById('date').min = new Date().toISOString().split('T')[0];
-        
+
         // Auto-calculate suggested end time
-        document.getElementById('startTime').addEventListener('change', function() {
+        document.getElementById('startTime').addEventListener('change', function () {
             const startTime = this.value;
             if (startTime && !document.getElementById('endTime').value) {
                 const start = new Date('2000-01-01 ' + startTime);
@@ -288,6 +340,46 @@
                 const endTime = start.toTimeString().slice(0, 5);
                 document.getElementById('endTime').value = endTime;
             }
+        });
+    </script>
+
+    <script>
+        function showLogoutModal() {
+            const modal = document.getElementById('logoutModal');
+            modal.classList.remove('hidden');
+            // Prevent body scroll when modal is open
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideLogoutModal() {
+            const modal = document.getElementById('logoutModal');
+            modal.classList.add('hidden');
+            // Restore body scroll
+            document.body.style.overflow = 'auto';
+        }
+
+        function confirmLogout() {
+            // Add loading state to button
+            const logoutBtn = document.querySelector('#logoutModal button[onclick="confirmLogout()"]');
+            logoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Logging out...';
+            logoutBtn.disabled = true;
+
+            // Redirect to logout after a short delay for better UX
+            setTimeout(() => {
+                window.location.href = '/logout';
+            }, 500);
+        }
+
+        // Close modal when pressing Escape key
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                hideLogoutModal();
+            }
+        });
+
+        // Prevent modal close when clicking on modal content
+        document.querySelector('#logoutModal .bg-white').addEventListener('click', function (event) {
+            event.stopPropagation();
         });
     </script>
 </body>

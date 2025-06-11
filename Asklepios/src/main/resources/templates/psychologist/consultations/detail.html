@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="id">
+
 <head>
     <title>Detail Konsultasi - Asklepios</title>
     <meta charset="UTF-8">
@@ -12,6 +13,7 @@
                 transform: translateY(-100%);
                 opacity: 0;
             }
+
             to {
                 transform: translateY(0);
                 opacity: 1;
@@ -23,6 +25,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -30,11 +33,26 @@
         }
 
         @keyframes float {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translateY(0px);
             }
+
             50% {
                 transform: translateY(-10px);
+            }
+        }
+
+        @keyframes fadeInModal {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
             }
         }
 
@@ -54,6 +72,11 @@
             animation: fadeIn 1s ease-out;
         }
 
+        .modal-backdrop {
+            backdrop-filter: blur(2px);
+        }
+
+
         .floating-shape {
             animation: float 4s ease-in-out infinite;
         }
@@ -67,16 +90,19 @@
             color: #856404;
             border-color: #ffeaa7;
         }
+
         .status-confirmed {
             background-color: #d4edda;
             color: #155724;
             border-color: #c3e6cb;
         }
+
         .status-completed {
             background-color: #e2e3e5;
             color: #383d41;
             border-color: #d1d3d4;
         }
+
         .status-cancelled {
             background-color: #f8d7da;
             color: #721c24;
@@ -97,31 +123,70 @@
                     <h1 class="text-2xl font-bold text-teal-800">Asklepios</h1>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="/psychologist/dashboard" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
+                    <a href="/psychologist/dashboard"
+                        class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
                         <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
                     </a>
-                    <a href="/psychologist/profile" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
+                    <a href="/psychologist/profile"
+                        class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
                         <i class="fas fa-user mr-2"></i>Profil
                     </a>
-                    <a href="/psychologist/schedules" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
+                    <a href="/psychologist/schedules"
+                        class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
                         <i class="fas fa-clock mr-2"></i>Jadwal
                     </a>
-                    <a href="/psychologist/consultations" class="bg-teal-50 text-teal-700 font-semibold px-3 py-2 rounded-lg transition-all duration-300">
+                    <a href="/psychologist/consultations"
+                        class="bg-teal-50 text-teal-700 font-semibold px-3 py-2 rounded-lg transition-all duration-300">
                         <i class="fas fa-comments mr-2"></i>Konsultasi
                     </a>
-                    <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105">
+                    <button onclick="showLogoutModal()"
+                        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105">
                         <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
 
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModal" class="fixed inset-0 z-[100] hidden">
+        <div class="fixed inset-0 bg-black/40 modal-backdrop" onclick="hideLogoutModal()"></div>
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-3xl p-8 max-w-md w-full mx-4 modal-fade-in shadow-2xl relative z-10">
+                <div class="text-center">
+                    <!-- Warning Icon -->
+                    <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-exclamation-triangle text-3xl text-red-500"></i>
+                    </div>
+
+                    <!-- Modal Content -->
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Konfirmasi Logout</h3>
+                    <p class="text-gray-600 mb-8 leading-relaxed">
+                        Apakah Anda yakin ingin keluar dari sistem?
+                    </p>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                        <button onclick="hideLogoutModal()"
+                            class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-full transition-all duration-300 hover:scale-105 order-2 sm:order-1">
+                            <i class="fas fa-times mr-2"></i>Batal
+                        </button>
+                        <button onclick="confirmLogout()"
+                            class="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105 order-1 sm:order-2">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="pt-24 pb-8">
         <div class="container mx-auto px-6 max-w-4xl">
             <!-- Consultation Detail Card -->
             <div class="section-fade-in mb-8">
-                <div class="bg-white rounded-2xl border border-slate-200 hover:border-teal-300 transition-all duration-500 hover:shadow-2xl overflow-hidden">
+                <div
+                    class="bg-white rounded-2xl border border-slate-200 hover:border-teal-300 transition-all duration-500 hover:shadow-2xl overflow-hidden">
                     <div class="bg-teal-50 p-6 border-b border-slate-200">
                         <div class="flex justify-between items-center">
                             <div>
@@ -129,11 +194,12 @@
                                     <i class="fas fa-comments text-green-600 mr-3"></i>
                                     <span>Konsultasi dengan</span>
                                     <span class="ml-1" th:text="${consultation.client.fullName}">Nama Klien</span>
-                                </h2>                                
+                                </h2>
                                 <p class="text-gray-600 mt-2">Detail informasi konsultasi dan klien</p>
                             </div>
-                            <span th:class="'px-4 py-2 rounded-full font-bold border status-' + ${consultation.status.toString().toLowerCase()}" 
-                                  th:text="${consultation.status}">Status</span>
+                            <span
+                                th:class="'px-4 py-2 rounded-full font-bold border status-' + ${consultation.status.toString().toLowerCase()}"
+                                th:text="${consultation.status}">Status</span>
                         </div>
                     </div>
 
@@ -150,14 +216,17 @@
                                         <i class="fas fa-calendar-day text-blue-500 mr-2"></i>
                                         Tanggal
                                     </div>
-                                    <div class="font-semibold text-gray-800" th:text="${consultation.schedule.date}">2023-06-01</div>
+                                    <div class="font-semibold text-gray-800" th:text="${consultation.schedule.date}">
+                                        2023-06-01</div>
                                 </div>
                                 <div class="bg-white rounded-lg p-4 border border-gray-200">
                                     <div class="text-sm text-gray-600 mb-1 flex items-center">
                                         <i class="fas fa-clock text-purple-500 mr-2"></i>
                                         Waktu
                                     </div>
-                                    <div class="font-semibold text-gray-800" th:text="${consultation.schedule.startTime} + ' - ' + ${consultation.schedule.endTime}">09:00 - 10:00</div>
+                                    <div class="font-semibold text-gray-800"
+                                        th:text="${consultation.schedule.startTime} + ' - ' + ${consultation.schedule.endTime}">
+                                        09:00 - 10:00</div>
                                 </div>
                             </div>
                         </div>
@@ -174,28 +243,34 @@
                                         <i class="fas fa-id-card text-blue-500 mr-2"></i>
                                         Nama
                                     </div>
-                                    <div class="font-semibold text-gray-800" th:text="${consultation.client.fullName}">Nama Klien</div>
+                                    <div class="font-semibold text-gray-800" th:text="${consultation.client.fullName}">
+                                        Nama Klien</div>
                                 </div>
                                 <div class="bg-white rounded-lg p-4 border border-gray-200">
                                     <div class="text-sm text-gray-600 mb-1 flex items-center">
                                         <i class="fas fa-envelope text-green-500 mr-2"></i>
                                         Email
                                     </div>
-                                    <div class="font-semibold text-gray-800" th:text="${consultation.client.email}">email@example.com</div>
+                                    <div class="font-semibold text-gray-800" th:text="${consultation.client.email}">
+                                        email@example.com</div>
                                 </div>
-                                <div th:if="${consultation.client.phone != null}" class="bg-white rounded-lg p-4 border border-gray-200">
+                                <div th:if="${consultation.client.phone != null}"
+                                    class="bg-white rounded-lg p-4 border border-gray-200">
                                     <div class="text-sm text-gray-600 mb-1 flex items-center">
                                         <i class="fas fa-phone text-orange-500 mr-2"></i>
                                         Telepon
                                     </div>
-                                    <div class="font-semibold text-gray-800" th:text="${consultation.client.phone}">08123456789</div>
+                                    <div class="font-semibold text-gray-800" th:text="${consultation.client.phone}">
+                                        08123456789</div>
                                 </div>
-                                <div th:if="${consultation.client.gender != null}" class="bg-white rounded-lg p-4 border border-gray-200">
+                                <div th:if="${consultation.client.gender != null}"
+                                    class="bg-white rounded-lg p-4 border border-gray-200">
                                     <div class="text-sm text-gray-600 mb-1 flex items-center">
                                         <i class="fas fa-venus-mars text-pink-500 mr-2"></i>
                                         Jenis Kelamin
                                     </div>
-                                    <div class="font-semibold text-gray-800" th:text="${consultation.client.gender}">Laki-laki</div>
+                                    <div class="font-semibold text-gray-800" th:text="${consultation.client.gender}">
+                                        Laki-laki</div>
                                 </div>
                             </div>
                         </div>
@@ -207,8 +282,10 @@
                                 Catatan
                             </h3>
                             <div class="bg-white rounded-lg p-4 border border-gray-200">
-                                <div th:if="${consultation.notes != null}" class="text-gray-700 leading-relaxed" th:text="${consultation.notes}">Catatan konsultasi</div>
-                                <div th:if="${consultation.notes == null}" class="text-gray-500 italic flex items-center">
+                                <div th:if="${consultation.notes != null}" class="text-gray-700 leading-relaxed"
+                                    th:text="${consultation.notes}">Catatan konsultasi</div>
+                                <div th:if="${consultation.notes == null}"
+                                    class="text-gray-500 italic flex items-center">
                                     <i class="fas fa-info-circle mr-2"></i>
                                     Belum ada catatan
                                 </div>
@@ -220,7 +297,8 @@
 
             <!-- Update Form -->
             <div class="form-fade-in mb-8">
-                <div class="bg-white rounded-2xl border border-slate-200 hover:border-teal-300 transition-all duration-500 hover:shadow-2xl overflow-hidden">
+                <div
+                    class="bg-white rounded-2xl border border-slate-200 hover:border-teal-300 transition-all duration-500 hover:shadow-2xl overflow-hidden">
                     <div class="bg-teal-50 p-6 border-b border-slate-200">
                         <h3 class="text-2xl font-bold text-gray-900 flex items-center">
                             <i class="fas fa-edit text-teal-600 mr-3"></i>
@@ -230,18 +308,18 @@
                     </div>
 
                     <div class="p-8">
-                        <form th:action="@{'/psychologist/consultations/' + ${consultation.id} + '/update-status'}" method="post" class="space-y-6">
+                        <form th:action="@{'/psychologist/consultations/' + ${consultation.id} + '/update-status'}"
+                            method="post" class="space-y-6">
                             <!-- Status Selection -->
                             <div class="space-y-2">
                                 <label for="status" class="block text-sm font-semibold text-gray-700 mb-2">
                                     <i class="fas fa-toggle-on text-teal-600 mr-2"></i>
                                     Status Konsultasi
                                 </label>
-                                <select id="status" name="status" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-300 bg-white">
-                                    <option th:each="status : ${statuses}" 
-                                            th:value="${status}" 
-                                            th:text="${status}"
-                                            th:selected="${status == consultation.status}">Status</option>
+                                <select id="status" name="status"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-300 bg-white">
+                                    <option th:each="status : ${statuses}" th:value="${status}" th:text="${status}"
+                                        th:selected="${status == consultation.status}">Status</option>
                                 </select>
                                 <p class="text-sm text-gray-500 mt-1">
                                     <i class="fas fa-lightbulb text-yellow-500 mr-1"></i>
@@ -255,12 +333,10 @@
                                     <i class="fas fa-pen text-blue-600 mr-2"></i>
                                     Catatan Konsultasi
                                 </label>
-                                <textarea id="notes" 
-                                          name="notes" 
-                                          rows="6"
-                                          class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-300 bg-white resize-vertical" 
-                                          placeholder="Tambahkan catatan atau observasi dari sesi konsultasi..."
-                                          th:text="${consultation.notes}"></textarea>
+                                <textarea id="notes" name="notes" rows="6"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-300 bg-white resize-vertical"
+                                    placeholder="Tambahkan catatan atau observasi dari sesi konsultasi..."
+                                    th:text="${consultation.notes}"></textarea>
                                 <p class="text-sm text-gray-500 mt-1">
                                     <i class="fas fa-info-circle text-blue-500 mr-1"></i>
                                     Catatan ini akan membantu untuk follow-up konsultasi selanjutnya
@@ -269,11 +345,13 @@
 
                             <!-- Form Actions -->
                             <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
-                                <button type="submit" class="bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-xl hover:scale-105 transform flex items-center justify-center">
+                                <button type="submit"
+                                    class="bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-xl hover:scale-105 transform flex items-center justify-center">
                                     <i class="fas fa-save mr-2"></i>
                                     Update Konsultasi
                                 </button>
-                                <a href="/psychologist/consultations" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-lg flex items-center justify-center">
+                                <a href="/psychologist/consultations"
+                                    class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-lg flex items-center justify-center">
                                     <i class="fas fa-arrow-left mr-2"></i>
                                     Kembali ke Daftar Konsultasi
                                 </a>
@@ -288,17 +366,19 @@
     <!-- Floating Background Elements -->
     <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         <div class="absolute top-20 right-10 w-20 h-20 bg-teal-100 rounded-full opacity-20 floating-shape"></div>
-        <div class="absolute bottom-20 left-10 w-16 h-16 bg-emerald-100 rounded-full opacity-30 floating-shape-reverse"></div>
+        <div class="absolute bottom-20 left-10 w-16 h-16 bg-emerald-100 rounded-full opacity-30 floating-shape-reverse">
+        </div>
         <div class="absolute top-1/2 left-1/4 w-12 h-12 bg-blue-100 rounded-full opacity-25 floating-shape"></div>
-        <div class="absolute top-1/3 right-1/3 w-14 h-14 bg-purple-100 rounded-full opacity-20 floating-shape-reverse"></div>
+        <div class="absolute top-1/3 right-1/3 w-14 h-14 bg-purple-100 rounded-full opacity-20 floating-shape-reverse">
+        </div>
     </div>
 
     <script>
         // Form validation
-        document.querySelector('form').addEventListener('submit', function(e) {
+        document.querySelector('form').addEventListener('submit', function (e) {
             const status = document.getElementById('status').value;
             const notes = document.getElementById('notes').value.trim();
-            
+
             // Confirm status change
             if (status) {
                 const confirmed = confirm(`Apakah Anda yakin ingin mengubah status konsultasi menjadi "${status}"?`);
@@ -307,7 +387,7 @@
                     return;
                 }
             }
-            
+
             // Encourage adding notes for completed consultations
             if (status === 'COMPLETED' && notes.length < 10) {
                 const addNotes = confirm('Untuk konsultasi yang selesai, disarankan untuk menambahkan catatan. Lanjutkan tanpa catatan?');
@@ -321,7 +401,7 @@
 
         // Auto-resize textarea
         const textarea = document.getElementById('notes');
-        textarea.addEventListener('input', function() {
+        textarea.addEventListener('input', function () {
             this.style.height = 'auto';
             this.style.height = (this.scrollHeight) + 'px';
         });
@@ -329,7 +409,7 @@
         // Character counter for textarea
         const notesTextarea = document.getElementById('notes');
         const maxLength = 1000;
-        
+
         // Create character counter element
         const counterElement = document.createElement('div');
         counterElement.className = 'text-sm text-gray-500 text-right mt-1';
@@ -338,16 +418,16 @@
 
         const charCountSpan = document.getElementById('char-count');
 
-        notesTextarea.addEventListener('input', function() {
+        notesTextarea.addEventListener('input', function () {
             const currentLength = this.value.length;
             charCountSpan.textContent = currentLength;
-            
+
             if (currentLength > maxLength * 0.9) {
                 counterElement.className = 'text-sm text-orange-500 text-right mt-1';
             } else {
                 counterElement.className = 'text-sm text-gray-500 text-right mt-1';
             }
-            
+
             if (currentLength > maxLength) {
                 this.value = this.value.substring(0, maxLength);
                 charCountSpan.textContent = maxLength;
@@ -358,5 +438,47 @@
         // Initialize character count
         charCountSpan.textContent = notesTextarea.value.length;
     </script>
+
+    <script>
+        function showLogoutModal() {
+            const modal = document.getElementById('logoutModal');
+            modal.classList.remove('hidden');
+            // Prevent body scroll when modal is open
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideLogoutModal() {
+            const modal = document.getElementById('logoutModal');
+            modal.classList.add('hidden');
+            // Restore body scroll
+            document.body.style.overflow = 'auto';
+        }
+
+        function confirmLogout() {
+            // Add loading state to button
+            const logoutBtn = document.querySelector('#logoutModal button[onclick="confirmLogout()"]');
+            logoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Logging out...';
+            logoutBtn.disabled = true;
+
+            // Redirect to logout after a short delay for better UX
+            setTimeout(() => {
+                window.location.href = '/logout';
+            }, 500);
+        }
+
+        // Close modal when pressing Escape key
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                hideLogoutModal();
+            }
+        });
+
+        // Prevent modal close when clicking on modal content
+        document.querySelector('#logoutModal .bg-white').addEventListener('click', function (event) {
+            event.stopPropagation();
+        });
+    </script>
+
 </body>
+
 </html>
