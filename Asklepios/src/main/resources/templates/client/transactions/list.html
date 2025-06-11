@@ -1,45 +1,170 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
 <head>
-    <title>Daftar Transaksi Saya</title>
-    <link rel="stylesheet" href="/css/styles.css" />
+    <title>Daftar Transaksi - Asklepios</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/client/transactions/transaction-list.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-slate-50 text-gray-800">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-brain text-white text-lg"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-teal-800">Asklepios</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/client/dashboard" class="nav-link">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                    </a>
+                    <a href="/client/consultations" class="nav-link">
+                        <i class="fas fa-comments mr-2"></i>Konsultasi Saya
+                    </a>
+                    <a href="/client/transactions" class="nav-link nav-link-active">
+                        <i class="fas fa-credit-card mr-2"></i>Transaksi
+                    </a>
+                    <a href="/client/profile" class="nav-link">
+                        <i class="fas fa-user mr-2"></i>Profil
+                    </a>
+                    <a href="/auth/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-all duration-300">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-<h1>Daftar Transaksi Saya</h1>
+    <div class="pt-24 pb-8 min-h-screen">
+        <div class="container mx-auto px-6">
+            <!-- Header Section -->
+            <div class="mb-8">
+                <div class="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-3xl p-6 text-white relative overflow-hidden">
+                    <div class="absolute inset-0 opacity-10">
+                        <div class="w-24 h-24 bg-white rounded-full absolute -top-12 -right-12"></div>
+                        <div class="w-16 h-16 bg-white rounded-full absolute -bottom-8 -left-8"></div>
+                    </div>
+                    <div class="relative z-10 flex items-center">
+                        <i class="fas fa-credit-card text-4xl mr-4"></i>
+                        <div>
+                            <h1 class="text-3xl font-bold mb-1">Daftar Transaksi Saya</h1>
+                            <p class="text-lg opacity-90">Kelola dan pantau semua transaksi pembayaran Anda</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-<div th:if="${not #lists.isEmpty(transactions)}">
-    <table border="1" cellpadding="8" cellspacing="0">
-        <thead>
-        <tr>
-            <th>ID Transaksi</th>
-            <th>Tanggal Konsultasi</th>
-            <th>Psikolog</th>
-            <th>Jumlah (Rp)</th>
-            <th>Status</th>
-            <th>Aksi</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="tx : ${transactions}">
-            <td th:text="${tx.id}">TX123</td>
-            <td th:text="${#temporals.format(tx.consultation.schedule.date, 'dd/MM/yyyy') + ' ' + tx.consultation.schedule.startTime}">01/01/2023 10:00</td>
-            <td th:text="${tx.consultation.schedule?.psychologist?.user?.fullName}">Dr. Psikolog</td>
-            <td th:text="${#numbers.formatDecimal(tx.amount, 0, 'COMMA', 2, 'POINT')}">100,000.00</td>
-            <td th:text="${tx.status}">PENDING</td>
-            <td>
-                <a th:href="@{'/client/transactions/' + ${tx.id}}">Detail</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+            <!-- Empty State -->
+            <div th:if="${#lists.isEmpty(transactions)}" class="text-center py-16">
+                <div class="bg-white rounded-3xl p-12 border border-slate-200 max-w-md mx-auto">
+                    <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-receipt text-gray-400 text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Tidak ada transaksi ditemukan</h3>
+                    <p class="text-gray-600 mb-6">Anda belum memiliki riwayat transaksi. Mulai konsultasi untuk melihat transaksi.</p>
+                    <a href="/client/dashboard" class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-xl font-medium transition-colors duration-300 inline-flex items-center">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Kembali ke Dashboard
+                    </a>
+                </div>
+            </div>
 
-<div th:if="${#lists.isEmpty(transactions)}">
-    <p>Tidak ada transaksi ditemukan.</p>
-</div>
+            <!-- Transactions List -->
+            <div th:unless="${#lists.isEmpty(transactions)}" class="space-y-6">
+                <div th:each="tx : ${transactions}" class="transaction-card bg-white rounded-3xl border border-slate-200 hover:border-teal-300 transition-all duration-300 hover:shadow-lg">
+                    <div class="p-6">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
+                                    <i class="fas fa-receipt text-teal-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-800" th:text="'TX-' + ${tx.id}">
+                                        TX-123
+                                    </h3>
+                                    <p class="text-gray-600">ID Transaksi</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="transaction-status" th:classappend="${#strings.toLowerCase(tx.status)}">
+                                    <span th:text="${tx.status}">PENDING</span>
+                                </div>
+                            </div>
+                        </div>
 
-<a href="/client/dashboard">Kembali ke Dashboard</a>
+                        <div class="grid md:grid-cols-3 gap-4 mb-6">
+                            <!-- Date & Time -->
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-calendar text-blue-600 text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-semibold uppercase">Tanggal Konsultasi</p>
+                                    <p class="text-sm font-medium text-gray-800" 
+                                       th:text="${#temporals.format(tx.consultation.schedule.date, 'dd/MM/yyyy') + ' ' + tx.consultation.schedule.startTime}">
+                                        01/01/2023 10:00
+                                    </p>
+                                </div>
+                            </div>
 
+                            <!-- Psychologist -->
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-user-md text-purple-600 text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-semibold uppercase">Psikolog</p>
+                                    <p class="text-sm font-medium text-gray-800" 
+                                       th:text="${tx.consultation.schedule?.psychologist?.user?.fullName}">
+                                        Dr. Psikolog
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Amount -->
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-money-bill text-green-600 text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-semibold uppercase">Jumlah</p>
+                                    <p class="text-sm font-medium text-gray-800">
+                                        Rp <span th:text="${#numbers.formatDecimal(tx.amount, 0, 'COMMA', 2, 'POINT')}">100,000.00</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="flex justify-end">
+                            <a th:href="@{'/client/transactions/' + ${tx.id}}" 
+                               class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-300 inline-flex items-center">
+                                <i class="fas fa-eye mr-2"></i>
+                                Detail
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simple fade-in animation for transaction cards
+            const cards = document.querySelectorAll('.transaction-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
 </body>
 </html>

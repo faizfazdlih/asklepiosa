@@ -1,148 +1,447 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
 <head>
-    <title>Tambah Jadwal - Asklepios Admin</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .form-container {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: bold;
-        }
-        select, input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-        select {
-            background-color: white;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #007bff;
-            text-decoration: none;
-        }
-        .back-link:hover {
-            text-decoration: underline;
-        }
-        .error {
-            color: #dc3545;
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            border-radius: 4px;
-        }
-        .required {
-            color: #dc3545;
-        }
-        .time-inputs {
-            display: flex;
-            gap: 15px;
-        }
-        .time-inputs .form-group {
-            flex: 1;
-        }
-    </style>
+    <title>Tambah Jadwal - Admin | Asklepios</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/admin/schedule/create.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-    <div class="form-container">
-        <a href="/admin/schedules" class="back-link">← Kembali ke Daftar Jadwal</a>
-        
-        <h1>Tambah Jadwal Baru</h1>
-
-        <div th:if="${error}" th:text="${error}" class="error"></div>
-
-        <form th:action="@{/admin/schedules/add}" th:object="${schedule}" method="post">
-            <div class="form-group">
-                <label for="psychologist">Psikolog <span class="required">*</span></label>
-                <select th:field="*{psychologist}" id="psychologist" required>
-                    <option value="">Pilih Psikolog</option>
-                    <option th:each="p : ${psychologists}" 
-                            th:value="${p.id}" 
-                            th:text="${p.user.fullName + (p.specialization != null ? ' - ' + p.specialization : '')}">
-                    </option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="date">Tanggal <span class="required">*</span></label>
-                <input type="date" th:field="*{date}" id="date" required />
-            </div>
-
-            <div class="time-inputs">
-                <div class="form-group">
-                    <label for="startTime">Waktu Mulai <span class="required">*</span></label>
-                    <input type="time" th:field="*{startTime}" id="startTime" required />
+<body class="bg-slate-50 text-gray-800 overflow-x-hidden">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-brain text-white text-lg"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-teal-800">Asklepios</h1>
                 </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/admin/dashboard" class="nav-link">
+                        <i class="fas fa-tachometer-alt mr-2"></i><span>Dashboard</span>
+                    </a>
+                    <a href="/admin/users" class="nav-link">
+                        <i class="fas fa-users mr-2"></i><span>Pengguna</span>
+                    </a>
+                    <a href="/admin/psychologists" class="nav-link">
+                        <i class="fas fa-user-md mr-2"></i><span>Psikolog</span>
+                    </a>
+                    <a href="/admin/schedules" class="nav-link nav-link-active">
+                        <i class="fas fa-calendar-alt mr-2"></i><span>Jadwal</span>
+                    </a>
+                    <a href="/admin/transactions" class="nav-link">
+                        <i class="fas fa-credit-card mr-2"></i><span>Transaksi</span>
+                    </a>
+                    <a href="/admin/consultations" class="nav-link">
+                        <i class="fas fa-comments mr-2"></i><span>Konsultasi</span>
+                    </a>
+                    <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-colors duration-300">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-                <div class="form-group">
-                    <label for="endTime">Waktu Selesai <span class="required">*</span></label>
-                    <input type="time" th:field="*{endTime}" id="endTime" required />
+    <div class="pt-24 pb-8">
+        <div class="container mx-auto px-6">
+            <!-- Header -->
+            <div class="mb-12">
+                <div class="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-3xl p-8 text-white relative overflow-hidden header-gradient">
+                    <div class="absolute inset-0 opacity-10">
+                        <div class="w-32 h-32 bg-white rounded-full absolute -top-16 -right-16"></div>
+                        <div class="w-24 h-24 bg-white rounded-full absolute -bottom-12 -left-12"></div>
+                    </div>
+                    <div class="relative z-10">
+                        <h1 class="text-4xl font-bold mb-2">Tambah Jadwal Baru</h1>
+                        <p class="text-xl opacity-90">Buat jadwal konsultasi psikolog baru</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- <div th:if="${error}" class="error" th:text="${error}"></div> -->
+            <!-- Breadcrumb -->
+            <div class="mb-8">
+                <nav class="flex items-center space-x-2 text-sm text-gray-600">
+                    <a href="/admin/schedules" class="breadcrumb-link">
+                        <i class="fas fa-calendar-alt mr-1"></i>Jadwal
+                    </a>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                    <span class="text-teal-600 font-medium">
+                        <i class="fas fa-plus mr-1"></i>Tambah
+                    </span>
+                </nav>
+            </div>
 
-            <button type="submit">Simpan Jadwal</button>
-        </form>
+            <!-- Error Message -->
+            <div th:if="${error}" class="max-w-4xl mx-auto mb-6">
+                <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-r-lg">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-exclamation-triangle text-red-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-red-700" th:text="${error}">Error message</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create Form -->
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-2xl border border-slate-200 hover:border-teal-300 transition-colors duration-300 hover:shadow-lg">
+                    <div class="bg-gradient-to-r from-teal-50 to-emerald-50 p-6 border-b border-slate-200">
+                        <h3 class="text-xl font-semibold text-gray-900 flex items-center">
+                            <i class="fas fa-calendar-plus text-teal-600 mr-3"></i>
+                            Form Tambah Jadwal
+                        </h3>
+                    </div>
+                    
+                    <div class="p-8">
+                        <form th:action="@{/admin/schedules/add}" th:object="${schedule}" method="post" class="space-y-8">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 form-grid">
+                                <!-- Left Column -->
+                                <div class="space-y-6">
+                                    <!-- Psikolog Selection -->
+                                    <div class="form-group">
+                                        <label for="psychologist" class="form-label">
+                                            <i class="fas fa-user-md text-teal-600 mr-2"></i>Pilih Psikolog
+                                            <span class="required">*</span>
+                                        </label>
+                                        <select th:field="*{psychologist}" id="psychologist" required class="form-select">
+                                            <option value="" disabled selected>Pilih psikolog...</option>
+                                            <option th:each="p : ${psychologists}" 
+                                                    th:value="${p.id}" 
+                                                    th:text="${p.user.fullName + (p.specialization != null ? ' - ' + p.specialization : '')}">
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Date Selection -->
+                                    <div class="form-group">
+                                        <label for="date" class="form-label">
+                                            <i class="fas fa-calendar text-teal-600 mr-2"></i>Tanggal
+                                            <span class="required">*</span>
+                                        </label>
+                                        <input type="date" 
+                                               th:field="*{date}" 
+                                               id="date" 
+                                               required 
+                                               class="form-input"
+                                               placeholder="Pilih tanggal">
+                                    </div>
+                                </div>
+
+                                <!-- Right Column -->
+                                <div class="space-y-6">
+                                    <!-- Start Time -->
+                                    <div class="form-group">
+                                        <label for="startTime" class="form-label">
+                                            <i class="fas fa-play text-green-600 mr-2"></i>Waktu Mulai
+                                            <span class="required">*</span>
+                                        </label>
+                                        <input type="time" 
+                                               th:field="*{startTime}" 
+                                               id="startTime" 
+                                               required 
+                                               class="form-input"
+                                               placeholder="Pilih waktu mulai">
+                                    </div>
+
+                                    <!-- End Time -->
+                                    <div class="form-group">
+                                        <label for="endTime" class="form-label">
+                                            <i class="fas fa-stop text-red-600 mr-2"></i>Waktu Selesai
+                                            <span class="required">*</span>
+                                        </label>
+                                        <input type="time" 
+                                               th:field="*{endTime}" 
+                                               id="endTime" 
+                                               required 
+                                               class="form-input"
+                                               placeholder="Pilih waktu selesai">
+                                        <p class="text-xs text-gray-500 mt-2">
+                                            <i class="fas fa-info-circle mr-1"></i>
+                                            Waktu selesai harus lebih besar dari waktu mulai
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="flex justify-between items-center pt-6 border-t border-slate-200 button-group">
+                                <a href="/admin/schedules" class="back-button">
+                                    <i class="fas fa-arrow-left mr-2"></i>Kembali ke Daftar
+                                </a>
+                                
+                                <div class="flex space-x-4 button-actions">
+                                    <button type="reset" class="reset-button">
+                                        <i class="fas fa-undo mr-2"></i>Reset
+                                    </button>
+                                    <button type="submit" class="save-button">
+                                        <i class="fas fa-save mr-2"></i>Simpan Jadwal
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div id="notification" class="fixed top-4 right-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg border border-gray-200 p-4 max-w-sm">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <i id="notificationIcon" class="text-xl"></i>
+                </div>
+                <div class="ml-3">
+                    <p id="notificationMessage" class="text-sm font-medium text-gray-900"></p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Validasi waktu
-        document.getElementById('endTime').addEventListener('change', function() {
-            const startTime = document.getElementById('startTime').value;
-            const endTime = this.value;
-            
-            if (startTime && endTime && endTime <= startTime) {
-                alert('Waktu selesai harus lebih besar dari waktu mulai!');
-                this.value = '';
-            }
+        // Create Schedule JavaScript for Asklepios
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeForm();
+            initializeValidation();
+            addKeyboardShortcuts();
         });
-        
-        // Set minimum date to today
-        document.getElementById('date').min = new Date().toISOString().split('T')[0];
+
+        function initializeForm() {
+            const form = document.querySelector('form');
+            const saveButton = document.querySelector('.save-button');
+            const resetButton = document.querySelector('.reset-button');
+            
+            // Set minimum date to today
+            document.getElementById('date').min = new Date().toISOString().split('T')[0];
+            
+            // Form submission handling
+            form.addEventListener('submit', function(e) {
+                if (!validateForm()) {
+                    e.preventDefault();
+                    return;
+                }
+                
+                // Show loading state
+                saveButton.disabled = true;
+                saveButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Menyimpan...';
+                saveButton.style.pointerEvents = 'none';
+                saveButton.style.opacity = '0.7';
+                
+                // Reset after 5 seconds if form doesn't submit
+                setTimeout(() => {
+                    if (saveButton.disabled) {
+                        saveButton.innerHTML = '<i class="fas fa-save mr-2"></i>Simpan Jadwal';
+                        saveButton.style.pointerEvents = 'auto';
+                        saveButton.style.opacity = '1';
+                        saveButton.disabled = false;
+                    }
+                }, 5000);
+            });
+
+            // Reset button handling
+            resetButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Yakin ingin mereset semua field?')) {
+                    form.reset();
+                    clearAllErrors();
+                }
+            });
+
+            // End time validation
+            document.getElementById('endTime').addEventListener('change', function () {
+                const startTime = document.getElementById('startTime').value;
+                const endTime = this.value;
+
+                if (startTime && endTime && endTime <= startTime) {
+                    showFieldError(this, 'Waktu selesai harus lebih besar dari waktu mulai!');
+                    this.value = '';
+                }
+            });
+        }
+
+        function initializeValidation() {
+            const inputs = document.querySelectorAll('.form-input[required], .form-select[required]');
+            
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    validateField(this);
+                });
+                
+                input.addEventListener('input', function() {
+                    if (this.classList.contains('error')) {
+                        validateField(this);
+                    }
+                });
+            });
+        }
+
+        function validateField(field) {
+            const value = field.value.trim();
+            let isValid = true;
+            let errorMessage = '';
+            
+            // Remove existing error styling
+            field.classList.remove('error');
+            const existingError = field.parentNode.querySelector('.field-error');
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            // Required field validation
+            if (field.hasAttribute('required') && !value) {
+                isValid = false;
+                errorMessage = 'Field ini wajib diisi';
+            }
+            
+            // Date validation
+            if (field.type === 'date' && value) {
+                const selectedDate = new Date(value);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                if (selectedDate < today) {
+                    isValid = false;
+                    errorMessage = 'Tanggal tidak boleh di masa lalu';
+                }
+            }
+            
+            // Time validation
+            if (field.id === 'endTime' && value) {
+                const startTime = document.getElementById('startTime').value;
+                if (startTime && value <= startTime) {
+                    isValid = false;
+                    errorMessage = 'Waktu selesai harus lebih besar dari waktu mulai';
+                }
+            }
+            
+            // Show error if invalid
+            if (!isValid) {
+                showFieldError(field, errorMessage);
+            }
+            
+            return isValid;
+        }
+
+        function showFieldError(field, message) {
+            field.classList.add('error');
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'field-error';
+            errorDiv.innerHTML = `<i class="fas fa-exclamation-circle mr-1"></i>${message}`;
+            field.parentNode.appendChild(errorDiv);
+        }
+
+        function clearAllErrors() {
+            const errorFields = document.querySelectorAll('.error');
+            const errorMessages = document.querySelectorAll('.field-error');
+            
+            errorFields.forEach(field => {
+                field.classList.remove('error');
+            });
+            
+            errorMessages.forEach(error => {
+                error.remove();
+            });
+        }
+
+        function validateForm() {
+            const inputs = document.querySelectorAll('.form-input[required], .form-select[required]');
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (!validateField(input)) {
+                    isValid = false;
+                }
+            });
+            
+            if (!isValid) {
+                showNotification('Mohon periksa kembali data yang diisi', 'error');
+            }
+            
+            return isValid;
+        }
+
+        function addKeyboardShortcuts() {
+            document.addEventListener('keydown', function(e) {
+                // Ctrl+S to save
+                if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                    e.preventDefault();
+                    document.querySelector('.save-button').click();
+                }
+                
+                // Ctrl+R to reset
+                if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+                    e.preventDefault();
+                    document.querySelector('.reset-button').click();
+                }
+                
+                // Escape to go back
+                if (e.key === 'Escape') {
+                    const backButton = document.querySelector('.back-button');
+                    if (backButton) {
+                        backButton.click();
+                    }
+                }
+            });
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300`;
+            
+            switch(type) {
+                case 'success':
+                    notification.className += ' bg-green-500 text-white';
+                    break;
+                case 'error':
+                    notification.className += ' bg-red-500 text-white';
+                    break;
+                case 'warning':
+                    notification.className += ' bg-yellow-500 text-white';
+                    break;
+                default:
+                    notification.className += ' bg-blue-500 text-white';
+            }
+            
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : type === 'warning' ? 'exclamation' : 'info'}-circle mr-2"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Export for global use
+        window.CreateScheduleManager = {
+            validateForm,
+            showNotification,
+            validateField,
+            clearAllErrors
+        };
     </script>
 </body>
 </html>

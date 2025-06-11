@@ -1,114 +1,296 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
 <head>
     <title>Booking Konsultasi - Asklepios</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 30px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-        .booking-details {
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-        .detail-item {
-            margin-bottom: 15px;
-        }
-        .detail-label {
-            font-weight: bold;
-            color: #555;
-            margin-bottom: 5px;
-        }
-        .detail-value {
-            color: #333;
-        }
-        .price {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #28a745;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #ddd;
-        }
-        .confirm-button {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            text-align: center;
-        }
-        .confirm-button:hover {
-            background-color: #218838;
-        }
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #007bff;
-            text-decoration: none;
-        }
-        .back-link:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/client/consultations/book.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-    <div class="container">
-        <h1>Konfirmasi Booking Konsultasi</h1>
-        
-        <div class="booking-details">
-            <div class="detail-item">
-                <div class="detail-label">Psikolog:</div>
-                <div class="detail-value" th:text="${schedule.psychologist.user.fullName}">Nama Psikolog</div>
+<body class="bg-slate-50 text-gray-800 overflow-x-hidden">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50 nav-slide-down">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center floating-element">
+                        <i class="fas fa-brain text-white text-lg"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-teal-800">Asklepios</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/client/dashboard" class="nav-link">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                    </a>
+                    <a href="/client/consultations" class="nav-link nav-link-active">
+                        <i class="fas fa-comments mr-2"></i>Konsultasi Saya
+                    </a>
+                    <a href="/client/transactions" class="nav-link">
+                        <i class="fas fa-credit-card mr-2"></i>Transaksi
+                    </a>
+                    <a href="/client/profile" class="nav-link">
+                        <i class="fas fa-user mr-2"></i>Profil
+                    </a>
+                    <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
             </div>
-            
-            <div class="detail-item">
-                <div class="detail-label">Spesialisasi:</div>
-                <div class="detail-value" th:text="${schedule.psychologist.specialization}">Spesialisasi</div>
-            </div>
-            
-            <div class="detail-item">
-                <div class="detail-label">Tanggal:</div>
-                <div class="detail-value" th:text="${schedule.date}">Tanggal</div>
-            </div>
-            
-            <div class="detail-item">
-                <div class="detail-label">Waktu:</div>
-                <div class="detail-value" th:text="${schedule.startTime} + ' - ' + ${schedule.endTime}">Waktu</div>
-            </div>
-            
-            <div class="price" th:text="'Biaya: Rp ' + ${#numbers.formatDecimal(schedule.psychologist.price, 0, 'COMMA', 0, 'POINT')}">Biaya</div>
         </div>
-        
-        <form th:action="@{/client/consultations/book}" method="post">
-            <input type="hidden" name="scheduleId" th:value="${schedule.id}" />
-            <button type="submit" class="confirm-button">Konfirmasi Booking</button>
-        </form>
-        
-        <a href="javascript:history.back()" class="back-link">Kembali</a>
+    </nav>
+
+    <div class="pt-24 pb-8 min-h-screen">
+        <div class="container mx-auto px-6">
+            <!-- Header Section -->
+            <div class="mb-8 section-fade-in">
+                <div class="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-3xl p-6 text-white relative overflow-hidden">
+                    <div class="absolute inset-0 opacity-10">
+                        <div class="floating-shape w-24 h-24 bg-white rounded-full absolute -top-12 -right-12"></div>
+                        <div class="floating-shape-reverse w-16 h-16 bg-white rounded-full absolute -bottom-8 -left-8"></div>
+                    </div>
+                    <div class="relative z-10 flex items-center">
+                        <i class="fas fa-calendar-check text-4xl mr-4 floating-element"></i>
+                        <div>
+                            <h1 class="text-3xl font-bold mb-1">Konfirmasi Booking Konsultasi</h1>
+                            <p class="text-lg opacity-90">Periksa detail konsultasi Anda sebelum melakukan pembayaran</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="max-w-4xl mx-auto">
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <!-- Booking Details Card -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-white rounded-3xl overflow-hidden border border-slate-200 hover:border-teal-300 transition-all duration-500 hover:shadow-2xl floating-card">
+                            <div class="bg-gradient-to-r from-slate-50 to-gray-50 p-6 border-b border-slate-200">
+                                <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+                                    <i class="fas fa-clipboard-list text-teal-600 mr-3"></i>
+                                    Detail Konsultasi
+                                </h2>
+                            </div>
+                            
+                            <div class="p-8 space-y-6">
+                                <!-- Psychologist Info -->
+                                <div class="detail-item group">
+                                    <div class="flex items-start space-x-4">
+                                        <div class="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center group-hover:bg-teal-200 transition-colors duration-300">
+                                            <i class="fas fa-user-md text-teal-600 text-xl"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <div class="detail-label">Psikolog</div>
+                                            <div class="detail-value" th:text="${schedule.psychologist.user.fullName}">Nama Psikolog</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Specialization -->
+                                <div class="detail-item group">
+                                    <div class="flex items-start space-x-4">
+                                        <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center group-hover:bg-emerald-200 transition-colors duration-300">
+                                            <i class="fas fa-graduation-cap text-emerald-600 text-xl"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <div class="detail-label">Spesialisasi</div>
+                                            <div class="detail-value" th:text="${schedule.psychologist.specialization}">Spesialisasi</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Date -->
+                                <div class="detail-item group">
+                                    <div class="flex items-start space-x-4">
+                                        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-200 transition-colors duration-300">
+                                            <i class="fas fa-calendar text-blue-600 text-xl"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <div class="detail-label">Tanggal</div>
+                                            <div class="detail-value" th:text="${schedule.date}">Tanggal</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Time -->
+                                <div class="detail-item group">
+                                    <div class="flex items-start space-x-4">
+                                        <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center group-hover:bg-purple-200 transition-colors duration-300">
+                                            <i class="fas fa-clock text-purple-600 text-xl"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <div class="detail-label">Waktu</div>
+                                            <div class="detail-value" th:text="${schedule.startTime} + ' - ' + ${schedule.endTime}">Waktu</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Summary Card -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-white rounded-3xl overflow-hidden border border-slate-200 hover:border-teal-300 transition-all duration-500 hover:shadow-2xl floating-card sticky top-28">
+                            <div class="bg-gradient-to-r from-teal-50 to-emerald-50 p-6 border-b border-slate-200">
+                                <h3 class="text-xl font-bold text-gray-800 flex items-center">
+                                    <i class="fas fa-money-bill-wave text-teal-600 mr-3"></i>
+                                    Ringkasan Biaya
+                                </h3>
+                            </div>
+                            
+                            <div class="p-6 space-y-6">
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-gray-600">Biaya Konsultasi</span>
+                                        <span class="font-semibold text-gray-800" th:text="'Rp ' + ${#numbers.formatDecimal(schedule.psychologist.price, 0, 'COMMA', 0, 'POINT')}">Rp 500.000</span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-sm text-gray-500">
+                                        <span>Platform Fee</span>
+                                        <span>Gratis</span>
+                                    </div>
+                                    <hr class="border-slate-200">
+                                    <div class="flex justify-between items-center text-lg font-bold text-teal-600">
+                                        <span>Total</span>
+                                        <span th:text="'Rp ' + ${#numbers.formatDecimal(schedule.psychologist.price, 0, 'COMMA', 0, 'POINT')}">Rp 500.000</span>
+                                    </div>
+                                </div>
+                                
+                                <form th:action="@{/client/consultations/book}" method="post" class="space-y-4">
+                                    <input type="hidden" name="scheduleId" th:value="${schedule.id}" />
+                                    <button type="submit" class="confirm-button group">
+                                        <i class="fas fa-check-circle mr-2 group-hover:scale-110 transition-transform duration-300"></i>
+                                        Konfirmasi Booking
+                                    </button>
+                                </form>
+                                
+                                <button onclick="history.back()" class="back-button group">
+                                    <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform duration-300"></i>
+                                    Kembali
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        // Animation initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate sections on page load
+            setTimeout(() => {
+                document.querySelectorAll('.section-fade-in').forEach(el => {
+                    el.classList.add('animate');
+                });
+            }, 100);
+
+            // Animate detail items with stagger
+            setTimeout(() => {
+                document.querySelectorAll('.detail-item').forEach((el, index) => {
+                    setTimeout(() => {
+                        el.classList.add('animate');
+                    }, index * 150);
+                });
+            }, 300);
+
+            // Animate cards
+            setTimeout(() => {
+                document.querySelectorAll('.floating-card').forEach((el, index) => {
+                    setTimeout(() => {
+                        el.classList.add('animate');
+                    }, index * 200);
+                });
+            }, 200);
+
+            // Floating animation for logo and icons
+            const floatingElements = document.querySelectorAll('.floating-element');
+            floatingElements.forEach((element, index) => {
+                setInterval(() => {
+                    const offset = Math.sin(Date.now() / 1000 + index) * 3;
+                    element.style.transform = `translateY(${offset}px)`;
+                }, 50);
+            });
+
+            // Enhanced button interactions
+            const confirmButton = document.querySelector('.confirm-button');
+            const backButton = document.querySelector('.back-button');
+
+            // Confirm button hover effect
+            confirmButton.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px) scale(1.02)';
+            });
+            
+            confirmButton.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+
+            // Back button hover effect
+            backButton.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-1px)';
+            });
+            
+            backButton.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+
+            // Add ripple effect to buttons
+            function createRipple(event) {
+                const button = event.currentTarget;
+                const ripple = document.createElement('span');
+                const rect = button.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = event.clientX - rect.left - size / 2;
+                const y = event.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.classList.add('ripple');
+                
+                button.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            }
+
+            confirmButton.addEventListener('click', createRipple);
+            backButton.addEventListener('click', createRipple);
+
+            // Smooth scroll behavior
+            document.documentElement.style.scrollBehavior = 'smooth';
+
+            // Loading state for form submission
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function() {
+                const button = this.querySelector('.confirm-button');
+                button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Memproses...';
+                button.disabled = true;
+            });
+        });
+
+        // Enhanced card animations
+        document.querySelectorAll('.floating-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px) scale(1.01)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Parallax effect for floating shapes
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelectorAll('.floating-shape, .floating-shape-reverse');
+            
+            parallax.forEach((element, index) => {
+                const speed = 0.5 + (index * 0.1);
+                element.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+    </script>
 </body>
 </html>

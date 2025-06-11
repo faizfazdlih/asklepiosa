@@ -1,0 +1,169 @@
+/* Client Dashboard CSS for Asklepios */
+
+/* Navigation Links */
+.nav-link {
+    color: #4b5563;
+    transition-property: all;
+    transition-duration: 300ms;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.nav-link:hover {
+    color: #0d9488;
+    background-color: #f0fdfa;
+}
+
+.nav-link-active {
+    background-color: #ccfbf1;
+    color: #0f766e;
+}
+
+/* Primary Button */
+.btn-primary {
+    background-image: linear-gradient(to right, #0d9488, #059669);
+    color: white;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition-property: all;
+    transition-duration: 300ms;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-primary:hover {
+    background-image: linear-gradient(to right, #0f766e, #047857);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: scale(1.05);
+}
+
+/* Input and Select Focus States */
+input:focus, select:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.5);
+    border-color: #0d9488;
+}
+
+/* Animations */
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.slide-in {
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Transitions */
+.transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+}
+
+/* Card Shadows */
+.card-shadow {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.card-shadow:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transform: translateY(-5px);
+}
+
+/* Rating Stars */
+.star {
+    color: #d1d5db;
+    transition: color 0.2s ease-in-out;
+}
+
+.star.filled {
+    color: #f59e0b;
+}
+
+.star:hover {
+    transform: scale(1.2);
+}
+
+/* Empty States */
+.empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+}
+
+.empty-state-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #d1d5db;
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .grid {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+    
+    .hidden-mobile {
+        display: none;
+    }
+    
+    .nav-link {
+        padding: 0.5rem;
+        font-size: 0.875rem;
+    }
+    
+    .btn-primary {
+        width: 100%;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1f2937;
+        color: #f9fafb;
+    }
+    
+    .nav-slide-down {
+        background-color: #111827;
+        border-bottom: 1px solid #374151;
+    }
+    
+    .psychologist-card > div {
+        background-color: #1f2937;
+        border: 1px solid #374151;
+    }
+    
+    .stat-card > div {
+        background-color: #1f2937;
+        border: 1px solid #374151;
+    }
+}

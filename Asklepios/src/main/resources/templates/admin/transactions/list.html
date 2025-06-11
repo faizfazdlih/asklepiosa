@@ -1,49 +1,328 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
 <head>
-    <title>Daftar Transaksi</title>
-    <link rel="stylesheet" href="/css/styles.css" />
+    <title>Manajemen Transaksi - Asklepios</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/admin/transactions/list.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-<h1>Daftar Transaksi</h1>
+<body class="bg-slate-50 text-gray-800 overflow-x-hidden">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-brain text-white text-lg"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-teal-800">Asklepios</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/admin/dashboard" class="nav-link">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                    </a>
+                    <a href="/admin/users" class="nav-link">
+                        <i class="fas fa-users mr-2"></i>Pengguna
+                    </a>
+                    <a href="/admin/psychologists" class="nav-link">
+                        <i class="fas fa-user-md mr-2"></i>Psikolog
+                    </a>
+                    <a href="/admin/schedules" class="nav-link">
+                        <i class="fas fa-calendar-alt mr-2"></i>Jadwal
+                    </a>
+                    <a href="/admin/transactions" class="nav-link nav-link-active">
+                        <i class="fas fa-credit-card mr-2"></i>Transaksi
+                    </a>
+                    <a href="/admin/consultations" class="nav-link">
+                        <i class="fas fa-comments mr-2"></i>Konsultasi
+                    </a>
+                    <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-colors duration-300">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-<div>
-    <a href="/admin/transactions/create" class="button">Buat Transaksi Baru</a>
-</div>
-<br/>
+    <div class="pt-24 pb-8">
+        <div class="container mx-auto px-6">
+            <!-- Header -->
+            <div class="mb-12">
+                <div class="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-3xl p-8 text-white relative overflow-hidden">
+                    <div class="absolute inset-0 opacity-10">
+                        <div class="w-32 h-32 bg-white rounded-full absolute -top-16 -right-16"></div>
+                        <div class="w-24 h-24 bg-white rounded-full absolute -bottom-12 -left-12"></div>
+                    </div>
+                    <div class="relative z-10">
+                        <h1 class="text-4xl font-bold mb-2">Manajemen Transaksi</h1>
+                        <p class="text-xl opacity-90">Kelola transaksi pembayaran konsultasi</p>
+                    </div>
+                </div>
+            </div>
 
-<table border="1" cellpadding="8" cellspacing="0">
-    <thead>
-    <tr>
-        <th>ID Transaksi</th>
-        <th>ID Konsultasi</th>
-        <th>Jumlah (Rp)</th>
-        <th>Metode Pembayaran</th>
-        <th>Status</th>
-        <th>Tanggal Bayar</th>
-        <th>Aksi</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="tx : ${transactions}">
-        <td th:text="${tx.id}">TX123</td>
-        <td th:text="${tx.consultation.id}">CONSULT123</td>
-        <td th:text="${#numbers.formatDecimal(tx.amount, 0, 'COMMA', 2, 'POINT')}">100,000.00</td>
-        <td th:text="${tx.paymentMethod}">BANK_TRANSFER</td>
-        <td th:text="${tx.status}">PENDING</td>
-        <!-- Solution 1: Using #temporals utility for LocalDateTime -->
-        <td th:text="${tx.paymentDate != null} ? ${#temporals.format(tx.paymentDate, 'dd/MM/yyyy HH:mm')} : 'Belum Bayar'">-</td>
-        
-        <!-- Alternative Solution 2: Using toString() method with custom formatting
-        <td th:text="${tx.paymentDate != null} ? ${tx.paymentDate.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy HH:mm'))} : 'Belum Bayar'">-</td>
-        -->
-        
-        <td>
-            <a th:href="@{'/admin/transactions/detail/' + ${tx.id}}">Detail</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+            <!-- Action Buttons -->
+            <div class="mb-8">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-3xl font-bold text-gray-900 flex items-center">
+                        <i class="fas fa-money-bill-wave text-teal-600 mr-3"></i>
+                        Daftar Transaksi
+                    </h2>
+                </div>
+            </div>
 
+            <!-- Transaction Table -->
+            <div>
+                <div class="bg-white rounded-2xl border border-slate-200 hover:border-teal-300 transition-colors duration-300 hover:shadow-lg">
+                    <div class="bg-gradient-to-r from-teal-50 to-emerald-50 p-6 border-b border-slate-200">
+                        <h3 class="text-xl font-semibold text-gray-900 flex items-center">
+                            <i class="fas fa-list text-teal-600 mr-3"></i>
+                            Semua Transaksi
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="overflow-x-auto">
+                            <table class="w-full transaction-table">
+                                <thead>
+                                    <tr class="border-b-2 border-slate-200">
+                                        <th class="text-left py-4 px-4 font-semibold text-gray-700">
+                                            <i class="fas fa-hashtag text-teal-600 mr-2"></i>ID Transaksi
+                                        </th>
+                                        <th class="text-left py-4 px-4 font-semibold text-gray-700">
+                                            <i class="fas fa-comments text-teal-600 mr-2"></i>ID Konsultasi
+                                        </th>
+                                        <th class="text-left py-4 px-4 font-semibold text-gray-700">
+                                            <i class="fas fa-money-bill text-teal-600 mr-2"></i>Jumlah
+                                        </th>
+                                        <th class="text-left py-4 px-4 font-semibold text-gray-700">
+                                            <i class="fas fa-credit-card text-teal-600 mr-2"></i>Metode Pembayaran
+                                        </th>
+                                        <th class="text-left py-4 px-4 font-semibold text-gray-700">
+                                            <i class="fas fa-info-circle text-teal-600 mr-2"></i>Status
+                                        </th>
+                                        <th class="text-left py-4 px-4 font-semibold text-gray-700">
+                                            <i class="fas fa-calendar text-teal-600 mr-2"></i>Tanggal Bayar
+                                        </th>
+                                        <th class="text-center py-4 px-4 font-semibold text-gray-700">
+                                            <i class="fas fa-cogs text-teal-600 mr-2"></i>Aksi
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="tx : ${transactions}" class="transaction-row border-b border-slate-100 hover:bg-slate-50 transition-colors duration-200">
+                                        <td class="py-5 px-4">
+                                            <div class="flex items-center">
+                                                <div class="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center mr-3">
+                                                    <i class="fas fa-receipt text-teal-600"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="font-semibold text-gray-800" th:text="${tx.id}">TX123</div>
+                                                    <div class="text-sm text-gray-500">Transaction ID</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="py-5 px-4">
+                                            <div class="flex items-center">
+                                                <i class="fas fa-comment-medical text-blue-500 mr-2"></i>
+                                                <span class="font-medium text-gray-700" th:text="${tx.consultation.id}">CONSULT123</span>
+                                            </div>
+                                        </td>
+                                        <td class="py-5 px-4">
+                                            <div class="flex items-center">
+                                                <i class="fas fa-rupiah-sign text-green-500 mr-2"></i>
+                                                <span class="font-semibold text-gray-700" th:text="'Rp ' + ${#numbers.formatDecimal(tx.amount, 0, 'COMMA', 2, 'POINT')}">Rp 100,000.00</span>
+                                            </div>
+                                        </td>
+                                        <td class="py-5 px-4">
+                                            <div class="flex items-center">
+                                                <i class="fas fa-university text-purple-500 mr-2"></i>
+                                                <span class="font-medium text-gray-700" th:text="${tx.paymentMethod}">BANK_TRANSFER</span>
+                                            </div>
+                                        </td>
+                                        <td class="py-5 px-4">
+                                            <span th:if="${tx.status == 'PENDING'}" class="status-badge status-pending">
+                                                <i class="fas fa-clock mr-1"></i>Pending
+                                            </span>
+                                            <span th:if="${tx.status == 'PAID'}" class="status-badge status-paid">
+                                                <i class="fas fa-check-circle mr-1"></i>Dibayar
+                                            </span>
+                                            <span th:if="${tx.status == 'REFUND'}" class="status-badge status-refund">
+                                                <i class="fas fa-undo mr-1"></i>Refund
+                                            </span>
+                                            <span th:if="${tx.status == 'FAILED'}" class="status-badge status-failed">
+                                                <i class="fas fa-exclamation-circle mr-1"></i>Gagal
+                                            </span>
+                                        </td>
+                                        <td class="py-5 px-4">
+                                            <div class="flex items-center">
+                                                <i class="fas fa-calendar-day text-orange-500 mr-2"></i>
+                                                <span class="font-medium text-gray-700" th:text="${tx.paymentDate != null} ? ${#temporals.format(tx.paymentDate, 'dd/MM/yyyy HH:mm')} : 'Belum Bayar'">-</span>
+                                            </div>
+                                        </td>
+                                        <td class="py-5 px-4 text-center">
+                                            <div class="flex justify-center space-x-2">
+                                                <a th:href="@{'/admin/transactions/detail/' + ${tx.id}}" class="action-button detail-button">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a th:href="@{'/admin/transactions/delete/' + ${tx.id}}" class="action-button delete-button" onclick="return confirm('Apakah Anda yakin ingin menghapus transaksi ini?')">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${transactions.empty}">
+                                        <td colspan="7" class="py-12 text-center text-gray-500">
+                                            <div class="flex flex-col items-center">
+                                                <i class="fas fa-receipt text-4xl mb-4 text-gray-300"></i>
+                                                <h3 class="text-lg font-semibold text-gray-600 mb-2">Belum Ada Transaksi</h3>
+                                                <p class="text-gray-500 mb-4">Silakan buat transaksi baru</p>
+                                                <a th:href="@{/admin/transactions/create}" class="add-button">
+                                                    <i class="fas fa-plus mr-2"></i>Buat Transaksi Pertama
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Admin Transaction Management JavaScript for Asklepios
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeBasicInteractions();
+            initializeTable();
+        });
+
+        function initializeBasicInteractions() {
+            const actionButtons = document.querySelectorAll('.action-button, .add-button');
+            actionButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    if (this.classList.contains('delete-button')) {
+                        if (!confirm('Apakah Anda yakin ingin menghapus transaksi ini?')) {
+                            e.preventDefault();
+                            return;
+                        }
+                    }
+                    
+                    // Simple loading state
+                    this.style.pointerEvents = 'none';
+                    this.style.opacity = '0.7';
+                    
+                    const originalContent = this.innerHTML;
+                    if (this.classList.contains('add-button')) {
+                        this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Loading...';
+                    } else {
+                        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    }
+                    
+                    // Reset after 3 seconds
+                    setTimeout(() => {
+                        this.innerHTML = originalContent;
+                        this.style.pointerEvents = 'auto';
+                        this.style.opacity = '1';
+                    }, 3000);
+                });
+            });
+        }
+
+        function initializeTable() {
+            const headers = document.querySelectorAll('.transaction-table th');
+            headers.forEach(header => {
+                if (header.textContent.includes('Tanggal') || header.textContent.includes('Jumlah')) {
+                    header.style.cursor = 'pointer';
+                    header.addEventListener('click', function() {
+                        console.log('Sorting by:', this.textContent);
+                    });
+                }
+            });
+
+            addSearchFunctionality();
+        }
+
+        function addSearchFunctionality() {
+            const transactionRows = document.querySelectorAll('.transaction-row');
+            
+            window.filterTransactions = function(searchTerm) {
+                transactionRows.forEach(row => {
+                    const transactionId = row.querySelector('td:first-child .font-semibold').textContent.toLowerCase();
+                    const consultationId = row.querySelector('td:nth-child(2) span').textContent.toLowerCase();
+                    const paymentMethod = row.querySelector('td:nth-child(4) span').textContent.toLowerCase();
+                    
+                    if (transactionId.includes(searchTerm.toLowerCase()) || 
+                        consultationId.includes(searchTerm.toLowerCase()) || 
+                        paymentMethod.includes(searchTerm.toLowerCase())) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            };
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50`;
+            
+            switch(type) {
+                case 'success':
+                    notification.className += ' bg-green-500 text-white';
+                    break;
+                case 'error':
+                    notification.className += ' bg-red-500 text-white';
+                    break;
+                case 'warning':
+                    notification.className += ' bg-yellow-500 text-white';
+                    break;
+                default:
+                    notification.className += ' bg-blue-500 text-white';
+            }
+            
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : type === 'warning' ? 'exclamation' : 'info'}-circle mr-2"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 3000);
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+                e.preventDefault();
+                const addButton = document.querySelector('a[href*="/admin/transactions/create"]');
+                if (addButton) {
+                    addButton.click();
+                }
+            }
+        });
+
+        // Format currency display
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+
+        // Export functions for global use
+        window.TransactionManager = {
+            filterTransactions,
+            showNotification,
+            formatCurrency
+        };
+    </script>
 </body>
 </html>

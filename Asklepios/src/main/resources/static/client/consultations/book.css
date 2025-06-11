@@ -1,0 +1,190 @@
+/* Client Consultation Booking CSS for Asklepios */
+
+/* Navigation Links */
+.nav-link {
+    color: #4b5563;
+    transition-property: all;
+    transition-duration: 300ms;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.nav-link:hover {
+    color: #0d9488;
+    background-color: #f0fdfa;
+}
+
+.nav-link-active {
+    background-color: #ccfbf1;
+    color: #0f766e;
+}
+
+/* Detail Styles */
+.detail-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 0.5rem;
+}
+
+.detail-value {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #111827;
+}
+
+/* Button Styles */
+.confirm-button {
+    background-image: linear-gradient(to right, #0d9488, #059669);
+    color: white;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    transition-property: all;
+    transition-duration: 300ms;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.confirm-button:hover {
+    background-image: linear-gradient(to right, #0f766e, #047857);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: scale(1.05);
+}
+
+.back-button {
+    background-color: white;
+    border: 2px solid #d1d5db;
+    color: #4b5563;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    transition-property: all;
+    transition-duration: 300ms;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.back-button:hover {
+    border-color: #0d9488;
+    color: #0d9488;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Focus states for accessibility */
+.nav-link:focus,
+.confirm-button:focus,
+.back-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.5);
+}
+
+/* Text selection styling */
+::selection {
+    background-color: #ccfbf1;
+    color: #0f766e;
+}
+
+/* Image loading animation */
+img {
+    transition: opacity 0.3s ease-in-out;
+}
+
+img.loading {
+    opacity: 0;
+}
+
+img.loaded {
+    opacity: 1;
+}
+
+/* Icon hover effects */
+.icon {
+    transition: transform 0.2s ease-in-out;
+}
+
+.icon:hover {
+    transform: scale(1.2);
+}
+
+/* Backdrop blur for modals */
+.modal-backdrop {
+    backdrop-filter: blur(8px);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .confirm-button {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    .back-button {
+        width: 100%;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .nav-link {
+        border: 1px solid #000;
+    }
+    
+    .nav-link-active {
+        background-color: #000;
+        color: #fff;
+    }
+    
+    .confirm-button,
+    .back-button {
+        border: 2px solid #000;
+    }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* Print styles */
+@media print {
+    .confirm-button,
+    .back-button,
+    .nav-link {
+        display: none;
+    }
+    
+    body {
+        font-size: 12pt;
+        color: #000;
+        background-color: #fff;
+    }
+    
+    .detail-label {
+        font-weight: bold;
+    }
+}

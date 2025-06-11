@@ -1,5 +1,16 @@
 /* Admin Dashboard CSS for Asklepios - Consistent with Landing Page Theme */
 
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
 /* Navigation Animation */
 .nav-slide-down {
     animation: slideDown 0.8s ease-out;
@@ -18,7 +29,37 @@
 
 /* Navigation Links */
 .nav-link {
-    @apply text-gray-700 hover:text-teal-600 transition-all duration-300 px-3 py-2 rounded-lg hover:bg-teal-50 font-medium;
+    color: #4b5563;
+    transition-property: all;
+    transition-duration: 300ms;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.nav-link:hover {
+    color: #0d9488;
+    background-color: #f0fdfa;
+}
+
+.nav-link-active {
+    background-color: #ccfbf1;
+    color: #0f766e;
+}
+
+/* Focus states for accessibility */
+.nav-link:focus,
+.add-button:focus,
+.action-button:focus,
+.modal-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #0d9488;
+    box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.5);
 }
 
 /* Section Fade In Animation */

@@ -1,30 +1,302 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
 <head>
-    <title>Daftar Pengguna</title>
+    <title>Manajemen Pengguna - Asklepios</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/admin/users/list.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Daftar Pengguna</h1>
-    <table border="1">
-        <tr>
-            <th>Email</th>
-            <th>Username</th>
-            <th>Role</th>
-            <th>Aksi</th>
-        </tr>
-        <a href="/admin/users/add">+ Tambah Pengguna</a>
-        <tr th:each="user : ${users}">
-            <td th:text="${user.email}"></td>
-            <td th:text="${user.fullName}"></td>
-            <td th:text="${user.role}"></td>
-            <td>
-                <a th:href="@{|/admin/users/${user.id}|}">Detail</a>
-                <a th:href="@{|/admin/users/${user.id}/edit|}">Edit</a>
-                <form th:action="@{|/admin/users/${user.id}/delete|}" method="post" style="display:inline">
-                    <button type="submit" onclick="return confirm('Yakin hapus user ini?')">Hapus</button>
-                </form>
-            </td>
-        </tr>
-    </table>
+<body class="bg-slate-50 text-gray-800 overflow-x-hidden">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-brain text-white text-lg"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-teal-800">Asklepios</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/admin/dashboard" class="nav-link">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                    </a>
+                    <a href="/admin/users" class="nav-link nav-link-active">
+                        <i class="fas fa-users mr-2"></i>Pengguna
+                    </a>
+                    <a href="/admin/psychologists" class="nav-link">
+                        <i class="fas fa-user-md mr-2"></i>Psikolog
+                    </a>
+                    <a href="/admin/schedules" class="nav-link">
+                        <i class="fas fa-calendar-alt mr-2"></i>Jadwal
+                    </a>
+                    <a href="/admin/transactions" class="nav-link">
+                        <i class="fas fa-credit-card mr-2"></i>Transaksi
+                    </a>
+                    <a href="/admin/consultations" class="nav-link">
+                        <i class="fas fa-comments mr-2"></i>Konsultasi
+                    </a>
+                    <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-colors duration-300">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-24 pb-8">
+        <div class="container mx-auto px-6">
+            <!-- Header -->
+            <div class="mb-12">
+                <div class="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-3xl p-8 text-white relative overflow-hidden">
+                    <div class="absolute inset-0 opacity-10">
+                        <div class="w-32 h-32 bg-white rounded-full absolute -top-16 -right-16"></div>
+                        <div class="w-24 h-24 bg-white rounded-full absolute -bottom-12 -left-12"></div>
+                    </div>
+                    <div class="relative z-10">
+                        <h1 class="text-4xl font-bold mb-2">Manajemen Pengguna</h1>
+                        <p class="text-xl opacity-90">Kelola data pengguna sistem</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mb-8">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-3xl font-bold text-gray-900 flex items-center">
+                        <i class="fas fa-users text-teal-600 mr-3"></i>
+                        Daftar Pengguna
+                    </h2>
+                    <a href="/admin/users/add" class="add-button">
+                        <i class="fas fa-plus mr-2"></i>Tambah Pengguna
+                    </a>
+                </div>
+            </div>
+
+            <!-- User Table -->
+            <div>
+                <div class="bg-white rounded-2xl border border-slate-200 hover:border-teal-300 transition-colors duration-300 hover:shadow-lg">
+                    <div class="bg-gradient-to-r from-teal-50 to-emerald-50 p-6 border-b border-slate-200">
+                        <h3 class="text-xl font-semibold text-gray-900 flex items-center">
+                            <i class="fas fa-list text-teal-600 mr-3"></i>
+                            Semua Pengguna
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="overflow-x-auto">
+                            <table class="w-full user-table">
+                                <thead>
+                                    <tr class="border-b-2 border-slate-200">
+                                        <th class="text-left py-4 px-4 font-semibold text-gray-700">
+                                            <i class="fas fa-envelope text-teal-600 mr-2"></i>Email
+                                        </th>
+                                        <th class="text-left py-4 px-4 font-semibold text-gray-700">
+                                            <i class="fas fa-user text-teal-600 mr-2"></i>Nama Lengkap
+                                        </th>
+                                        <th class="text-left py-4 px-4 font-semibold text-gray-700">
+                                            <i class="fas fa-shield-alt text-teal-600 mr-2"></i>Role
+                                        </th>
+                                        <th class="text-center py-4 px-4 font-semibold text-gray-700">
+                                            <i class="fas fa-cogs text-teal-600 mr-2"></i>Aksi
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="user : ${users}" class="user-row border-b border-slate-100 hover:bg-slate-50 transition-colors duration-200">
+                                        <td class="py-5 px-4">
+                                            <div class="flex items-center">
+                                                <div class="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center mr-3">
+                                                    <i class="fas fa-at text-teal-600"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="font-semibold text-gray-800" th:text="${user.email}">user@example.com</div>
+                                                    <div class="text-sm text-gray-500">Email Address</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="py-5 px-4">
+                                            <div class="flex items-center">
+                                                <i class="fas fa-user-circle text-blue-500 mr-2"></i>
+                                                <span class="font-medium text-gray-700" th:text="${user.fullName}">John Doe</span>
+                                            </div>
+                                        </td>
+                                        <td class="py-5 px-4">
+                                            <!-- Fixed Role Display - Using switch statement for cleaner code -->
+                                            <span th:switch="${user.role.name()}">
+                                                <span th:case="'ADMIN'" class="role-badge role-admin">
+                                                    <i class="fas fa-crown mr-1"></i>Admin
+                                                </span>
+                                                <span th:case="'CLIENT'" class="role-badge role-user">
+                                                    <i class="fas fa-user mr-1"></i>Client
+                                                </span>
+                                                <span th:case="'PSYCHOLOGIST'" class="role-badge role-psychologist">
+                                                    <i class="fas fa-user-md mr-1"></i>Psikolog
+                                                </span>
+                                            </span>
+                                        </td>
+                                        <td class="py-5 px-4 text-center">
+                                            <div class="flex justify-center space-x-2">
+                                                <a th:href="@{'/admin/users/' + ${user.id}}" class="action-button detail-button">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a th:href="@{'/admin/users/' + ${user.id} + '/edit'}" class="action-button edit-button">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <form th:action="@{'/admin/users/' + ${user.id} + '/delete'}" method="post" style="display:inline">
+                                                    <button type="submit" class="action-button delete-button" onclick="return confirm('Yakin hapus user ini?')">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${users.empty}">
+                                        <td colspan="4" class="py-12 text-center text-gray-500">
+                                            <div class="flex flex-col items-center">
+                                                <i class="fas fa-users text-4xl mb-4 text-gray-300"></i>
+                                                <h3 class="text-lg font-semibold text-gray-600 mb-2">Belum Ada Pengguna</h3>
+                                                <p class="text-gray-500 mb-4">Silakan tambah pengguna baru</p>
+                                                <a href="/admin/users/add" class="add-button">
+                                                    <i class="fas fa-plus mr-2"></i>Tambah Pengguna Pertama
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Admin User Management JavaScript for Asklepios
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeBasicInteractions();
+            initializeTable();
+        });
+
+        function initializeBasicInteractions() {
+            const actionButtons = document.querySelectorAll('.action-button, .add-button');
+            actionButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    if (this.classList.contains('delete-button')) {
+                        if (!confirm('Yakin hapus user ini?')) {
+                            e.preventDefault();
+                            return;
+                        }
+                    }
+                    
+                    // Simple loading state
+                    this.style.pointerEvents = 'none';
+                    this.style.opacity = '0.7';
+                    
+                    const originalContent = this.innerHTML;
+                    if (this.classList.contains('add-button')) {
+                        this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Loading...';
+                    } else {
+                        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    }
+                    
+                    // Reset after 3 seconds
+                    setTimeout(() => {
+                        this.innerHTML = originalContent;
+                        this.style.pointerEvents = 'auto';
+                        this.style.opacity = '1';
+                    }, 3000);
+                });
+            });
+        }
+
+        function initializeTable() {
+            const headers = document.querySelectorAll('.user-table th');
+            headers.forEach(header => {
+                if (header.textContent.includes('Email') || header.textContent.includes('Nama')) {
+                    header.style.cursor = 'pointer';
+                    header.addEventListener('click', function() {
+                        console.log('Sorting by:', this.textContent);
+                    });
+                }
+            });
+
+            addSearchFunctionality();
+        }
+
+        function addSearchFunctionality() {
+            const userRows = document.querySelectorAll('.user-row');
+            
+            window.filterUsers = function(searchTerm) {
+                userRows.forEach(row => {
+                    const email = row.querySelector('td:first-child .font-semibold').textContent.toLowerCase();
+                    const fullName = row.querySelector('td:nth-child(2) span').textContent.toLowerCase();
+                    
+                    // Fixed role selector to handle switch case structure
+                    const roleElement = row.querySelector('td:nth-child(3) .role-badge');
+                    const role = roleElement ? roleElement.textContent.toLowerCase() : '';
+                    
+                    if (email.includes(searchTerm.toLowerCase()) || 
+                        fullName.includes(searchTerm.toLowerCase()) || 
+                        role.includes(searchTerm.toLowerCase())) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            };
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50`;
+            
+            switch(type) {
+                case 'success':
+                    notification.className += ' bg-green-500 text-white';
+                    break;
+                case 'error':
+                    notification.className += ' bg-red-500 text-white';
+                    break;
+                case 'warning':
+                    notification.className += ' bg-yellow-500 text-white';
+                    break;
+                default:
+                    notification.className += ' bg-blue-500 text-white';
+            }
+            
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : type === 'warning' ? 'exclamation' : 'info'}-circle mr-2"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 3000);
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+                e.preventDefault();
+                const addButton = document.querySelector('a[href*="/admin/users/add"]');
+                if (addButton) {
+                    addButton.click();
+                }
+            }
+        });
+
+        // Export functions for global use
+        window.UserManager = {
+            filterUsers,
+            showNotification
+        };
+    </script>
 </body>
 </html>
