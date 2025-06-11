@@ -1,131 +1,296 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
+
 <head>
     <title>Daftar Konsultasi - Asklepios</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
-        .consultations-container {
-            max-width: 1000px;
-            margin: 0 auto;
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
         }
-        .nav-links {
-            display: flex;
-            gap: 20px;
+
+        .floating-element {
+            animation: float 3s ease-in-out infinite;
         }
-        .nav-links a {
-            text-decoration: none;
-            color: #007bff;
-            font-weight: bold;
+
+        .nav-slide-down {
+            animation: slideDown 0.5s ease-out;
         }
-        .consultations-table {
-            width: 100%;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            overflow: hidden;
+
+        .section-fade-in {
+            animation: fadeIn 0.8s ease-out;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+
+        .table-fade-in {
+            animation: fadeIn 1s ease-out;
         }
-        table th, table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+
+        .floating-shape {
+            animation: float 4s ease-in-out infinite;
         }
-        table th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-            color: #333;
+
+        .floating-shape-reverse {
+            animation: float 4s ease-in-out infinite reverse;
         }
-        table tr:last-child td {
-            border-bottom: none;
+
+        .nav-link {
+            @apply text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50;
         }
+
         .status-pending {
-            color: #ffc107;
-            font-weight: bold;
+            @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800;
         }
+
         .status-confirmed {
-            color: #28a745;
-            font-weight: bold;
+            @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800;
         }
+
         .status-completed {
-            color: #6c757d;
-            font-weight: bold;
+            @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800;
         }
+
         .status-cancelled {
-            color: #dc3545;
-            font-weight: bold;
-        }
-        .action-links a {
-            text-decoration: none;
-            color: #007bff;
-        }
-        .action-links a:hover {
-            text-decoration: underline;
-        }
-        .empty-message {
-            text-align: center;
-            padding: 30px;
-            color: #6c757d;
+            @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800;
         }
     </style>
 </head>
-<body>
-    <div class="consultations-container">
-        <div class="header">
-            <h1>Daftar Konsultasi</h1>
-            <div class="nav-links">
-                <a href="/psychologist/dashboard">Dashboard</a>
-                <a href="/psychologist/profile">Profil</a>
-                <a href="/psychologist/schedules">Jadwal</a>
-                <a href="/logout">Logout</a>
+
+<body class="bg-slate-50 text-gray-800 overflow-x-hidden">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50 nav-slide-down">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-brain text-white text-lg"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-teal-800">Asklepios</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/psychologist/dashboard" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                    </a>
+                    <a href="/psychologist/profile" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
+                        <i class="fas fa-user mr-2"></i>Profil
+                    </a>
+                    <a href="/psychologist/schedules" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
+                        <i class="fas fa-clock mr-2"></i>Jadwal
+                    </a>
+                    <a href="/psychologist/consultations" class="bg-teal-50 text-teal-700 font-semibold px-3 py-2 rounded-lg transition-all duration-300">
+                        <i class="fas fa-comments mr-2"></i>Konsultasi
+                    </a>
+                    <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
             </div>
         </div>
+    </nav>
 
-        <div class="consultations-table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Tanggal & Waktu</th>
-                        <th>Klien</th>
-                        <th>Status</th>
-                        <th>Catatan</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="consultation : ${consultations}">
-                        <td th:text="${consultation.schedule.date} + ' ' + ${consultation.schedule.startTime} + ' - ' + ${consultation.schedule.endTime}">Waktu</td>
-                        <td th:text="${consultation.client.fullName}">Klien</td>
-                        <td>
-                            <span th:class="'status-' + ${consultation.status.toString().toLowerCase()}" 
-                                  th:text="${consultation.status}">Status</span>
-                        </td>
-                        <td th:text="${consultation.notes != null ? consultation.notes : '-'}">Catatan</td>
-                        <td class="action-links">
-                            <a th:href="@{'/psychologist/consultations/' + ${consultation.id}}">Detail</a>
-                        </td>
-                    </tr>
-                    <tr th:if="${consultations.empty}">
-                        <td colspan="5" class="empty-message">Belum ada konsultasi</td>
-                    </tr>
-                </tbody>
-            </table>
+    <div class="pt-24 pb-8">
+        <div class="container mx-auto px-6 max-w-6xl">
+            <!-- Statistics Cards -->
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-4 gap-6">
+                <!-- Total Consultations -->
+                <div
+                    class="bg-white rounded-2xl p-6 border border-slate-200 hover:border-blue-300 transition-all duration-500 hover:shadow-xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-comments text-blue-600 text-xl"></i>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-3xl font-bold text-blue-600" th:text="${consultations.size()}">0</div>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800">Total Konsultasi</h3>
+                    <p class="text-gray-600 text-sm">Semua konsultasi</p>
+                </div>
+
+                <!-- Pending Consultations -->
+                <div
+                    class="bg-white rounded-2xl p-6 border border-slate-200 hover:border-yellow-300 transition-all duration-500 hover:shadow-xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-3xl font-bold text-yellow-600" th:text="${consultations.?[status.toString() == 'PENDING'].size()}">0</div>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800">Menunggu</h3>
+                    <p class="text-gray-600 text-sm">Belum dikonfirmasi</p>
+                </div>
+
+                <!-- Confirmed Consultations -->
+                <div
+                    class="bg-white rounded-2xl p-6 border border-slate-200 hover:border-green-300 transition-all duration-500 hover:shadow-xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-3xl font-bold text-green-600" th:text="${consultations.?[status.toString() == 'CONFIRMED'].size()}">0</div>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800">Dikonfirmasi</h3>
+                    <p class="text-gray-600 text-sm">Siap dilaksanakan</p>
+                </div>
+
+                <!-- Completed Consultations -->
+                <div
+                    class="bg-white rounded-2xl p-6 border border-slate-200 hover:border-gray-300 transition-all duration-500 hover:shadow-xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-check-double text-gray-600 text-xl"></i>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-3xl font-bold text-gray-600" th:text="${consultations.?[status.toString() == 'COMPLETED'].size()}">0</div>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800">Selesai</h3>
+                    <p class="text-gray-600 text-sm">Sudah dilaksanakan</p>
+                </div>
+            </div>
+
+            <!-- Consultations Table -->
+            <div class="mt-8 table-fade-in">
+                <div
+                    class="bg-white rounded-2xl border border-slate-200 hover:border-teal-300 transition-all duration-500 hover:shadow-2xl overflow-hidden">
+                    <div class="bg-gradient-to-r from-teal-50 to-emerald-50 p-6 border-b border-slate-200">
+                        <h2 class="text-2xl font-bold text-gray-900 flex items-center">
+                            <i class="fas fa-comments text-teal-600 mr-3"></i>
+                            Daftar Konsultasi
+                        </h2>
+                        <p class="text-gray-600 mt-2">Kelola dan pantau semua konsultasi dengan klien Anda</p>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th
+                                        class="text-left py-4 px-6 font-semibold text-gray-700 border-b border-slate-200">
+                                        <i class="fas fa-calendar-day text-teal-600 mr-2"></i>
+                                        Tanggal & Waktu
+                                    </th>
+                                    <th
+                                        class="text-left py-4 px-6 font-semibold text-gray-700 border-b border-slate-200">
+                                        <i class="fas fa-user text-teal-600 mr-2"></i>
+                                        Klien
+                                    </th>
+                                    <th
+                                        class="text-left py-4 px-6 font-semibold text-gray-700 border-b border-slate-200">
+                                        <i class="fas fa-info-circle text-teal-600 mr-2"></i>
+                                        Status
+                                    </th>
+                                    <th
+                                        class="text-left py-4 px-6 font-semibold text-gray-700 border-b border-slate-200">
+                                        <i class="fas fa-sticky-note text-teal-600 mr-2"></i>
+                                        Catatan
+                                    </th>
+                                    <th
+                                        class="text-left py-4 px-6 font-semibold text-gray-700 border-b border-slate-200">
+                                        <i class="fas fa-cogs text-teal-600 mr-2"></i>
+                                        Aksi
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr th:each="consultation : ${consultations}"
+                                    class="hover:bg-slate-50 transition-colors duration-200">
+                                    <td class="py-4 px-6 text-gray-800 font-medium">
+                                        <div class="flex flex-col">
+                                            <span th:text="${consultation.schedule.date}">2023-06-01</span>
+                                            <span class="text-sm text-gray-500" 
+                                                  th:text="${consultation.schedule.startTime} + ' - ' + ${consultation.schedule.endTime}">
+                                                09:00 - 10:00
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="flex items-center">
+                                            <div class="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center mr-3">
+                                                <i class="fas fa-user text-teal-600"></i>
+                                            </div>
+                                            <div>
+                                                <div class="font-medium text-gray-800" th:text="${consultation.client.fullName}">
+                                                    Nama Klien
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <span th:class="'status-' + ${consultation.status.toString().toLowerCase()}" 
+                                              th:text="${consultation.status}">
+                                            Status
+                                        </span>
+                                    </td>
+                                    <td class="py-4 px-6 text-gray-700 max-w-xs">
+                                        <div class="truncate" th:text="${consultation.notes != null ? consultation.notes : '-'}">
+                                            Catatan konsultasi
+                                        </div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="flex items-center space-x-3">
+                                            <a th:href="@{'/psychologist/consultations/' + ${consultation.id}}"
+                                                class="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold transition-colors duration-300 hover:scale-105">
+                                                <i class="fas fa-eye mr-1"></i>
+                                                Detail
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr th:if="${consultations.empty}">
+                                    <td colspan="5" class="py-16 text-center">
+                                        <div class="flex flex-col items-center justify-center text-gray-500">
+                                            <i class="fas fa-comments text-6xl mb-4 text-gray-300"></i>
+                                            <div class="text-xl font-medium mb-2">Belum ada konsultasi</div>
+                                            <div class="text-sm mb-4">Konsultasi akan muncul setelah klien melakukan booking jadwal</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>
+
 </html>

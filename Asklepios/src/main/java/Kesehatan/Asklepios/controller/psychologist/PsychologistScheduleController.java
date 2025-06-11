@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import Kesehatan.Asklepios.model.PsychologistProfile;
 import Kesehatan.Asklepios.model.Schedule;
@@ -125,5 +126,80 @@ public class PsychologistScheduleController {
         scheduleService.save(schedule);
         
         return "redirect:/psychologist/schedules";
+    }
+    // Show edit form
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable String id, Model model, Principal principal) {
+        Schedule schedule = scheduleService.getById(id);
+        
+        // Verify this schedule belongs to the current psychologist
+        String email = principal.getName();
+        User psychologistUser = userService.getByEmail(email);
+        PsychologistProfile profile = profileRepository.findAll().stream()
+                .filter(p -> p.getUser().getId().equals(psychologistUser.getId()))
+                .findFirst()
+                .orElse(null);
+        
+        if (profile == null || !schedule.getPsychologist().getId().equals(profile.getId())) {
+            model.addAttribute("error", "Jadwal tidak ditemukan atau tidak dapat diakses");
+            return "redirect:/psychologist/schedules";
+        }
+        
+        if (schedule.getIsBooked()) {
+            model.addAttribute("error", "Jadwal yang sudah dipesan tidak dapat diubah");
+            return "redirect:/psychologist/schedules";
+        }
+        
+        model.addAttribute("schedule", schedule);
+        return "psychologist/schedules/edit";
+    }
+
+    // Process edit form
+    @PostMapping("/edit/{id}")
+    public String editSchedule(
+            @PathVariable String id,
+            @RequestParam("date") LocalDate date,
+            @RequestParam("startTime") LocalTime startTime,
+            @RequestParam("endTime") LocalTime endTime,
+            Principal principal,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+        
+        try {
+            Schedule schedule = scheduleService.getById(id);
+            
+            // Verify ownership and booking status
+            String email = principal.getName();
+            User psychologistUser = userService.getByEmail(email);
+            PsychologistProfile profile = profileRepository.findAll().stream()
+                    .filter(p -> p.getUser().getId().equals(psychologistUser.getId()))
+                    .findFirst()
+                    .orElse(null);
+            
+            if (profile == null || !schedule.getPsychologist().getId().equals(profile.getId())) {
+                redirectAttributes.addFlashAttribute("error", "Jadwal tidak ditemukan");
+                return "redirect:/psychologist/schedules";
+            }
+            
+            if (schedule.getIsBooked()) {
+                redirectAttributes.addFlashAttribute("error", "Jadwal yang sudah dipesan tidak dapat diubah");
+                return "redirect:/psychologist/schedules";
+            }
+            
+            // Update schedule
+            schedule.setDate(date);
+            schedule.setStartTime(startTime);
+            schedule.setEndTime(endTime);
+            
+            scheduleService.save(schedule);
+            
+            redirectAttributes.addFlashAttribute("success", "Jadwal berhasil diperbarui");
+            return "redirect:/psychologist/schedules";
+            
+        } catch (Exception e) {
+            model.addAttribute("error", "Terjadi kesalahan: " + e.getMessage());
+            model.addAttribute("schedule", scheduleService.getById(id));
+            return "psychologist/schedules/edit";
+        }
     }
 }

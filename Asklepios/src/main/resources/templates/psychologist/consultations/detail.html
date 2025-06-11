@@ -1,227 +1,362 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
 <head>
     <title>Detail Konsultasi - Asklepios</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
-        .consultation-container {
-            max-width: 800px;
-            margin: 0 auto;
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
         }
-        .nav-links {
-            display: flex;
-            gap: 20px;
+
+        .floating-element {
+            animation: float 3s ease-in-out infinite;
         }
-        .nav-links a {
-            text-decoration: none;
-            color: #007bff;
-            font-weight: bold;
+
+        .nav-slide-down {
+            animation: slideDown 0.5s ease-out;
         }
-        .consultation-card {
-            background: white;
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+
+        .section-fade-in {
+            animation: fadeIn 0.8s ease-out;
         }
-        .consultation-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
+
+        .form-fade-in {
+            animation: fadeIn 1s ease-out;
         }
-        .consultation-title {
-            font-size: 24px;
-            margin: 0;
+
+        .floating-shape {
+            animation: float 4s ease-in-out infinite;
         }
-        .consultation-status {
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-weight: bold;
+
+        .floating-shape-reverse {
+            animation: float 4s ease-in-out infinite reverse;
         }
+
         .status-pending {
             background-color: #fff3cd;
             color: #856404;
+            border-color: #ffeaa7;
         }
         .status-confirmed {
             background-color: #d4edda;
             color: #155724;
+            border-color: #c3e6cb;
         }
         .status-completed {
             background-color: #e2e3e5;
             color: #383d41;
+            border-color: #d1d3d4;
         }
         .status-cancelled {
             background-color: #f8d7da;
             color: #721c24;
-        }
-        .detail-section {
-            margin-bottom: 30px;
-        }
-        .detail-section h3 {
-            margin-top: 0;
-            color: #555;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
-        .detail-row {
-            display: flex;
-            margin-bottom: 10px;
-        }
-        .detail-label {
-            width: 150px;
-            font-weight: bold;
-            color: #666;
-        }
-        .detail-value {
-            flex: 1;
-        }
-        .update-form {
-            background: white;
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
-        select, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-        textarea {
-            height: 120px;
-            resize: vertical;
-        }
-        .update-button {
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .update-button:hover {
-            background-color: #218838;
-        }
-        .back-link {
-            display: inline-block;
-            margin-top: 20px;
-            color: #007bff;
-            text-decoration: none;
-        }
-        .back-link:hover {
-            text-decoration: underline;
+            border-color: #f5c6cb;
         }
     </style>
 </head>
-<body>
-    <div class="consultation-container">
-        <div class="header">
-            <h1>Detail Konsultasi</h1>
-            <div class="nav-links">
-                <a href="/psychologist/dashboard">Dashboard</a>
-                <a href="/psychologist/profile">Profil</a>
-                <a href="/psychologist/schedules">Jadwal</a>
-                <a href="/psychologist/consultations">Konsultasi</a>
+
+<body class="bg-slate-50 text-gray-800 overflow-x-hidden">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50 nav-slide-down">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-brain text-white text-lg"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-teal-800">Asklepios</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/psychologist/dashboard" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                    </a>
+                    <a href="/psychologist/profile" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
+                        <i class="fas fa-user mr-2"></i>Profil
+                    </a>
+                    <a href="/psychologist/schedules" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-teal-50">
+                        <i class="fas fa-clock mr-2"></i>Jadwal
+                    </a>
+                    <a href="/psychologist/consultations" class="bg-teal-50 text-teal-700 font-semibold px-3 py-2 rounded-lg transition-all duration-300">
+                        <i class="fas fa-comments mr-2"></i>Konsultasi
+                    </a>
+                    <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
             </div>
         </div>
+    </nav>
 
-        <div class="consultation-card">
-            <div class="consultation-header">
-                <h2 class="consultation-title">Konsultasi dengan <span th:text="${consultation.client.fullName}">Nama Klien</span></h2>
-                <span th:class="'consultation-status status-' + ${consultation.status.toString().toLowerCase()}" 
-                      th:text="${consultation.status}">Status</span>
+    <div class="pt-24 pb-8">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <!-- Consultation Detail Card -->
+            <div class="section-fade-in mb-8">
+                <div class="bg-white rounded-2xl border border-slate-200 hover:border-teal-300 transition-all duration-500 hover:shadow-2xl overflow-hidden">
+                    <div class="bg-teal-50 p-6 border-b border-slate-200">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-900 flex items-center">
+                                    <i class="fas fa-comments text-green-600 mr-3"></i>
+                                    <span>Konsultasi dengan</span>
+                                    <span class="ml-1" th:text="${consultation.client.fullName}">Nama Klien</span>
+                                </h2>                                
+                                <p class="text-gray-600 mt-2">Detail informasi konsultasi dan klien</p>
+                            </div>
+                            <span th:class="'px-4 py-2 rounded-full font-bold border status-' + ${consultation.status.toString().toLowerCase()}" 
+                                  th:text="${consultation.status}">Status</span>
+                        </div>
+                    </div>
+
+                    <div class="p-8 space-y-8">
+                        <!-- Schedule Information -->
+                        <div class="bg-white rounded-xl p-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                                <i class="fas fa-calendar-alt text-green-600 mr-2"></i>
+                                Informasi Jadwal
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-white rounded-lg p-4 border border-gray-200">
+                                    <div class="text-sm text-gray-600 mb-1 flex items-center">
+                                        <i class="fas fa-calendar-day text-blue-500 mr-2"></i>
+                                        Tanggal
+                                    </div>
+                                    <div class="font-semibold text-gray-800" th:text="${consultation.schedule.date}">2023-06-01</div>
+                                </div>
+                                <div class="bg-white rounded-lg p-4 border border-gray-200">
+                                    <div class="text-sm text-gray-600 mb-1 flex items-center">
+                                        <i class="fas fa-clock text-purple-500 mr-2"></i>
+                                        Waktu
+                                    </div>
+                                    <div class="font-semibold text-gray-800" th:text="${consultation.schedule.startTime} + ' - ' + ${consultation.schedule.endTime}">09:00 - 10:00</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Client Information -->
+                        <div class="bg-white rounded-xl p-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                                <i class="fas fa-user text-green-600 mr-2"></i>
+                                Informasi Klien
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-white rounded-lg p-4 border border-gray-200">
+                                    <div class="text-sm text-gray-600 mb-1 flex items-center">
+                                        <i class="fas fa-id-card text-blue-500 mr-2"></i>
+                                        Nama
+                                    </div>
+                                    <div class="font-semibold text-gray-800" th:text="${consultation.client.fullName}">Nama Klien</div>
+                                </div>
+                                <div class="bg-white rounded-lg p-4 border border-gray-200">
+                                    <div class="text-sm text-gray-600 mb-1 flex items-center">
+                                        <i class="fas fa-envelope text-green-500 mr-2"></i>
+                                        Email
+                                    </div>
+                                    <div class="font-semibold text-gray-800" th:text="${consultation.client.email}">email@example.com</div>
+                                </div>
+                                <div th:if="${consultation.client.phone != null}" class="bg-white rounded-lg p-4 border border-gray-200">
+                                    <div class="text-sm text-gray-600 mb-1 flex items-center">
+                                        <i class="fas fa-phone text-orange-500 mr-2"></i>
+                                        Telepon
+                                    </div>
+                                    <div class="font-semibold text-gray-800" th:text="${consultation.client.phone}">08123456789</div>
+                                </div>
+                                <div th:if="${consultation.client.gender != null}" class="bg-white rounded-lg p-4 border border-gray-200">
+                                    <div class="text-sm text-gray-600 mb-1 flex items-center">
+                                        <i class="fas fa-venus-mars text-pink-500 mr-2"></i>
+                                        Jenis Kelamin
+                                    </div>
+                                    <div class="font-semibold text-gray-800" th:text="${consultation.client.gender}">Laki-laki</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notes Section -->
+                        <div class="bg-white rounded-xl p-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                                <i class="fas fa-sticky-note text-green-600 mr-2"></i>
+                                Catatan
+                            </h3>
+                            <div class="bg-white rounded-lg p-4 border border-gray-200">
+                                <div th:if="${consultation.notes != null}" class="text-gray-700 leading-relaxed" th:text="${consultation.notes}">Catatan konsultasi</div>
+                                <div th:if="${consultation.notes == null}" class="text-gray-500 italic flex items-center">
+                                    <i class="fas fa-info-circle mr-2"></i>
+                                    Belum ada catatan
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="detail-section">
-                <h3>Informasi Jadwal</h3>
-                <div class="detail-row">
-                    <div class="detail-label">Tanggal</div>
-                    <div class="detail-value" th:text="${consultation.schedule.date}">2023-06-01</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Waktu</div>
-                    <div class="detail-value" th:text="${consultation.schedule.startTime} + ' - ' + ${consultation.schedule.endTime}">09:00 - 10:00</div>
-                </div>
-            </div>
+            <!-- Update Form -->
+            <div class="form-fade-in mb-8">
+                <div class="bg-white rounded-2xl border border-slate-200 hover:border-teal-300 transition-all duration-500 hover:shadow-2xl overflow-hidden">
+                    <div class="bg-teal-50 p-6 border-b border-slate-200">
+                        <h3 class="text-2xl font-bold text-gray-900 flex items-center">
+                            <i class="fas fa-edit text-teal-600 mr-3"></i>
+                            Update Status Konsultasi
+                        </h3>
+                        <p class="text-gray-600 mt-2">Perbarui status dan tambahkan catatan konsultasi</p>
+                    </div>
 
-            <div class="detail-section">
-                <h3>Informasi Klien</h3>
-                <div class="detail-row">
-                    <div class="detail-label">Nama</div>
-                    <div class="detail-value" th:text="${consultation.client.fullName}">Nama Klien</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Email</div>
-                    <div class="detail-value" th:text="${consultation.client.email}">email@example.com</div>
-                </div>
-                <div class="detail-row" th:if="${consultation.client.phone != null}">
-                    <div class="detail-label">Telepon</div>
-                    <div class="detail-value" th:text="${consultation.client.phone}">08123456789</div>
-                </div>
-                <div class="detail-row" th:if="${consultation.client.gender != null}">
-                    <div class="detail-label">Jenis Kelamin</div>
-                    <div class="detail-value" th:text="${consultation.client.gender}">Laki-laki</div>
-                </div>
-            </div>
+                    <div class="p-8">
+                        <form th:action="@{'/psychologist/consultations/' + ${consultation.id} + '/update-status'}" method="post" class="space-y-6">
+                            <!-- Status Selection -->
+                            <div class="space-y-2">
+                                <label for="status" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    <i class="fas fa-toggle-on text-teal-600 mr-2"></i>
+                                    Status Konsultasi
+                                </label>
+                                <select id="status" name="status" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-300 bg-white">
+                                    <option th:each="status : ${statuses}" 
+                                            th:value="${status}" 
+                                            th:text="${status}"
+                                            th:selected="${status == consultation.status}">Status</option>
+                                </select>
+                                <p class="text-sm text-gray-500 mt-1">
+                                    <i class="fas fa-lightbulb text-yellow-500 mr-1"></i>
+                                    Pilih status yang sesuai dengan kondisi konsultasi saat ini
+                                </p>
+                            </div>
 
-            <div class="detail-section">
-                <h3>Catatan</h3>
-                <div th:if="${consultation.notes != null}" th:text="${consultation.notes}">Catatan konsultasi</div>
-                <div th:if="${consultation.notes == null}">Belum ada catatan</div>
+                            <!-- Notes Textarea -->
+                            <div class="space-y-2">
+                                <label for="notes" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    <i class="fas fa-pen text-blue-600 mr-2"></i>
+                                    Catatan Konsultasi
+                                </label>
+                                <textarea id="notes" 
+                                          name="notes" 
+                                          rows="6"
+                                          class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-300 bg-white resize-vertical" 
+                                          placeholder="Tambahkan catatan atau observasi dari sesi konsultasi..."
+                                          th:text="${consultation.notes}"></textarea>
+                                <p class="text-sm text-gray-500 mt-1">
+                                    <i class="fas fa-info-circle text-blue-500 mr-1"></i>
+                                    Catatan ini akan membantu untuk follow-up konsultasi selanjutnya
+                                </p>
+                            </div>
+
+                            <!-- Form Actions -->
+                            <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
+                                <button type="submit" class="bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-xl hover:scale-105 transform flex items-center justify-center">
+                                    <i class="fas fa-save mr-2"></i>
+                                    Update Konsultasi
+                                </button>
+                                <a href="/psychologist/consultations" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-lg flex items-center justify-center">
+                                    <i class="fas fa-arrow-left mr-2"></i>
+                                    Kembali ke Daftar Konsultasi
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <div class="update-form">
-            <h3>Update Status Konsultasi</h3>
-            <form th:action="@{'/psychologist/consultations/' + ${consultation.id} + '/update-status'}" method="post">
-                <div class="form-group">
-                    <label for="status">Status</label>
-                    <select id="status" name="status">
-                        <option th:each="status : ${statuses}" 
-                                th:value="${status}" 
-                                th:text="${status}"
-                                th:selected="${status == consultation.status}">Status</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="notes">Catatan</label>
-                    <textarea id="notes" name="notes" th:text="${consultation.notes}"></textarea>
-                </div>
-                
-                <button type="submit" class="update-button">Update</button>
-            </form>
-        </div>
-
-        <a href="/psychologist/consultations" class="back-link">← Kembali ke Daftar Konsultasi</a>
     </div>
+
+    <!-- Floating Background Elements -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div class="absolute top-20 right-10 w-20 h-20 bg-teal-100 rounded-full opacity-20 floating-shape"></div>
+        <div class="absolute bottom-20 left-10 w-16 h-16 bg-emerald-100 rounded-full opacity-30 floating-shape-reverse"></div>
+        <div class="absolute top-1/2 left-1/4 w-12 h-12 bg-blue-100 rounded-full opacity-25 floating-shape"></div>
+        <div class="absolute top-1/3 right-1/3 w-14 h-14 bg-purple-100 rounded-full opacity-20 floating-shape-reverse"></div>
+    </div>
+
+    <script>
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const status = document.getElementById('status').value;
+            const notes = document.getElementById('notes').value.trim();
+            
+            // Confirm status change
+            if (status) {
+                const confirmed = confirm(`Apakah Anda yakin ingin mengubah status konsultasi menjadi "${status}"?`);
+                if (!confirmed) {
+                    e.preventDefault();
+                    return;
+                }
+            }
+            
+            // Encourage adding notes for completed consultations
+            if (status === 'COMPLETED' && notes.length < 10) {
+                const addNotes = confirm('Untuk konsultasi yang selesai, disarankan untuk menambahkan catatan. Lanjutkan tanpa catatan?');
+                if (!addNotes) {
+                    e.preventDefault();
+                    document.getElementById('notes').focus();
+                    return;
+                }
+            }
+        });
+
+        // Auto-resize textarea
+        const textarea = document.getElementById('notes');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // Character counter for textarea
+        const notesTextarea = document.getElementById('notes');
+        const maxLength = 1000;
+        
+        // Create character counter element
+        const counterElement = document.createElement('div');
+        counterElement.className = 'text-sm text-gray-500 text-right mt-1';
+        counterElement.innerHTML = `<i class="fas fa-keyboard mr-1"></i><span id="char-count">0</span>/${maxLength} karakter`;
+        notesTextarea.parentNode.appendChild(counterElement);
+
+        const charCountSpan = document.getElementById('char-count');
+
+        notesTextarea.addEventListener('input', function() {
+            const currentLength = this.value.length;
+            charCountSpan.textContent = currentLength;
+            
+            if (currentLength > maxLength * 0.9) {
+                counterElement.className = 'text-sm text-orange-500 text-right mt-1';
+            } else {
+                counterElement.className = 'text-sm text-gray-500 text-right mt-1';
+            }
+            
+            if (currentLength > maxLength) {
+                this.value = this.value.substring(0, maxLength);
+                charCountSpan.textContent = maxLength;
+                counterElement.className = 'text-sm text-red-500 text-right mt-1';
+            }
+        });
+
+        // Initialize character count
+        charCountSpan.textContent = notesTextarea.value.length;
+    </script>
 </body>
 </html>
