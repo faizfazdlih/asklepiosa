@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bukti Pembayaran - Asklepios</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Enhanced Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            color: #1f2937;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Enhanced Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            z-index: 50;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        nav .container {
+            padding: 1rem 1.5rem;
+        }
+
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .nav-logo {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, #0d9488, #14b8a6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
+        }
+
+        .nav-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #115e59, #0d9488);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            color: #374151;
+            text-decoration: none;
+            font-weight: 500;
+            border-radius: 0.75rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(13, 148, 136, 0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .nav-link:hover::before {
+            left: 100%;
+        }
+
+        .nav-link:hover {
+            color: #0d9488;
+            background-color: rgba(240, 253, 250, 0.8);
+            transform: translateY(-1px);
+        }
+
+        .nav-link-active {
+            color: #0d9488;
+            background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+            box-shadow: 0 2px 8px rgba(13, 148, 136, 0.2);
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Enhanced Main Content */
+        .main-content {
+            padding-top: 6rem;
+            padding-bottom: 2rem;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            max-width: 56rem;
+            margin: 0 auto;
+        }
+
+        /* Enhanced Receipt Container */
+        .receipt-container {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(243, 244, 246, 0.8);
+            padding: 3rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .receipt-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #0d9488, #14b8a6, #22d3ee);
+        }
+
+        /* Enhanced Receipt Header */
+        .receipt-header {
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .receipt-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .receipt-brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .receipt-logo {
+            width: 4rem;
+            height: 4rem;
+            background: linear-gradient(135deg, #0d9488, #14b8a6);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(13, 148, 136, 0.3);
+            margin-right: 1rem;
+        }
+
+        .receipt-logo i {
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .receipt-titles {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .receipt-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1f2937;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+            background: linear-gradient(135deg, #1f2937, #374151);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .receipt-subtitle {
+            font-size: 1.125rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .status-section {
+            text-align: right;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-paid {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+            border: 2px solid #34d399;
+            box-shadow: 0 4px 12px rgba(52, 211, 153, 0.3);
+        }
+
+        .status-paid::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Enhanced Info Grid */
+        .receipt-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .receipt-info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: rgba(248, 250, 252, 0.5);
+            border-radius: 0.75rem;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .receipt-info-item:hover {
+            background: rgba(240, 253, 250, 0.5);
+            border-color: rgba(13, 148, 136, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .receipt-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .receipt-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        /* Enhanced Receipt Sections */
+        .receipt-section {
+            background: linear-gradient(135deg, #f9fafb, #f3f4f6);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e5e7eb;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .receipt-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #0d9488, #14b8a6);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(229, 231, 235, 0.8);
+        }
+
+        .section-icon {
+            font-size: 1.5rem;
+            color: #0d9488;
+            margin-right: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(240, 253, 250, 0.8);
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.2);
+        }
+
+        .section-title {
+            font-size: 1.375rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        /* Enhanced Amount Section */
+        .amount-section {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe, #bfdbfe);
+            border-radius: 1.5rem;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            border: 2px solid #3b82f6;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.3);
+        }
+
+        .amount-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: float 10s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-10px, -10px) rotate(180deg); }
+        }
+
+        .amount-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .amount-label {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e40af;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .amount-value {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+        }
+
+        .currency {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .amount-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #1f2937;
+            font-family: 'Courier New', monospace;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Enhanced Footer */
+        .receipt-footer {
+            border-top: 2px solid #e5e7eb;
+            padding-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .footer-note {
+            display: flex;
+            align-items: flex-start;
+            background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border-left: 4px solid #0d9488;
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.1);
+        }
+
+        .footer-note i {
+            color: #0d9488;
+            margin-right: 0.5rem;
+            margin-top: 0.25rem;
+        }
+
+        .footer-text {
+            color: #374151;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .footer-timestamp {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(249, 250, 251, 0.8);
+            border-radius: 0.75rem;
+        }
+
+        .timestamp-text {
+            color: #6b7280;
+            font-size: 0.875rem;
+            font-style: italic;
+        }
+
+        /* Enhanced Action Buttons */
+        .receipt-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            border-radius: 1rem;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            min-width: 180px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0d9488, #14b8a6);
+            color: white;
+            box-shadow: 0 8px 25px rgba(13, 148, 136, 0.4);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0f766e, #0d9488);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(13, 148, 136, 0.5);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            color: #374151;
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            border-color: #0d9488;
+            color: #0d9488;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #6b7280;
+            border: 2px solid #d1d5db;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-outline:hover {
+            background: rgba(249, 250, 251, 0.8);
+            border-color: #9ca3af;
+            color: #374151;
+            transform: translateY(-2px);
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            nav {
+                display: none;
+            }
+            
+            .main-content {
+                padding-top: 0;
+            }
+            
+            .receipt-container {
+                box-shadow: none;
+                border: 1px solid #000;
+                margin: 0;
+                padding: 2rem;
+            }
+            
+            .receipt-actions {
+                display: none;
+            }
+            
+            .receipt-header {
+                border-bottom: 2px solid #000;
+            }
+            
+            .receipt-section {
+                border: 1px solid #ccc;
+                break-inside: avoid;
+            }
+            
+            .amount-section {
+                border: 2px solid #000;
+            }
+
+            .amount-section::before {
+                display: none;
+            }
+
+            .status-paid::before {
+                display: none;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .nav-link {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .main-content {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            .receipt-container {
+                padding: 2rem;
+            }
+            
+            .receipt-info-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .receipt-title {
+                font-size: 1.5rem;
+            }
+            
+            .amount-number {
+                font-size: 2.5rem;
+            }
+            
+            .receipt-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .receipt-header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .status-section {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .nav-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .receipt-brand {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .receipt-logo {
+                margin-right: 0;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .section-icon {
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Enhanced Navigation -->
+    <nav>
+        <div class="container">
+            <div class="nav-header">
+                <div class="nav-brand">
+                    <div class="nav-logo">
+                        <i class="fas fa-brain text-white text-lg"></i>
+                    </div>
+                    <h1 class="nav-title">Asklepios</h1>
+                </div>
+                <div class="nav-links">
+                    <a href="/client/dashboard" class="nav-link">
+                        <i class="fas fa-tachometer-alt" style="margin-right: 0.5rem;"></i>Dashboard
+                    </a>
+                    <a href="/client/consultations" class="nav-link">
+                        <i class="fas fa-comments" style="margin-right: 0.5rem;"></i>Konsultasi Saya
+                    </a>
+                    <a href="/client/transactions" class="nav-link nav-link-active">
+                        <i class="fas fa-credit-card" style="margin-right: 0.5rem;"></i>Transaksi
+                    </a>
+                    <a href="/client/profile" class="nav-link">
+                        <i class="fas fa-user" style="margin-right: 0.5rem;"></i>Profil
+                    </a>
+                    <a href="/logout" class="logout-btn">
+                        <i class="fas fa-sign-out-alt" style="margin-right: 0.5rem;"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <!-- Enhanced Receipt Container -->
+        <div class="receipt-container">
+            <!-- Enhanced Header Section -->
+            <div class="receipt-header">
+                <div class="receipt-header-content">
+                    <div class="receipt-brand">
+                        <div class="receipt-logo">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="receipt-titles">
+                            <h1 class="receipt-title">BUKTI PEMBAYARAN</h1>
+                            <p class="receipt-subtitle">Asklepios Psychological Services</p>
+                        </div>
+                    </div>
+                    <div class="status-section">
+                        <span class="status-badge status-paid">LUNAS</span>
+                    </div>
+                </div>
+                
+                <div class="receipt-info-grid">
+                    <div class="receipt-info-item">
+                        <span class="receipt-label">No. Transaksi</span>
+                        <span class="receipt-value" th:text="${transaction.id}">TRX123456789</span>
+                    </div>
+                    <div class="receipt-info-item">
+                        <span class="receipt-label">Tanggal Pembayaran</span>
+                        <span class="receipt-value" th:text="${#temporals.format(transaction.paymentDate, 'dd MMMM yyyy HH:mm')}">10 Juni 2025 14:30</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Client Information Section -->
+            <div class="receipt-section">
+                <div class="section-header">
+                    <i class="fas fa-user-circle section-icon"></i>
+                    <h2 class="section-title">Informasi Klien</h2>
+                </div>
+                <div class="receipt-info-grid">
+                    <div class="receipt-info-item">
+                        <span class="receipt-label">Nama Lengkap</span>
+                        <span class="receipt-value" th:text="${transaction.consultation.client.fullName}">John Doe</span>
+                    </div>
+                    <div class="receipt-info-item">
+                        <span class="receipt-label">Email</span>
+                        <span class="receipt-value" th:text="${transaction.consultation.client.email}">john.doe@example.com</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Consultation Information Section -->
+            <div class="receipt-section">
+                <div class="section-header">
+                    <i class="fas fa-calendar-check section-icon"></i>
+                    <h2 class="section-title">Detail Konsultasi</h2>
+                </div>
+                <div class="receipt-info-grid">
+                    <div class="receipt-info-item">
+                        <span class="receipt-label">Psikolog</span>
+                        <span class="receipt-value" th:text="${transaction.consultation.schedule.psychologist.user.fullName}">Dr. Jane Smith, M.Psi</span>
+                    </div>
+                    <div class="receipt-info-item">
+                        <span class="receipt-label">Tanggal Konsultasi</span>
+                        <span class="receipt-value" th:text="${#temporals.format(transaction.consultation.schedule.date, 'dd MMMM yyyy')}">15 Juni 2025</span>
+                    </div>
+                    <div class="receipt-info-item">
+                        <span class="receipt-label">Waktu Konsultasi</span>
+                        <span class="receipt-value">
+                            <span th:text="${#temporals.format(transaction.consultation.schedule.startTime, 'HH:mm')}">10:00</span> - 
+                            <span th:text="${#temporals.format(transaction.consultation.schedule.endTime, 'HH:mm')}">11:00</span> WIB
+                        </span>
+                    </div>
+                    <div class="receipt-info-item">
+                        <span class="receipt-label">Status Konsultasi</span>
+                        <span class="receipt-value">
+                            <span class="consultation-status" th:text="${transaction.consultation.status}">CONFIRMED</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Payment Information Section -->
+            <div class="receipt-section">
+                <div class="section-header">
+                    <i class="fas fa-credit-card section-icon"></i>
+                    <h2 class="section-title">Informasi Pembayaran</h2>
+                </div>
+                <div class="receipt-info-grid">
+                    <div class="receipt-info-item">
+                        <span class="receipt-label">Metode Pembayaran</span>
+                        <span class="receipt-value payment-method" th:text="${transaction.paymentMethod}">BANK_TRANSFER</span>
+                    </div>
+                    <div class="receipt-info-item">
+                        <span class="receipt-label">Status Pembayaran</span>
+                        <span class="receipt-value">
+                            <span class="payment-status" th:text="${transaction.status}">COMPLETED</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Amount Section -->
+            <div class="amount-section">
+                <div class="amount-container">
+                    <div class="amount-label">Total Pembayaran</div>
+                    <div class="amount-value">
+                        <span class="currency">Rp</span>
+                        <span class="amount-number" th:text="${#numbers.formatDecimal(transaction.amount, 0, 'COMMA', 0, 'POINT')}">500.000</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Footer Section -->
+            <div class="receipt-footer">
+                <div class="footer-content">
+                    <div class="footer-note">
+                        <i class="fas fa-info-circle"></i>
+                        <p class="footer-text">
+                            Bukti pembayaran ini merupakan dokumen sah dan dapat digunakan sebagai bukti transaksi. 
+                            Terima kasih telah menggunakan layanan Asklepios.
+                        </p>
+                    </div>
+                    <div class="footer-timestamp">
+                        <p class="timestamp-text">Dicetak pada: <span id="printDate"></span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Action Buttons -->
+            <div class="receipt-actions">
+                <button onclick="window.print()" class="btn btn-primary">
+                    <i class="fas fa-print" style="margin-right: 0.5rem;"></i>
+                    Cetak Bukti Pembayaran
+                </button>
+                <a th:href="@{'/client/consultations/detail/' + ${transaction.consultation.id}}" class="btn btn-secondary">
+                    <i class="fas fa-eye" style="margin-right: 0.5rem;"></i>
+                    Lihat Detail Konsultasi
+                </a>
+                <a href="/client/transactions" class="btn btn-outline">
+                    <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i>
+                    Kembali ke Transaksi
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current print date
+            const now = new Date();
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit',
+                timeZone: 'Asia/Jakarta'
+            };
+            document.getElementById('printDate').textContent = now.toLocaleDateString('id-ID', options) + ' WIB';
+
+            // Format payment method display
+            const paymentMethodElement = document.querySelector('.payment-method');
+            if (paymentMethodElement) {
+                const method = paymentMethodElement.textContent.trim();
+                const methodMap = {
+                    'BANK_TRANSFER': 'Transfer Bank',
+                    'E_WALLET': 'E-Wallet',
+                    'CREDIT_CARD': 'Kartu Kredit'
+                };
+                paymentMethodElement.textContent = methodMap[method] || method;
+            }
+
+            // Format consultation status display
+            const consultationStatusElement = document.querySelector('.consultation-status');
+            if (consultationStatusElement) {
+                const status = consultationStatusElement.textContent.trim();
+                const statusMap = {
+                    'CONFIRMED': 'Dikonfirmasi',
+                    'PENDING': 'Menunggu',
+                    'COMPLETED': 'Selesai',
+                    'CANCELLED': 'Dibatalkan'
+                };
+                consultationStatusElement.textContent = statusMap[status] || status;
+            }
+
+            // Format payment status display
+            const paymentStatusElement = document.querySelector('.payment-status');
+            if (paymentStatusElement) {
+                const status = paymentStatusElement.textContent.trim();
+                const statusMap = {
+                    'COMPLETED': 'Berhasil',
+                    'PENDING': 'Menunggu',
+                    'FAILED': 'Gagal'
+                };
+                paymentStatusElement.textContent = statusMap[status] || status;
+            }
+        });
+    </script>
+</body>
+</html>

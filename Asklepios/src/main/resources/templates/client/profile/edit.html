@@ -1,138 +1,244 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
 <head>
     <title>Edit Profil - Asklepios</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 30px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-            margin-bottom: 30px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-        .button-group {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-        }
-        .save-button {
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .save-button:hover {
-            background-color: #218838;
-        }
-        .cancel-button {
-            padding: 10px 20px;
-            background-color: #6c757d;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            text-decoration: none;
-        }
-        .cancel-button:hover {
-            background-color: #5a6268;
-        }
-        .nav-links {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        .nav-links a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        .nav-links a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/client/profile/edit.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-    <div class="container">
-        <div class="nav-links">
-            <a href="/client/dashboard">Dashboard</a>
-            <a href="/client/consultations">Konsultasi Saya</a>
-            <a href="/client/profile">Profil Saya</a>
-            <a href="/auth/logout">Logout</a>
+<body class="bg-slate-50 text-gray-800 overflow-x-hidden">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50 nav-slide-down">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center floating-element">
+                        <i class="fas fa-brain text-white text-lg"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-teal-800">Asklepios</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/client/dashboard" class="nav-link">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                    </a>
+                    <a href="/client/consultations" class="nav-link">
+                        <i class="fas fa-comments mr-2"></i>Konsultasi Saya
+                    </a>
+                    <a href="/client/transactions" class="nav-link">
+                        <i class="fas fa-credit-card mr-2"></i>Transaksi
+                    </a>
+                    <a href="/client/profile" class="nav-link nav-link-active">
+                        <i class="fas fa-user mr-2"></i>Profil
+                    </a>
+                    <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
+            </div>
         </div>
+    </nav>
 
-        <h1>Edit Profil</h1>
-        
-        <form th:action="@{/client/profile/update}" method="post">
-            <input type="hidden" name="id" th:value="${user.id}" />
-            
-            <div class="form-group">
-                <label for="fullName">Nama Lengkap</label>
-                <input type="text" id="fullName" name="fullName" th:value="${user.fullName}" required />
+    <div class="pt-24 pb-8">
+        <div class="container mx-auto px-6">
+            <!-- Header Section -->
+            <div class="mb-8 section-fade-in">
+                <div class="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-3xl p-8 text-white relative overflow-hidden">
+                    <div class="absolute inset-0 opacity-10">
+                        <div class="floating-shape w-32 h-32 bg-white rounded-full absolute -top-16 -right-16"></div>
+                        <div class="floating-shape-reverse w-24 h-24 bg-white rounded-full absolute -bottom-12 -left-12"></div>
+                    </div>
+                    <div class="relative z-10">
+                        <h1 class="text-4xl font-bold mb-2 flex items-center">
+                            <i class="fas fa-user-edit mr-3"></i>
+                            Edit Profil
+                        </h1>
+                        <p class="text-xl opacity-90">Perbarui informasi profil Anda</p>
+                    </div>
+                </div>
             </div>
-            
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" th:value="${user.email}" required readonly />
-                <small>Email tidak dapat diubah</small>
+
+            <!-- Profile Form Section -->
+            <div class="section-fade-in">
+                <div class="max-w-2xl mx-auto">
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden">
+                        <div class="p-8">
+                            <form th:action="@{/client/profile/update}" method="post" class="profile-form">
+                                <input type="hidden" name="id" th:value="${user.id}" />
+                                
+                                <div class="form-group">
+                                    <label for="fullName" class="form-label">
+                                        <i class="fas fa-user text-teal-600 mr-2"></i>
+                                        Nama Lengkap
+                                    </label>
+                                    <input type="text" id="fullName" name="fullName" th:value="${user.fullName}" 
+                                           class="form-input" required />
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="email" class="form-label">
+                                        <i class="fas fa-envelope text-teal-600 mr-2"></i>
+                                        Email
+                                    </label>
+                                    <input type="email" id="email" name="email" th:value="${user.email}" 
+                                           class="form-input form-input-readonly" required readonly />
+                                    <small class="form-help-text">Email tidak dapat diubah</small>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="phone" class="form-label">
+                                        <i class="fas fa-phone text-teal-600 mr-2"></i>
+                                        Nomor Telepon
+                                    </label>
+                                    <input type="tel" id="phone" name="phone" th:value="${user.phone}" 
+                                           class="form-input" required />
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="gender" class="form-label">
+                                        <i class="fas fa-venus-mars text-teal-600 mr-2"></i>
+                                        Jenis Kelamin
+                                    </label>
+                                    <select id="gender" name="gender" class="form-select" required>
+                                        <option value="MALE" th:selected="${user.gender == 'MALE'}">Laki-laki</option>
+                                        <option value="FEMALE" th:selected="${user.gender == 'FEMALE'}">Perempuan</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="password" class="form-label">
+                                        <i class="fas fa-lock text-teal-600 mr-2"></i>
+                                        Password Baru
+                                    </label>
+                                    <input type="password" id="password" name="password" class="form-input" />
+                                    <small class="form-help-text">Kosongkan jika tidak ingin mengubah password</small>
+                                </div>
+                                
+                                <div class="button-group">
+                                    <a href="/client/profile" class="cancel-button">
+                                        <i class="fas fa-times mr-2"></i>
+                                        Batal
+                                    </a>
+                                    <button type="submit" class="save-button">
+                                        <i class="fas fa-save mr-2"></i>
+                                        Simpan Perubahan
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-            
-            <div class="form-group">
-                <label for="phone">Nomor Telepon</label>
-                <input type="tel" id="phone" name="phone" th:value="${user.phone}" required />
-            </div>
-            
-            <div class="form-group">
-                <label for="gender">Jenis Kelamin</label>
-                <select id="gender" name="gender" required>
-                    <option value="MALE" th:selected="${user.gender == 'MALE'}">Laki-laki</option>
-                    <option value="FEMALE" th:selected="${user.gender == 'FEMALE'}">Perempuan</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="password">Password Baru (Kosongkan jika tidak ingin mengubah)</label>
-                <input type="password" id="password" name="password" />
-            </div>
-            
-            <div class="button-group">
-                <a href="/client/profile" class="cancel-button">Batal</a>
-                <button type="submit" class="save-button">Simpan Perubahan</button>
-            </div>
-        </form>
+        </div>
     </div>
+
+    <script>
+        // Animation initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate sections on page load
+            setTimeout(() => {
+                document.querySelectorAll('.section-fade-in').forEach(el => {
+                    el.classList.add('animate');
+                });
+            }, 100);
+
+            // Animate form elements
+            setTimeout(() => {
+                document.querySelectorAll('.form-group').forEach((el, index) => {
+                    setTimeout(() => {
+                        el.classList.add('animate');
+                    }, index * 100);
+                });
+            }, 300);
+
+            // Floating animation for logo
+            const floatingElement = document.querySelector('.floating-element');
+            if (floatingElement) {
+                setInterval(() => {
+                    floatingElement.style.transform = 'translateY(' + (Math.sin(Date.now() / 1000) * 3) + 'px)';
+                }, 50);
+            }
+
+            // Form validation and enhancement
+            const form = document.querySelector('.profile-form');
+            const inputs = form.querySelectorAll('input, select');
+            
+            // Add focus animations
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focused');
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.classList.remove('focused');
+                });
+            });
+
+            // Form submission animation
+            form.addEventListener('submit', function(e) {
+                const submitButton = this.querySelector('.save-button');
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Menyimpan...';
+                submitButton.disabled = true;
+            });
+
+            // Enhanced hover effects for buttons
+            document.querySelectorAll('.save-button, .cancel-button').forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px) scale(1.02)';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Input validation feedback
+            const phoneInput = document.getElementById('phone');
+            phoneInput.addEventListener('input', function() {
+                const phoneRegex = /^[\+]?[0-9\-\(\)\s]+$/;
+                if (this.value && !phoneRegex.test(this.value)) {
+                    this.classList.add('error');
+                } else {
+                    this.classList.remove('error');
+                }
+            });
+
+            // Password strength indicator
+            const passwordInput = document.getElementById('password');
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                let strength = 0;
+                
+                if (password.length >= 8) strength++;
+                if (/[A-Z]/.test(password)) strength++;
+                if (/[0-9]/.test(password)) strength++;
+                if (/[^A-Za-z0-9]/.test(password)) strength++;
+                
+                // Remove previous strength classes
+                this.classList.remove('weak', 'medium', 'strong');
+                
+                if (password.length > 0) {
+                    if (strength < 2) this.classList.add('weak');
+                    else if (strength < 4) this.classList.add('medium');
+                    else this.classList.add('strong');
+                }
+            });
+        });
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>

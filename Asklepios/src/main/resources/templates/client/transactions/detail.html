@@ -1,54 +1,231 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
 <head>
-    <title>Detail Transaksi</title>
-    <link rel="stylesheet" href="/css/styles.css" />
+    <title>Detail Transaksi - Asklepios</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/client/transactions/detail.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Detail Transaksi</h1>
-
-    <div>
-        <p><strong>ID Transaksi:</strong> <span th:text="${transaction.id}"></span></p>
-        
-        <p><strong>Tanggal Konsultasi:</strong> 
-            <span th:text="${#temporals.format(transaction.consultation.schedule.date, 'dd/MM/yyyy')} + ' ' + ${transaction.consultation.schedule.startTime}"></span>
-        </p>
-        
-        <p><strong>Psikolog:</strong> 
-            <span th:text="${transaction.consultation.schedule?.psychologist?.user?.fullName}">Dr. Psikolog</span>
-        </p>
-        
-        <p><strong>Jumlah (Rp):</strong> 
-            <span th:text="${#numbers.formatDecimal(transaction.amount, 0, 'COMMA', 2, 'POINT')}"></span>
-        </p>
-        
-        <p><strong>Status:</strong> <span th:text="${transaction.status}"></span></p>
-        
-        <div th:if="${transaction.status == 'PENDING'}">
-            <h3>Lakukan Pembayaran</h3>
-            <form th:action="@{'/client/transactions/' + ${transaction.id} + '/pay'}" method="post">
-                <label for="paymentMethod">Pilih Metode Pembayaran:</label>
-                <select id="paymentMethod" name="paymentMethod" required>
-                    <option value="BANK_TRANSFER">Transfer Bank</option>
-                    <option value="E_WALLET">E-Wallet</option>
-                    <option value="CREDIT_CARD">Kartu Kredit</option>
-                </select>
-                <br/><br/>
-                <button type="submit">Konfirmasi Pembayaran</button>
-            </form>
+<body class="bg-slate-50 text-gray-800">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-brain text-white text-lg"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-teal-800">Asklepios</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/client/dashboard" class="nav-link">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                    </a>
+                    <a href="/client/consultations" class="nav-link">
+                        <i class="fas fa-comments mr-2"></i>Konsultasi Saya
+                    </a>
+                    <a href="/client/transactions" class="nav-link nav-link-active">
+                        <i class="fas fa-credit-card mr-2"></i>Transaksi
+                    </a>
+                    <a href="/client/profile" class="nav-link">
+                        <i class="fas fa-user mr-2"></i>Profil
+                    </a>
+                    <a href="/auth/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-all duration-300">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
+            </div>
         </div>
-        
-        <div th:if="${transaction.status == 'PAID'}">
-            <p><strong>Tanggal Pembayaran:</strong> 
-                <span th:text="${#dates.format(transaction.paymentDate, 'dd/MM/yyyy HH:mm')}"></span>
-            </p>
-            <p><strong>Metode Pembayaran:</strong> 
-                <span th:text="${transaction.paymentMethod}"></span>
-            </p>
+    </nav>
+
+    <div class="pt-24 pb-8 min-h-screen">
+        <div class="container mx-auto px-6">
+            <!-- Header Section -->
+            <div class="mb-8">
+                <div class="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-3xl p-6 text-white relative overflow-hidden">
+                    <div class="absolute inset-0 opacity-10">
+                        <div class="w-24 h-24 bg-white rounded-full absolute -top-12 -right-12"></div>
+                        <div class="w-16 h-16 bg-white rounded-full absolute -bottom-8 -left-8"></div>
+                    </div>
+                    <div class="relative z-10 flex items-center">
+                        <i class="fas fa-file-invoice text-4xl mr-4"></i>
+                        <div>
+                            <h1 class="text-3xl font-bold mb-1">Detail Transaksi</h1>
+                            <p class="text-lg opacity-90">Informasi lengkap transaksi pembayaran</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transaction Detail Card -->
+            <div class="transaction-detail-card bg-white rounded-3xl border border-slate-200 shadow-sm">
+                <div class="p-8">
+                    <!-- Transaction Header -->
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-16 h-16 bg-teal-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-receipt text-teal-600 text-2xl"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-800" th:text="'TX-' + ${transaction.id}">TX-123</h2>
+                                <p class="text-gray-600">ID Transaksi</p>
+                            </div>
+                        </div>
+                        <div class="transaction-status" th:classappend="${#strings.toLowerCase(transaction.status)}">
+                            <span th:text="${transaction.status}">PENDING</span>
+                        </div>
+                    </div>
+
+                    <!-- Transaction Details Grid -->
+                    <div class="grid md:grid-cols-2 gap-6 mb-8">
+                        <!-- Consultation Date & Time -->
+                        <div class="detail-item">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-calendar text-blue-600"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-800">Tanggal Konsultasi</h3>
+                            </div>
+                            <p class="text-gray-600 ml-13" 
+                               th:text="${#temporals.format(transaction.consultation.schedule.date, 'dd/MM/yyyy')} + ' ' + ${transaction.consultation.schedule.startTime}">
+                                01/01/2023 10:00
+                            </p>
+                        </div>
+
+                        <!-- Psychologist -->
+                        <div class="detail-item">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-user-md text-purple-600"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-800">Psikolog</h3>
+                            </div>
+                            <p class="text-gray-600 ml-13" 
+                               th:text="${transaction.consultation.schedule?.psychologist?.user?.fullName}">
+                                Dr. Psikolog
+                            </p>
+                        </div>
+
+                        <!-- Amount -->
+                        <div class="detail-item">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-money-bill text-green-600"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-800">Jumlah</h3>
+                            </div>
+                            <p class="text-gray-600 ml-13">
+                                Rp <span th:text="${#numbers.formatDecimal(transaction.amount, 0, 'COMMA', 2, 'POINT')}">100,000.00</span>
+                            </p>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="detail-item">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-info-circle text-orange-600"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-800">Status</h3>
+                            </div>
+                            <div class="ml-13">
+                                <div class="transaction-status" th:classappend="${#strings.toLowerCase(transaction.status)}">
+                                    <span th:text="${transaction.status}">PENDING</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Section for PENDING status -->
+                    <div th:if="${transaction.status == 'PENDING'}" class="payment-section bg-yellow-50 border border-yellow-200 rounded-2xl p-6 mb-6">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-credit-card text-yellow-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800">Lakukan Pembayaran</h3>
+                        </div>
+                        
+                        <form th:action="@{'/client/transactions/' + ${transaction.id} + '/pay'}" method="post" class="payment-form">
+                            <div class="mb-4">
+                                <label for="paymentMethod" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Pilih Metode Pembayaran:
+                                </label>
+                                <select id="paymentMethod" name="paymentMethod" required 
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors">
+                                    <option value="BANK_TRANSFER">Transfer Bank</option>
+                                    <option value="E_WALLET">E-Wallet</option>
+                                    <option value="CREDIT_CARD">Kartu Kredit</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="payment-btn bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors duration-300 inline-flex items-center">
+                                <i class="fas fa-check mr-2"></i>
+                                Konfirmasi Pembayaran
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Payment Details for PAID status -->
+                    <div th:if="${transaction.status == 'PAID'}" class="payment-details bg-green-50 border border-green-200 rounded-2xl p-6 mb-6">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800">Pembayaran Berhasil</h3>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <p class="text-sm font-semibold text-gray-700 mb-1">Tanggal Pembayaran:</p>
+                                <p class="text-gray-600" th:text="${#dates.format(transaction.paymentDate, 'dd/MM/yyyy HH:mm')}">01/01/2023 10:30</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-700 mb-1">Metode Pembayaran:</p>
+                                <p class="text-gray-600" th:text="${transaction.paymentMethod}">BANK_TRANSFER</p>
+                            </div>
+                        </div>
+                        
+                        <a th:href="@{'/client/transactions/' + ${transaction.id} + '/receipt'}" 
+                           class="receipt-btn bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors duration-300 inline-flex items-center">
+                            <i class="fas fa-download mr-2"></i>
+                            Lihat Bukti Pembayaran
+                        </a>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex justify-start">
+                        <a href="/client/transactions" 
+                           class="back-btn bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors duration-300 inline-flex items-center">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            Kembali ke Daftar Transaksi
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    
-    <br/>
-    <a href="/client/transactions">Kembali ke Daftar Transaksi</a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simple fade-in animation for the transaction detail card
+            const card = document.querySelector('.transaction-detail-card');
+            if (card) {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100);
+            }
+
+            // Add loading state to payment form
+            const paymentForm = document.querySelector('.payment-form');
+            if (paymentForm) {
+                paymentForm.addEventListener('submit', function(e) {
+                    const submitBtn = paymentForm.querySelector('button[type="submit"]');
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Memproses...';
+                    submitBtn.disabled = true;
+                });
+            }
+        });
+    </script>
 </body>
 </html>

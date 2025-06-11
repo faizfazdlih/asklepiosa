@@ -1,236 +1,178 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
 <head>
     <title>Daftar Konsultasi - Asklepios</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h1,
-        h2 {
-            color: #333;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th,
-        td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-
-        tr:hover {
-            background-color: #f9f9f9;
-        }
-
-        .status {
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.9em;
-            font-weight: bold;
-        }
-
-        .status-pending {
-            background-color: #ffeeba;
-            color: #856404;
-        }
-
-        .status-confirmed {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .status-completed {
-            background-color: #c3e6cb;
-            color: #155724;
-        }
-
-        .status-cancelled {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
-        /* Tambahkan style untuk status pembayaran */
-        .payment-status {
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.9em;
-            font-weight: bold;
-        }
-
-        .payment-status-pending {
-            background-color: #ffeeba;
-            color: #856404;
-        }
-
-        .payment-status-paid {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .payment-status-failed {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
-        .payment-status-refund {
-            background-color: #cce5ff;
-            color: #004085;
-        }
-
-        .payment-status-none {
-            background-color: #e2e3e5;
-            color: #383d41;
-        }
-
-        .nav-links {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .nav-links a {
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        .nav-links a:hover {
-            text-decoration: underline;
-        }
-
-        .empty-message {
-            text-align: center;
-            padding: 30px;
-            color: #6c757d;
-        }
-
-        .btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 0.85em;
-            font-weight: bold;
-            display: inline-block;
-            margin-right: 5px;
-            text-align: center;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-
-        .btn-danger {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background-color: #c82333;
-        }
-
-        .btn-success {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background-color: #218838;
-        }
-
-        .action-column {
-            width: 180px;
-            text-align: center;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/client/consultations/ist.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-
-<body>
-    <div class="container">
-        <div class="nav-links">
-            <a href="/client/dashboard">Dashboard</a>
-            <a href="/client/consultations">Konsultasi Saya</a>
-            <a href="/client/profile">Profil Saya</a>
-            <a href="/auth/logout">Logout</a>
+<body class="bg-slate-50 text-gray-800">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-brain text-white text-lg"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-teal-800">Asklepios</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/client/dashboard" class="nav-link">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                    </a>
+                    <a href="/client/consultations" class="nav-link nav-link-active">
+                        <i class="fas fa-comments mr-2"></i>Konsultasi Saya
+                    </a>
+                    <a href="/client/transactions" class="nav-link">
+                        <i class="fas fa-credit-card mr-2"></i>Transaksi
+                    </a>
+                    <a href="/client/profile" class="nav-link">
+                        <i class="fas fa-user mr-2"></i>Profil
+                    </a>
+                    <a href="/auth/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-all duration-300">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
+            </div>
         </div>
-        <h1>Daftar Konsultasi Anda</h1>
-        <div th:if="${#lists.isEmpty(consultations)}" class="empty-message">
-            <p>Anda belum memiliki jadwal konsultasi.</p>
-            <a href="/client/dashboard">Cari Psikolog</a>
+    </nav>
+
+    <div class="pt-24 pb-8 min-h-screen">
+        <div class="container mx-auto px-6">
+            <!-- Header Section -->
+            <div class="mb-8">
+                <div class="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-3xl p-6 text-white relative overflow-hidden">
+                    <div class="absolute inset-0 opacity-10">
+                        <div class="w-24 h-24 bg-white rounded-full absolute -top-12 -right-12"></div>
+                        <div class="w-16 h-16 bg-white rounded-full absolute -bottom-8 -left-8"></div>
+                    </div>
+                    <div class="relative z-10 flex items-center">
+                        <i class="fas fa-comments text-4xl mr-4"></i>
+                        <div>
+                            <h1 class="text-3xl font-bold mb-1">Daftar Konsultasi Anda</h1>
+                            <p class="text-lg opacity-90">Kelola dan pantau semua konsultasi Anda</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div th:if="${#lists.isEmpty(consultations)}" class="text-center py-16">
+                <div class="bg-white rounded-3xl p-12 border border-slate-200 max-w-md mx-auto">
+                    <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-calendar-times text-gray-400 text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Belum Ada Konsultasi</h3>
+                    <p class="text-gray-600 mb-6">Anda belum memiliki jadwal konsultasi. Mulai konsultasi pertama Anda sekarang.</p>
+                    <a href="/client/dashboard" class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-xl font-medium transition-colors duration-300 inline-flex items-center">
+                        <i class="fas fa-search mr-2"></i>
+                        Cari Psikolog
+                    </a>
+                </div>
+            </div>
+
+            <!-- Consultations List -->
+            <div th:unless="${#lists.isEmpty(consultations)}" class="space-y-6">
+                <div th:each="consultation : ${consultations}" class="consultation-card bg-white rounded-3xl border border-slate-200 hover:border-teal-300 transition-all duration-300 hover:shadow-lg">
+                    <div class="p-6">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
+                                    <i class="fas fa-user-md text-teal-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-800" th:text="${consultation.schedule.psychologist.user.fullName}">
+                                        Dr. John Doe
+                                    </h3>
+                                    <p class="text-gray-600">Psikolog Klinis</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="status-badge" th:classappend="${#strings.toLowerCase(consultation.status)}">
+                                    <span th:text="${consultation.status}">PENDING</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-3 gap-4 mb-6">
+                            <!-- Date -->
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-calendar text-blue-600 text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-semibold uppercase">Tanggal</p>
+                                    <p class="text-sm font-medium text-gray-800" th:text="${consultation.schedule.date}">04 Juni 2025</p>
+                                </div>
+                            </div>
+
+                            <!-- Time -->
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-clock text-purple-600 text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-semibold uppercase">Waktu</p>
+                                    <p class="text-sm font-medium text-gray-800">
+                                        <span th:text="${consultation.schedule.startTime}">10:00</span> - 
+                                        <span th:text="${consultation.schedule.endTime}">11:00</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Payment Status -->
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-credit-card text-green-600 text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-semibold uppercase">Pembayaran</p>
+                                    <div class="payment-status" 
+                                         th:if="${consultation.transaction != null}"
+                                         th:classappend="${#strings.toLowerCase(consultation.transaction.status)}">
+                                        <span th:text="${consultation.transaction.status}">PAID</span>
+                                    </div>
+                                    <div th:if="${consultation.transaction == null}" class="payment-status none">
+                                        <span>BELUM ADA</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notes -->
+                        <div th:if="${consultation.notes}" class="mb-4 p-3 bg-gray-50 rounded-lg">
+                            <p class="text-xs text-gray-500 font-semibold uppercase mb-1">Catatan</p>
+                            <p class="text-sm text-gray-700" th:text="${consultation.notes}">Catatan konsultasi</p>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="flex justify-end">
+                            <a th:href="@{/client/consultations/detail/{id}(id=${consultation.id})}" 
+                               class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-300 inline-flex items-center">
+                                <i class="fas fa-eye mr-2"></i>
+                                Lihat Detail
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <table th:unless="${#lists.isEmpty(consultations)}">
-            <thead>
-                <tr>
-                    <th>Tanggal & Waktu</th>
-                    <th>Psikolog</th>
-                    <th>Status</th>
-                    <th>Status Pembayaran</th>
-                    <th>Catatan</th>
-                    <th class="action-column">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="consultation : ${consultations}">
-                    <td
-                        th:text="${consultation.schedule.date} + ' ' + ${consultation.schedule.startTime} + ' - ' + ${consultation.schedule.endTime}">
-                        Waktu</td>
-                    <td th:text="${consultation.schedule.psychologist.user.fullName}">Psikolog</td>
-                    <td>
-                        <span th:class="'status ' + 'status-' + ${#strings.toLowerCase(consultation.status)}"
-                            th:text="${consultation.status}">Status</span>
-                    </td>
-                    <td>
-                        <!-- Status Pembayaran -->
-                        <span th:if="${consultation.transaction != null}"
-                            th:class="'payment-status ' + 'payment-status-' + ${#strings.toLowerCase(consultation.transaction.status)}"
-                            th:text="${consultation.transaction.status}">Status Pembayaran</span>
-
-                        <span th:if="${consultation.transaction == null}"
-                            class="payment-status payment-status-none">BELUM ADA</span>
-                    </td>
-                    <td th:text="${consultation.notes}">Catatan</td>
-                    <td class="action-column">
-                        <!-- Detail Button - always available -->
-                        <a th:href="@{/client/consultations/detail/{id}(id=${consultation.id})}"
-                            class="btn btn-primary">Detail</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
     </div>
-</body>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simple fade-in animation for consultation cards
+            const cards = document.querySelectorAll('.consultation-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
 </html>

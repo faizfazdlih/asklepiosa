@@ -1,0 +1,232 @@
+/* Client Consultation Detail CSS for Asklepios */
+
+/* Navigation Links */
+.nav-link {
+    color: #4b5563;
+    transition-property: all;
+    transition-duration: 300ms;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.nav-link:hover {
+    color: #0d9488;
+    background-color: #f0fdfa;
+}
+
+.nav-link-active {
+    background-color: #ccfbf1;
+    color: #0f766e;
+}
+
+/* Info Styles */
+.info-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 0.5rem;
+}
+
+.info-value {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #111827;
+}
+
+/* Status Badge Styles */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.status-scheduled {
+    background-color: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+}
+
+.status-completed {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.status-cancelled {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+.status-pending {
+    background-color: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
+/* Alert Styles */
+.alert {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.alert i {
+    margin-right: 0.5rem;
+    font-size: 1.25rem;
+}
+
+.alert-error {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+.alert-success {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+/* Button Styles */
+.action-button {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition-property: all;
+    transition-duration: 300ms;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-button-primary {
+    background-color: #0d9488;
+    color: white;
+}
+
+.action-button-primary:hover {
+    background-color: #0f766e;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.action-button-secondary {
+    background-color: white;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+}
+
+.action-button-secondary:hover {
+    color: #0d9488;
+    border-color: #0d9488;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Transaction ID styling */
+.transaction-id {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    background-color: #f3f4f6;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    color: #374151;
+}
+
+/* Ripple effect for buttons */
+.ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.ripple:after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    transform: scale(10, 10);
+    opacity: 0;
+    transition: transform 0.5s, opacity 1s;
+}
+
+.ripple:active:after {
+    transform: scale(0, 0);
+    opacity: 0.3;
+    transition: 0s;
+}
+
+/* Toast notification */
+.toast {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: #1f2937;
+    color: white;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: translateY(100%);
+    opacity: 0;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+.toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.toast-success {
+    background-color: #065f46;
+    border-left: 4px solid #10b981;
+}
+
+.toast-info {
+    background-color: #1e40af;
+    border-left: 4px solid #3b82f6;
+}
+
+/* Enhanced card shadows */
+.card {
+    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.card:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transform: translateY(-5px);
+}
+
+/* Icon hover effects */
+.icon {
+    transition: transform 0.2s ease-in-out;
+}
+
+.icon:hover {
+    transform: scale(1.2);
+}

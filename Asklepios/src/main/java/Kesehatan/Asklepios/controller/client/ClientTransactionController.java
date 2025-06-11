@@ -89,7 +89,7 @@ public class ClientTransactionController {
             redirectAttributes.addFlashAttribute("error", "Anda tidak memiliki akses ke transaksi ini.");
             return "redirect:/client/transactions";
         }
-
+    
         try {
             transaction.setPaymentMethod(Transaction.PaymentMethod.valueOf(paymentMethod));
             transactionService.updatePaymentStatus(id, Transaction.Status.PAID, LocalDateTime.now());
@@ -97,8 +97,45 @@ public class ClientTransactionController {
             redirectAttributes.addFlashAttribute("error", "Gagal memproses pembayaran: " + e.getMessage());
             return "redirect:/client/transactions/" + id;
         }
-
+    
         redirectAttributes.addFlashAttribute("success", "Pembayaran berhasil diproses.");
+        return "redirect:/client/transactions/" + id + "/receipt";
+    }
+
+    // Menampilkan bukti pembayaran
+ @GetMapping("/{id}/receipt")
+public String viewReceipt(@PathVariable String id, Model model, Principal principal, RedirectAttributes redirectAttributes) {
+    System.out.println("=== DEBUG: Receipt accessed for ID: " + id);
+    
+    String email = principal.getName();
+    User client = userService.getByEmail(email);
+
+    Transaction transaction;
+    try {
+        transaction = transactionService.getById(id);
+        System.out.println("=== DEBUG: Transaction found, status: " + transaction.getStatus());
+    } catch (RuntimeException e) {
+        System.out.println("=== DEBUG: Transaction error: " + e.getMessage());
+        redirectAttributes.addFlashAttribute("error", "Transaksi tidak ditemukan.");
+        return "redirect:/client/transactions";
+    }
+
+    // Pastikan transaksi ini milik client yang sedang login
+    if (!transaction.getConsultation().getClient().getId().equals(client.getId())) {
+        System.out.println("=== DEBUG: Access denied");
+        redirectAttributes.addFlashAttribute("error", "Anda tidak memiliki akses ke transaksi ini.");
+        return "redirect:/client/transactions";
+    }
+
+    // Pastikan transaksi sudah dibayar
+    if (transaction.getStatus() != Transaction.Status.PAID) {
+        System.out.println("=== DEBUG: Transaction not paid yet: " + transaction.getStatus());
+        redirectAttributes.addFlashAttribute("error", "Bukti pembayaran hanya tersedia untuk transaksi yang sudah dibayar.");
         return "redirect:/client/transactions/" + id;
     }
+
+    model.addAttribute("transaction", transaction);
+    System.out.println("=== DEBUG: Returning template: client/transactions/receipt");
+    return "client/transactions/receipt";
+}
 }

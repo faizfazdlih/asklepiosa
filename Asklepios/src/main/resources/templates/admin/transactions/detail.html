@@ -1,45 +1,325 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
 <head>
-    <title>Detail Transaksi</title>
-    <link rel="stylesheet" href="/css/styles.css" />
+    <title>Detail Transaksi - Asklepios</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/admin/transactions/detail.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Detail Transaksi</h1>
+<body class="bg-slate-50 text-gray-800 overflow-x-hidden">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-brain text-white text-lg"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-teal-800">Asklepios</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/admin/dashboard" class="nav-link">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                    </a>
+                    <a href="/admin/users" class="nav-link">
+                        <i class="fas fa-users mr-2"></i>Pengguna
+                    </a>
+                    <a href="/admin/psychologists" class="nav-link">
+                        <i class="fas fa-user-md mr-2"></i>Psikolog
+                    </a>
+                    <a href="/admin/schedules" class="nav-link">
+                        <i class="fas fa-calendar-alt mr-2"></i>Jadwal
+                    </a>
+                    <a href="/admin/transactions" class="nav-link nav-link-active">
+                        <i class="fas fa-credit-card mr-2"></i>Transaksi
+                    </a>
+                    <a href="/admin/consultations" class="nav-link">
+                        <i class="fas fa-comments mr-2"></i>Konsultasi
+                    </a>
+                    <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-colors duration-300">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-    <div>
-        <p><strong>ID Transaksi:</strong> <span th:text="${transaction.id}"></span></p>
-        <p><strong>ID Konsultasi:</strong> <span th:text="${transaction.consultation.id}"></span></p>
-        <p><strong>Jumlah (Rp):</strong> <span th:text="${#numbers.formatDecimal(transaction.amount, 0, 'COMMA', 2, 'POINT')}"></span></p>
-    
-        <form th:action="@{'/admin/transactions/update/' + ${transaction.id}}" method="post">
-            <label for="paymentMethod">Metode Pembayaran:</label>
-            <select id="paymentMethod" name="paymentMethod" required>
-                <option th:selected="${transaction.paymentMethod == 'BANK_TRANSFER'}" value="BANK_TRANSFER">Bank Transfer</option>
-                <option th:selected="${transaction.paymentMethod == 'E_WALLET'}" value="E_WALLET">E-Wallet</option>
-                <option th:selected="${transaction.paymentMethod == 'CREDIT_CARD'}" value="CREDIT_CARD">Credit Card</option>
-            </select>
-            <br/><br/>
-    
-            <label for="status">Status Pembayaran:</label>
-            <select id="status" name="status" required>
-                <option th:selected="${transaction.status == 'PENDING'}" value="PENDING">Pending</option>
-                <option th:selected="${transaction.status == 'PAID'}" value="PAID">Paid</option>
-                <option th:selected="${transaction.status == 'FAILED'}" value="FAILED">Failed</option>
-                <option th:selected="${transaction.status == 'REFUND'}" value="REFUND">Refund</option>
-            </select>
-            <br/><br/>
-    
-            <label for="paymentDate">Tanggal Bayar:</label>
-            <input type="datetime-local" id="paymentDate" name="paymentDate"
-                   th:value="${transaction.paymentDate != null} ? ${#temporals.format(transaction.paymentDate, 'yyyy-MM-dd''T''HH:mm')} : ''" />
-            <br/><br/>
-    
-            <button type="submit">Update</button>
-        </form>
+    <div class="pt-24 pb-8">
+        <div class="container mx-auto px-6">
+            <!-- Header -->
+            <div class="mb-12">
+                <div class="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-3xl p-8 text-white relative overflow-hidden">
+                    <div class="absolute inset-0 opacity-10">
+                        <div class="w-32 h-32 bg-white rounded-full absolute -top-16 -right-16"></div>
+                        <div class="w-24 h-24 bg-white rounded-full absolute -bottom-12 -left-12"></div>
+                    </div>
+                    <div class="relative z-10">
+                        <h1 class="text-4xl font-bold mb-2">Detail Transaksi</h1>
+                        <p class="text-xl opacity-90">Kelola informasi transaksi pembayaran</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Breadcrumb -->
+            <div class="mb-8">
+                <nav class="flex" aria-label="Breadcrumb">
+                    <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                        <li class="inline-flex items-center">
+                            <a href="/admin/transactions" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-teal-600">
+                                <i class="fas fa-credit-card mr-2"></i>
+                                Transaksi
+                            </a>
+                        </li>
+                        <li>
+                            <div class="flex items-center">
+                                <i class="fas fa-chevron-right text-gray-400 mx-2"></i>
+                                <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2">Detail</span>
+                            </div>
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+
+            <!-- Transaction Detail Card -->
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-2xl border border-slate-200 hover:border-teal-300 transition-colors duration-300 hover:shadow-lg">
+                    <div class="bg-gradient-to-r from-teal-50 to-emerald-50 p-6 border-b border-slate-200">
+                        <h2 class="text-2xl font-semibold text-gray-900 flex items-center">
+                            <i class="fas fa-receipt text-teal-600 mr-3"></i>
+                            Informasi Transaksi
+                        </h2>
+                    </div>
+                    
+                    <div class="p-8">
+                        <!-- Transaction Info Display -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                            <div class="detail-item">
+                                <label class="detail-label">
+                                    <i class="fas fa-hashtag text-teal-600 mr-2"></i>
+                                    ID Transaksi
+                                </label>
+                                <div class="detail-value transaction-id" th:text="${transaction.id}">TX123</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <label class="detail-label">
+                                    <i class="fas fa-comments text-blue-600 mr-2"></i>
+                                    ID Konsultasi
+                                </label>
+                                <div class="detail-value consultation-id" th:text="${transaction.consultation.id}">CONSULT123</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <label class="detail-label">
+                                    <i class="fas fa-money-bill text-green-600 mr-2"></i>
+                                    Jumlah Pembayaran
+                                </label>
+                                <div class="detail-value amount" th:text="'Rp ' + ${#numbers.formatDecimal(transaction.amount, 0, 'COMMA', 2, 'POINT')}">Rp 100,000.00</div>
+                            </div>
+                        </div>
+
+                        <!-- Update Form -->
+                        <form th:action="@{'/admin/transactions/update/' + ${transaction.id}}" method="post" class="transaction-form">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="form-group">
+                                    <label for="paymentMethod" class="form-label">
+                                        <i class="fas fa-credit-card text-purple-600 mr-2"></i>
+                                        Metode Pembayaran
+                                    </label>
+                                    <select id="paymentMethod" name="paymentMethod" required class="form-select">
+                                        <option th:selected="${transaction.paymentMethod == 'BANK_TRANSFER'}" value="BANK_TRANSFER">Bank Transfer</option>
+                                        <option th:selected="${transaction.paymentMethod == 'E_WALLET'}" value="E_WALLET">E-Wallet</option>
+                                        <option th:selected="${transaction.paymentMethod == 'CREDIT_CARD'}" value="CREDIT_CARD">Credit Card</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="status" class="form-label">
+                                        <i class="fas fa-info-circle text-orange-600 mr-2"></i>
+                                        Status Pembayaran
+                                    </label>
+                                    <select id="status" name="status" required class="form-select">
+                                        <option th:selected="${transaction.status == 'PENDING'}" value="PENDING">Pending</option>
+                                        <option th:selected="${transaction.status == 'PAID'}" value="PAID">Paid</option>
+                                        <option th:selected="${transaction.status == 'FAILED'}" value="FAILED">Failed</option>
+                                        <option th:selected="${transaction.status == 'REFUND'}" value="REFUND">Refund</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group md:col-span-2">
+                                    <label for="paymentDate" class="form-label">
+                                        <i class="fas fa-calendar-day text-indigo-600 mr-2"></i>
+                                        Tanggal Bayar
+                                    </label>
+                                    <input type="datetime-local" id="paymentDate" name="paymentDate" class="form-input"
+                                           th:value="${transaction.paymentDate != null} ? ${#temporals.format(transaction.paymentDate, 'yyyy-MM-dd''T''HH:mm')} : ''" />
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="flex flex-col sm:flex-row justify-between items-center mt-8 pt-6 border-t border-slate-200">
+                                <a href="/admin/transactions" class="back-button mb-4 sm:mb-0">
+                                    <i class="fas fa-arrow-left mr-2"></i>
+                                    Kembali ke Daftar Transaksi
+                                </a>
+                                
+                                <button type="submit" class="update-button">
+                                    <i class="fas fa-save mr-2"></i>
+                                    Update Transaksi
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    
-    <br/>
-    <a href="/admin/transactions">Kembali ke Daftar Transaksi</a>
+
+    <!-- Notification Container -->
+    <div id="notification-container" class="fixed top-4 right-4 z-50"></div>
+
+    <script>
+        // Transaction Detail JavaScript for Asklepios
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeForm();
+            initializeNotifications();
+            initializeValidation();
+        });
+
+        function initializeForm() {
+            const form = document.querySelector('.transaction-form');
+            const updateButton = document.querySelector('.update-button');
+            
+            if (form && updateButton) {
+                form.addEventListener('submit', function(e) {
+                    // Add loading state
+                    updateButton.disabled = true;
+                    updateButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Memperbarui...';
+                    updateButton.classList.add('loading');
+                    
+                    // Reset after submission (for demo purposes)
+                    setTimeout(() => {
+                        updateButton.disabled = false;
+                        updateButton.innerHTML = '<i class="fas fa-save mr-2"></i>Update Transaksi';
+                        updateButton.classList.remove('loading');
+                    }, 2000);
+                });
+            }
+        }
+
+        function initializeNotifications() {
+            // Check for success/error messages from URL parameters or flash attributes
+            const urlParams = new URLSearchParams(window.location.search);
+            const message = urlParams.get('message');
+            const type = urlParams.get('type');
+            
+            if (message) {
+                showNotification(decodeURIComponent(message), type || 'info');
+            }
+        }
+
+        function initializeValidation() {
+            const paymentMethodSelect = document.getElementById('paymentMethod');
+            const statusSelect = document.getElementById('status');
+            const paymentDateInput = document.getElementById('paymentDate');
+            
+            // Real-time validation
+            statusSelect.addEventListener('change', function() {
+                if (this.value === 'PAID' && !paymentDateInput.value) {
+                    paymentDateInput.classList.add('required-field');
+                    showNotification('Silakan isi tanggal pembayaran untuk status "Paid"', 'warning');
+                } else {
+                    paymentDateInput.classList.remove('required-field');
+                }
+            });
+
+            // Auto-clear payment date when status is not PAID
+            statusSelect.addEventListener('change', function() {
+                if (this.value !== 'PAID') {
+                    paymentDateInput.value = '';
+                }
+            });
+        }
+
+        function showNotification(message, type = 'info') {
+            const container = document.getElementById('notification-container');
+            const notification = document.createElement('div');
+            
+            notification.className = `notification notification-${type}`;
+            
+            const iconMap = {
+                'success': 'check-circle',
+                'error': 'exclamation-circle',
+                'warning': 'exclamation-triangle',
+                'info': 'info-circle'
+            };
+            
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-${iconMap[type] || 'info-circle'} mr-3"></i>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white hover:text-gray-200">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Form validation before submit
+        function validateForm() {
+            const status = document.getElementById('status').value;
+            const paymentDate = document.getElementById('paymentDate').value;
+            
+            if (status === 'PAID' && !paymentDate) {
+                showNotification('Tanggal pembayaran harus diisi untuk status "Paid"', 'error');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                if (validateForm()) {
+                    document.querySelector('.transaction-form').submit();
+                }
+            }
+            
+            if (e.key === 'Escape') {
+                window.location.href = '/admin/transactions';
+            }
+        });
+
+        // Status change handler
+        document.getElementById('status').addEventListener('change', function() {
+            const statusValue = this.value;
+            const paymentDateGroup = document.getElementById('paymentDate').closest('.form-group');
+            
+            if (statusValue === 'PAID') {
+                paymentDateGroup.classList.add('required-field');
+            } else {
+                paymentDateGroup.classList.remove('required-field');
+            }
+        });
+
+        // Export functions for global use
+        window.TransactionDetail = {
+            showNotification,
+            validateForm
+        };
+    </script>
 </body>
 </html>

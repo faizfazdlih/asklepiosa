@@ -1,38 +1,537 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
 <head>
-    <title>Tambah Pengguna</title>
+    <title>Tambah Pengguna - Asklepios</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/admin/users/add.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Tambah Pengguna Baru</h1>
+<style>
+    .form-input {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+    }
+</style>
 
-    <form th:action="@{/admin/users/add}" method="post">
-        <label>Email:</label><br>
-        <input type="email" name="email" required><br><br>
+<body class="bg-slate-50 text-gray-800 overflow-x-hidden">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-brain text-white text-lg"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-teal-800">Asklepios</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/admin/dashboard" class="nav-link">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                    </a>
+                    <a href="/admin/users" class="nav-link nav-link-active">
+                        <i class="fas fa-users mr-2"></i>Pengguna
+                    </a>
+                    <a href="/admin/psychologists" class="nav-link">
+                        <i class="fas fa-user-md mr-2"></i>Psikolog
+                    </a>
+                    <a href="/admin/schedules" class="nav-link">
+                        <i class="fas fa-calendar-alt mr-2"></i>Jadwal
+                    </a>
+                    <a href="/admin/transactions" class="nav-link">
+                        <i class="fas fa-credit-card mr-2"></i>Transaksi
+                    </a>
+                    <a href="/admin/consultations" class="nav-link">
+                        <i class="fas fa-comments mr-2"></i>Konsultasi
+                    </a>
+                    <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-colors duration-300">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-        <label>Password:</label><br>
-        <input type="password" name="password" required><br><br>
+    <div class="pt-24 pb-8">
+        <div class="container mx-auto px-6">
+            <!-- Header -->
+            <div class="mb-12">
+                <div class="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-3xl p-8 text-white relative overflow-hidden">
+                    <div class="absolute inset-0 opacity-10">
+                        <div class="w-32 h-32 bg-white rounded-full absolute -top-16 -right-16"></div>
+                        <div class="w-24 h-24 bg-white rounded-full absolute -bottom-12 -left-12"></div>
+                    </div>
+                    <div class="relative z-10">
+                        <h1 class="text-4xl font-bold mb-2">Tambah Pengguna</h1>
+                        <p class="text-xl opacity-90">Tambah pengguna baru ke sistem</p>
+                    </div>
+                </div>
+            </div>
 
-        <label>Nama Lengkap:</label><br>
-        <input type="text" name="fullName" required><br><br>
+            <!-- Breadcrumb -->
+            <div class="mb-8">
+                <nav class="flex items-center space-x-2 text-sm text-gray-600">
+                    <a href="/admin/users" class="breadcrumb-link">
+                        <i class="fas fa-users mr-1"></i>Pengguna
+                    </a>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                    <span class="text-teal-600 font-medium">
+                        <i class="fas fa-user-plus mr-1"></i>Tambah
+                    </span>
+                </nav>
+            </div>
 
-        <label>No HP:</label><br>
-        <input type="text" name="phone"><br><br>
+            <!-- Add Form -->
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-2xl border border-slate-200 hover:border-teal-300 transition-colors duration-300 hover:shadow-lg">
+                    <div class="bg-gradient-to-r from-teal-50 to-emerald-50 p-6 border-b border-slate-200">
+                        <h3 class="text-xl font-semibold text-gray-900 flex items-center">
+                            <i class="fas fa-user-plus text-teal-600 mr-3"></i>
+                            Form Tambah Pengguna
+                        </h3>
+                    </div>
+                    
+                    <div class="p-8">
+                        <form th:action="@{/admin/users/add}" method="post" class="space-y-8">
+                            <!-- Email -->
+                            <div class="form-group">
+                                <label for="email" class="form-label">
+                                    <i class="fas fa-envelope text-teal-600 mr-2"></i>Email
+                                </label>
+                                <input type="email" id="email" name="email" required
+                                    class="form-input" placeholder="Masukkan alamat email">
+                            </div>
 
-        <label>Jenis Kelamin:</label><br>
-        <select name="gender">
-            <option th:each="g : ${genders}" th:value="${g}" th:text="${g}"></option>
-        </select><br><br>
+                            <!-- Password -->
+                            <div class="form-group">
+                                <label for="password" class="form-label">
+                                    <i class="fas fa-lock text-teal-600 mr-2"></i>Password
+                                </label>
+                                <div class="relative">
+                                    <input type="password" id="password" name="password" required
+                                        class="form-input pr-12" placeholder="Masukkan password">
+                                    <button type="button" id="togglePassword" 
+                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-teal-600 transition-colors">
+                                        <i class="fas fa-eye" id="eyeIcon"></i>
+                                    </button>
+                                </div>
+                                <div class="mt-2 text-sm text-gray-600">
+                                    <ul class="space-y-1">
+                                        <li class="flex items-center">
+                                            <i class="fas fa-circle text-xs mr-2 text-gray-400" id="lengthCheck"></i>
+                                            <span id="lengthText">Minimal 8 karakter</span>
+                                        </li>
+                                        <li class="flex items-center">
+                                            <i class="fas fa-circle text-xs mr-2 text-gray-400" id="upperCheck"></i>
+                                            <span id="upperText">Minimal 1 huruf besar</span>
+                                        </li>
+                                        <li class="flex items-center">
+                                            <i class="fas fa-circle text-xs mr-2 text-gray-400" id="numberCheck"></i>
+                                            <span id="numberText">Minimal 1 angka</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
 
-        <label>Role:</label><br>
-        <select name="role">
-            <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
-        </select><br><br>
+                            <!-- Nama Lengkap -->
+                            <div class="form-group">
+                                <label for="fullName" class="form-label">
+                                    <i class="fas fa-user text-teal-600 mr-2"></i>Nama Lengkap
+                                </label>
+                                <input type="text" id="fullName" name="fullName" required
+                                    class="form-input" placeholder="Masukkan nama lengkap">
+                            </div>
 
-        <button type="submit">Simpan</button>
-    </form>
+                            <!-- No HP -->
+                            <div class="form-group">
+                                <label for="phone" class="form-label">
+                                    <i class="fas fa-phone text-teal-600 mr-2"></i>No HP
+                                </label>
+                                <input type="text" id="phone" name="phone"
+                                    class="form-input" placeholder="Masukkan nomor HP (opsional)">
+                                <p class="text-sm text-gray-500 mt-1">Format: +6281234567890 (opsional)</p>
+                            </div>
 
-    <br>
-    <a href="/admin/users">Kembali ke daftar pengguna</a>
+                            <!-- Gender -->
+                            <div class="form-group">
+                                <label for="gender" class="form-label">
+                                    <i class="fas fa-venus-mars text-teal-600 mr-2"></i>Jenis Kelamin
+                                </label>
+                                <select id="gender" name="gender" class="form-select">
+                                    <option value="">Pilih Jenis Kelamin</option>
+                                    <option th:each="g : ${genders}"
+                                            th:value="${g}"
+                                            th:text="${g}">
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- Role -->
+                            <div class="form-group">
+                                <label for="role" class="form-label">
+                                    <i class="fas fa-shield-alt text-teal-600 mr-2"></i>Role
+                                </label>
+                                <select id="role" name="role" class="form-select">
+                                    <option value="">Pilih Role</option>
+                                    <option th:each="r : ${roles}"
+                                            th:value="${r}"
+                                            th:text="${r}">
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="flex justify-between items-center pt-6 border-t border-slate-200">
+                                <a href="/admin/users" class="back-button">
+                                    <i class="fas fa-arrow-left mr-2"></i>Kembali ke Daftar
+                                </a>
+                                
+                                <div class="flex space-x-4">
+                                    <button type="reset" class="reset-button">
+                                        <i class="fas fa-undo mr-2"></i>Reset
+                                    </button>
+                                    <button type="submit" class="save-button">
+                                        <i class="fas fa-save mr-2"></i>Simpan Pengguna
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add User JavaScript for Asklepios
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeForm();
+            initializeValidation();
+            initializePasswordToggle();
+            initializePasswordValidation();
+            addKeyboardShortcuts();
+        });
+
+        function initializeForm() {
+            const form = document.querySelector('form');
+            const saveButton = document.querySelector('.save-button');
+            const resetButton = document.querySelector('.reset-button');
+            
+            // Form submission handling
+            form.addEventListener('submit', function(e) {
+                if (!validateForm()) {
+                    e.preventDefault();
+                    return;
+                }
+                
+                // Show loading state
+                saveButton.disabled = true;
+                saveButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Menyimpan...';
+                saveButton.style.pointerEvents = 'none';
+                saveButton.style.opacity = '0.7';
+            });
+
+            // Reset button handling
+            resetButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Yakin ingin mereset semua data yang sudah diisi?')) {
+                    form.reset();
+                    // Reset password validation indicators
+                    resetPasswordValidation();
+                    showNotification('Form telah direset', 'info');
+                }
+            });
+
+            // Auto-format phone number
+            const phoneInput = document.getElementById('phone');
+            phoneInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.startsWith('62')) {
+                    value = '+' + value;
+                } else if (value.startsWith('0')) {
+                    value = '+62' + value.substring(1);
+                } else if (value && !value.startsWith('+')) {
+                    value = '+62' + value;
+                }
+                e.target.value = value;
+            });
+        }
+
+        function initializeValidation() {
+            const inputs = document.querySelectorAll('.form-input, .form-select');
+            
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    validateField(this);
+                });
+                
+                input.addEventListener('input', function() {
+                    if (this.classList.contains('error')) {
+                        validateField(this);
+                    }
+                });
+            });
+        }
+
+        function initializePasswordToggle() {
+            const toggleButton = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
+
+            toggleButton.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                if (type === 'text') {
+                    eyeIcon.classList.remove('fa-eye');
+                    eyeIcon.classList.add('fa-eye-slash');
+                } else {
+                    eyeIcon.classList.remove('fa-eye-slash');
+                    eyeIcon.classList.add('fa-eye');
+                }
+            });
+        }
+
+        function initializePasswordValidation() {
+            const passwordInput = document.getElementById('password');
+            
+            passwordInput.addEventListener('input', function() {
+                validatePasswordStrength(this.value);
+            });
+        }
+
+        function validatePasswordStrength(password) {
+            const lengthCheck = document.getElementById('lengthCheck');
+            const upperCheck = document.getElementById('upperCheck');
+            const numberCheck = document.getElementById('numberCheck');
+            const lengthText = document.getElementById('lengthText');
+            const upperText = document.getElementById('upperText');
+            const numberText = document.getElementById('numberText');
+
+            // Length check
+            if (password.length >= 8) {
+                lengthCheck.classList.remove('fa-circle', 'text-gray-400');
+                lengthCheck.classList.add('fa-check-circle', 'text-green-500');
+                lengthText.classList.add('text-green-600');
+            } else {
+                lengthCheck.classList.remove('fa-check-circle', 'text-green-500');
+                lengthCheck.classList.add('fa-circle', 'text-gray-400');
+                lengthText.classList.remove('text-green-600');
+            }
+
+            // Uppercase check
+            if (/[A-Z]/.test(password)) {
+                upperCheck.classList.remove('fa-circle', 'text-gray-400');
+                upperCheck.classList.add('fa-check-circle', 'text-green-500');
+                upperText.classList.add('text-green-600');
+            } else {
+                upperCheck.classList.remove('fa-check-circle', 'text-green-500');
+                upperCheck.classList.add('fa-circle', 'text-gray-400');
+                upperText.classList.remove('text-green-600');
+            }
+
+            // Number check
+            if (/\d/.test(password)) {
+                numberCheck.classList.remove('fa-circle', 'text-gray-400');
+                numberCheck.classList.add('fa-check-circle', 'text-green-500');
+                numberText.classList.add('text-green-600');
+            } else {
+                numberCheck.classList.remove('fa-check-circle', 'text-green-500');
+                numberCheck.classList.add('fa-circle', 'text-gray-400');
+                numberText.classList.remove('text-green-600');
+            }
+        }
+
+        function resetPasswordValidation() {
+            const checks = ['lengthCheck', 'upperCheck', 'numberCheck'];
+            const texts = ['lengthText', 'upperText', 'numberText'];
+            
+            checks.forEach(id => {
+                const element = document.getElementById(id);
+                element.classList.remove('fa-check-circle', 'text-green-500');
+                element.classList.add('fa-circle', 'text-gray-400');
+            });
+            
+            texts.forEach(id => {
+                const element = document.getElementById(id);
+                element.classList.remove('text-green-600');
+            });
+        }
+
+        function validateField(field) {
+            const value = field.value.trim();
+            let isValid = true;
+            let errorMessage = '';
+            
+            // Remove existing error styling
+            field.classList.remove('error');
+            const existingError = field.parentNode.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            // Validate based on field type
+            if (field.name === 'email' && field.required) {
+                if (!value) {
+                    isValid = false;
+                    errorMessage = 'Email harus diisi';
+                } else {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(value)) {
+                        isValid = false;
+                        errorMessage = 'Format email tidak valid';
+                    }
+                }
+            }
+            
+            if (field.name === 'password' && field.required) {
+                if (!value) {
+                    isValid = false;
+                    errorMessage = 'Password harus diisi';
+                } else {
+                    if (value.length < 8) {
+                        isValid = false;
+                        errorMessage = 'Password minimal 8 karakter';
+                    } else if (!/[A-Z]/.test(value)) {
+                        isValid = false;
+                        errorMessage = 'Password harus mengandung minimal 1 huruf besar';
+                    } else if (!/\d/.test(value)) {
+                        isValid = false;
+                        errorMessage = 'Password harus mengandung minimal 1 angka';
+                    }
+                }
+            }
+            
+            if (field.name === 'fullName' && field.required) {
+                if (!value) {
+                    isValid = false;
+                    errorMessage = 'Nama lengkap harus diisi';
+                } else if (value.length < 2) {
+                    isValid = false;
+                    errorMessage = 'Nama lengkap minimal 2 karakter';
+                }
+            }
+            
+            if (field.name === 'phone' && value) {
+                const phoneRegex = /^\+62\d{9,13}$/;
+                if (!phoneRegex.test(value)) {
+                    isValid = false;
+                    errorMessage = 'Format nomor HP tidak valid (contoh: +6281234567890)';
+                }
+            }
+            
+            // Show error if invalid
+            if (!isValid) {
+                field.classList.add('error');
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message text-red-500 text-sm mt-1';
+                errorDiv.textContent = errorMessage;
+                
+                // Insert error message after the input (or after password validation for password field)
+                if (field.name === 'password') {
+                    const passwordValidation = field.parentNode.parentNode.querySelector('.mt-2.text-sm.text-gray-600');
+                    passwordValidation.parentNode.insertBefore(errorDiv, passwordValidation.nextSibling);
+                } else {
+                    field.parentNode.appendChild(errorDiv);
+                }
+            }
+            
+            return isValid;
+        }
+
+        function validateForm() {
+            const inputs = document.querySelectorAll('.form-input[required], .form-select[required]');
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (!validateField(input)) {
+                    isValid = false;
+                }
+            });
+            
+            if (!isValid) {
+                showNotification('Mohon periksa kembali data yang diisi', 'error');
+            }
+            
+            return isValid;
+        }
+
+        function addKeyboardShortcuts() {
+            document.addEventListener('keydown', function(e) {
+                // Ctrl+S to save
+                if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                    e.preventDefault();
+                    document.querySelector('.save-button').click();
+                }
+                
+                // Ctrl+R to reset
+                if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+                    e.preventDefault();
+                    document.querySelector('.reset-button').click();
+                }
+                
+                // Escape to go back
+                if (e.key === 'Escape') {
+                    const backButton = document.querySelector('.back-button');
+                    if (backButton) {
+                        backButton.click();
+                    }
+                }
+            });
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300`;
+            
+            switch(type) {
+                case 'success':
+                    notification.className += ' bg-green-500 text-white';
+                    break;
+                case 'error':
+                    notification.className += ' bg-red-500 text-white';
+                    break;
+                case 'warning':
+                    notification.className += ' bg-yellow-500 text-white';
+                    break;
+                default:
+                    notification.className += ' bg-blue-500 text-white';
+            }
+            
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : type === 'warning' ? 'exclamation' : 'info'}-circle mr-2"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Export for global use
+        window.AddUserManager = {
+            validateForm,
+            showNotification
+        };
+    </script>
 </body>
 </html>
