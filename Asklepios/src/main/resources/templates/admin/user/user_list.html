@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="/admin/users/list.css" rel="stylesheet">
+    <link href="/admin/user/list.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-slate-50 text-gray-800 overflow-x-hidden">
-    <!-- Navigation -->
+   <!-- Navigation -->
     <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50">
         <div class="container mx-auto px-6 py-4">
             <div class="flex justify-between items-center">
@@ -38,32 +38,47 @@
                     <a href="/admin/consultations" class="nav-link">
                         <i class="fas fa-comments mr-2"></i>Konsultasi
                     </a>
-                    <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-colors duration-300">
-                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                    </a>
+                    <button id="logoutBtn" class="logout-button">
+                        <i class="fas fa-sign-out-alt mr-2"></i><span>Logout</span>
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
 
+    <!-- Custom Alert Modal -->
+    <div id="alertOverlay" class="alert-overlay">
+        <div class="alert-modal">
+            <div class="alert-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 class="alert-title">Logout</h3>
+            <p class="alert-message">Yakin ingin keluar?</p>
+            <div class="alert-buttons">
+                <button id="cancelBtn" class="alert-button alert-button-cancel">Batal</button>
+                <button id="confirmBtn" class="alert-button alert-button-confirm">Ya, Keluar</button>
+            </div>
+        </div>
+    </div>
+
     <div class="pt-24 pb-8">
         <div class="container mx-auto px-6">
             <!-- Header -->
-            <div class="mb-12">
+            <div class="mb-12 section-fade-in">
                 <div class="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-3xl p-8 text-white relative overflow-hidden">
                     <div class="absolute inset-0 opacity-10">
-                        <div class="w-32 h-32 bg-white rounded-full absolute -top-16 -right-16"></div>
-                        <div class="w-24 h-24 bg-white rounded-full absolute -bottom-12 -left-12"></div>
+                        <div class="floating-shape w-32 h-32 bg-white rounded-full absolute -top-16 -right-16"></div>
+                        <div class="floating-shape-reverse w-24 h-24 bg-white rounded-full absolute -bottom-12 -left-12"></div>
                     </div>
                     <div class="relative z-10">
                         <h1 class="text-4xl font-bold mb-2">Manajemen Pengguna</h1>
-                        <p class="text-xl opacity-90">Kelola data pengguna sistem</p>
+                        <p class="text-xl opacity-90">Kelola data pengguna sistem dengan mudah dan efisien</p>
                     </div>
                 </div>
             </div>
 
             <!-- Action Buttons -->
-            <div class="mb-8">
+            <div class="mb-8 section-fade-in">
                 <div class="flex justify-between items-center">
                     <h2 class="text-3xl font-bold text-gray-900 flex items-center">
                         <i class="fas fa-users text-teal-600 mr-3"></i>
@@ -75,11 +90,31 @@
                 </div>
             </div>
 
+            <!-- Search and Filter Section -->
+            <div class="mb-8 section-fade-in">
+                <div class="bg-white rounded-2xl border border-slate-200 hover:border-teal-300 transition-all duration-300 hover:shadow-lg p-6">
+                    <div class="flex flex-col md:flex-row gap-4 items-center">
+                        <div class="flex-1">
+                            <div class="relative">
+                                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <input type="text" id="searchInput" placeholder="Cari berdasarkan nama, email, atau role..." 
+                                       class="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-300">
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button id="clearSearchBtn" class="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition-colors duration-300">
+                                <i class="fas fa-times mr-2"></i>Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- User Table -->
-            <div>
-                <div class="bg-white rounded-2xl border border-slate-200 hover:border-teal-300 transition-colors duration-300 hover:shadow-lg">
+            <div class="data-table-card">
+                <div class="bg-white rounded-2xl border border-slate-200 hover:border-teal-300 transition-all duration-500 hover:shadow-2xl overflow-hidden">
                     <div class="bg-gradient-to-r from-teal-50 to-emerald-50 p-6 border-b border-slate-200">
-                        <h3 class="text-xl font-semibold text-gray-900 flex items-center">
+                        <h3 class="text-2xl font-bold text-gray-900 flex items-center">
                             <i class="fas fa-list text-teal-600 mr-3"></i>
                             Semua Pengguna
                         </h3>
@@ -107,7 +142,7 @@
                                     <tr th:each="user : ${users}" class="user-row border-b border-slate-100 hover:bg-slate-50 transition-colors duration-200">
                                         <td class="py-5 px-4">
                                             <div class="flex items-center">
-                                                <div class="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center mr-3">
+                                                <div class="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center mr-3">
                                                     <i class="fas fa-at text-teal-600"></i>
                                                 </div>
                                                 <div>
@@ -118,17 +153,18 @@
                                         </td>
                                         <td class="py-5 px-4">
                                             <div class="flex items-center">
-                                                <i class="fas fa-user-circle text-blue-500 mr-2"></i>
+                                                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                                    <i class="fas fa-user text-blue-600"></i>
+                                                </div>
                                                 <span class="font-medium text-gray-700" th:text="${user.fullName}">John Doe</span>
                                             </div>
                                         </td>
                                         <td class="py-5 px-4">
-                                            <!-- Fixed Role Display - Using switch statement for cleaner code -->
                                             <span th:switch="${user.role.name()}">
                                                 <span th:case="'ADMIN'" class="role-badge role-admin">
                                                     <i class="fas fa-crown mr-1"></i>Admin
                                                 </span>
-                                                <span th:case="'CLIENT'" class="role-badge role-user">
+                                                <span th:case="'CLIENT'" class="role-badge role-client">
                                                     <i class="fas fa-user mr-1"></i>Client
                                                 </span>
                                                 <span th:case="'PSYCHOLOGIST'" class="role-badge role-psychologist">
@@ -138,14 +174,14 @@
                                         </td>
                                         <td class="py-5 px-4 text-center">
                                             <div class="flex justify-center space-x-2">
-                                                <a th:href="@{'/admin/users/' + ${user.id}}" class="action-button detail-button">
+                                                <a th:href="@{'/admin/users/' + ${user.id}}" class="action-button detail-button" title="Lihat Detail">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a th:href="@{'/admin/users/' + ${user.id} + '/edit'}" class="action-button edit-button">
+                                                <a th:href="@{'/admin/users/' + ${user.id} + '/edit'}" class="action-button edit-button" title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                                 <form th:action="@{'/admin/users/' + ${user.id} + '/delete'}" method="post" style="display:inline">
-                                                    <button type="submit" class="action-button delete-button" onclick="return confirm('Yakin hapus user ini?')">
+                                                    <button type="submit" class="action-button delete-button" title="Hapus" onclick="return confirm('Yakin hapus user ini?')">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </form>
@@ -157,7 +193,7 @@
                                             <div class="flex flex-col items-center">
                                                 <i class="fas fa-users text-4xl mb-4 text-gray-300"></i>
                                                 <h3 class="text-lg font-semibold text-gray-600 mb-2">Belum Ada Pengguna</h3>
-                                                <p class="text-gray-500 mb-4">Silakan tambah pengguna baru</p>
+                                                <p class="text-gray-500 mb-4">Silakan tambah pengguna baru untuk memulai</p>
                                                 <a href="/admin/users/add" class="add-button">
                                                     <i class="fas fa-plus mr-2"></i>Tambah Pengguna Pertama
                                                 </a>
@@ -178,6 +214,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             initializeBasicInteractions();
             initializeTable();
+            initializeLogout();
+            initializeSearch();
         });
 
         function initializeBasicInteractions() {
@@ -222,36 +260,105 @@
                     });
                 }
             });
-
-            addSearchFunctionality();
         }
 
-        function addSearchFunctionality() {
+        function initializeLogout() {
+            const logoutBtn = document.getElementById('logoutBtn');
+            const alertOverlay = document.getElementById('alertOverlay');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const confirmBtn = document.getElementById('confirmBtn');
+
+            if (!logoutBtn || !alertOverlay) return;
+
+            // Show logout confirmation
+            logoutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                showLogoutAlert();
+            });
+
+            // Cancel logout
+            cancelBtn.addEventListener('click', function() {
+                hideLogoutAlert();
+            });
+
+            // Confirm logout
+            confirmBtn.addEventListener('click', function() {
+                hideLogoutAlert();
+                window.location.href = '/logout';
+            });
+
+            // Close modal when clicking overlay
+            alertOverlay.addEventListener('click', function(e) {
+                if (e.target === alertOverlay) {
+                    hideLogoutAlert();
+                }
+            });
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && alertOverlay.classList.contains('show')) {
+                    hideLogoutAlert();
+                }
+            });
+        }
+
+        function showLogoutAlert() {
+            const alertOverlay = document.getElementById('alertOverlay');
+            alertOverlay.classList.add('show');
+            document.body.style.overflow = 'hidden';
+            
+            setTimeout(() => {
+                document.getElementById('cancelBtn').focus();
+            }, 100);
+        }
+
+        function hideLogoutAlert() {
+            const alertOverlay = document.getElementById('alertOverlay');
+            alertOverlay.classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        function initializeSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const clearBtn = document.getElementById('clearSearchBtn');
             const userRows = document.querySelectorAll('.user-row');
             
-            window.filterUsers = function(searchTerm) {
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    filterUsers(searchTerm);
+                });
+            }
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function() {
+                    searchInput.value = '';
+                    filterUsers('');
+                });
+            }
+
+            function filterUsers(searchTerm) {
                 userRows.forEach(row => {
                     const email = row.querySelector('td:first-child .font-semibold').textContent.toLowerCase();
                     const fullName = row.querySelector('td:nth-child(2) span').textContent.toLowerCase();
                     
-                    // Fixed role selector to handle switch case structure
                     const roleElement = row.querySelector('td:nth-child(3) .role-badge');
                     const role = roleElement ? roleElement.textContent.toLowerCase() : '';
                     
-                    if (email.includes(searchTerm.toLowerCase()) || 
-                        fullName.includes(searchTerm.toLowerCase()) || 
-                        role.includes(searchTerm.toLowerCase())) {
+                    if (email.includes(searchTerm) || 
+                        fullName.includes(searchTerm) || 
+                        role.includes(searchTerm)) {
                         row.style.display = '';
                     } else {
                         row.style.display = 'none';
                     }
                 });
-            };
+            }
         }
 
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50`;
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 notification-${type}`;
             
             switch(type) {
                 case 'success':
@@ -277,7 +384,9 @@
             document.body.appendChild(notification);
             
             setTimeout(() => {
-                document.body.removeChild(notification);
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
             }, 3000);
         }
 
@@ -290,11 +399,18 @@
                     addButton.click();
                 }
             }
+            
+            if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                e.preventDefault();
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) {
+                    searchInput.focus();
+                }
+            }
         });
 
         // Export functions for global use
         window.UserManager = {
-            filterUsers,
             showNotification
         };
     </script>

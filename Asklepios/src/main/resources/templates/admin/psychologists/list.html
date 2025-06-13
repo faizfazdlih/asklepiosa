@@ -5,15 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Psikolog - Admin | Asklepios</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="/admin/psychologists/list.css" rel="stylesheet">
+    <link href="/admin/dashboard/dashboard.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-slate-50 text-gray-800 min-h-screen">
-    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50 nav-slide-down">
+<body class="bg-slate-50 text-gray-800 overflow-x-hidden">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50">
         <div class="container mx-auto px-6 py-4">
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center floating-element">
+                    <div class="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center">
                         <i class="fas fa-brain text-white text-lg"></i>
                     </div>
                     <h1 class="text-2xl font-bold text-teal-800">Asklepios</h1>
@@ -25,10 +26,10 @@
                     <a href="/admin/users" class="nav-link">
                         <i class="fas fa-users mr-2"></i>Pengguna
                     </a>
-                    <a href="/admin/psychologists" class="nav-link">
+                    <a href="/admin/psychologists" class="nav-link nav-link-active">
                         <i class="fas fa-user-md mr-2"></i>Psikolog
                     </a>
-                    <a href="/admin/schedules" class="nav-link nav-link-active">
+                    <a href="/admin/schedules" class="nav-link">
                         <i class="fas fa-calendar-alt mr-2"></i>Jadwal
                     </a>
                     <a href="/admin/transactions" class="nav-link">
@@ -37,133 +38,136 @@
                     <a href="/admin/consultations" class="nav-link">
                         <i class="fas fa-comments mr-2"></i>Konsultasi
                     </a>
-                    <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105">
-                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                    </a>
+                    <button id="logoutBtn" class="logout-button">
+                        <i class="fas fa-sign-out-alt mr-2"></i><span>Logout</span>
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
-    <!-- Header -->
-    <header class="bg-white shadow-sm border-b border-slate-200">
-        <div class="container mx-auto px-6 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center">
-                        <i class="fas fa-brain text-white text-lg"></i>
+
+    <!-- Custom Alert Modal -->
+    <div id="alertOverlay" class="alert-overlay">
+        <div class="alert-modal">
+            <div class="alert-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 class="alert-title">Logout</h3>
+            <p class="alert-message">Yakin ingin keluar?</p>
+            <div class="alert-buttons">
+                <button id="cancelBtn" class="alert-button alert-button-cancel">Batal</button>
+                <button id="confirmBtn" class="alert-button alert-button-confirm">Ya, Keluar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="pt-24 pb-8">
+        <div class="container mx-auto px-6">
+            <!-- Header -->
+            <div class="mb-12">
+                <div class="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-3xl p-8 text-white relative overflow-hidden">
+                    <div class="absolute inset-0 opacity-10">
+                        <div class="floating-shape w-32 h-32 bg-white rounded-full absolute -top-16 -right-16"></div>
+                        <div class="floating-shape-reverse w-24 h-24 bg-white rounded-full absolute -bottom-12 -left-12"></div>
                     </div>
-                    <div>
-                        <h1 class="text-2xl font-bold text-teal-800">Asklepios</h1>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <div class="hidden md:flex items-center space-x-2 text-gray-600">
-                        <i class="fas fa-user-shield"></i>
-                        <span class="text-sm">Administrator</span>
+                    <div class="relative z-10">
+                        <h1 class="text-4xl font-bold mb-2">Daftar Psikolog</h1>
+                        <p class="text-xl opacity-90">Kelola dan pantau semua psikolog terdaftar</p>
                     </div>
                 </div>
             </div>
-        </div>
-    </header>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-6 py-8">
-        <!-- Page Header -->
-        <div class="mb-8 page-header">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
-                    <h2 class="text-3xl font-bold text-gray-900 mb-2">Daftar Psikolog</h2>
-                    <p class="text-gray-600">Kelola dan pantau semua psikolog terdaftar</p>
-                </div>
-                <div class="flex items-center space-x-3">
-                    <a href="/admin/dashboard" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300">
-                        <i class="fas fa-arrow-left mr-2"></i>
-                        Kembali ke Dashboard
-                    </a>
+            <!-- Action Buttons -->
+            <div class="mb-8">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-3xl font-bold text-gray-900 flex items-center">
+                        <i class="fas fa-user-md text-teal-600 mr-3"></i>
+                        Manajemen Psikolog
+                    </h2>
                     <a href="/admin/psychologists/create" class="btn-primary inline-flex items-center px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-all duration-300">
                         <i class="fas fa-plus mr-2"></i>
                         Tambah Psikolog
                     </a>
                 </div>
             </div>
-        </div>
 
-
-        <!-- Psychologists Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div th:each="psych : ${psychologists}" class="bg-white rounded-xl border border-slate-200 overflow-hidden psychologist-card transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-                <!-- Card Header with Profile Picture -->
-                <div class="relative bg-gradient-to-br from-teal-50 to-emerald-50 p-6 text-center">
-                    <div class="relative inline-block">
-                        <img th:src="@{${psych.profilePicture}}" 
-                             alt="Foto Profil" 
-                             class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg mx-auto profile-image"
-                             onerror="this.onerror=null;this.src='/images/default-profile.png';">
-                        <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-500 rounded-full border-2 border-white flex items-center justify-center">
-                            <i class="fas fa-check text-white text-xs"></i>
+            <!-- Psychologists Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div th:each="psych : ${psychologists}" class="bg-white rounded-xl border border-slate-200 overflow-hidden psychologist-card transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+                    <!-- ... existing code ... -->
+                    <!-- Card Header with Profile Picture -->
+                    <div class="relative bg-gradient-to-br from-teal-50 to-emerald-50 p-6 text-center">
+                        <div class="relative inline-block">
+                            <img th:src="@{${psych.profilePicture}}" 
+                                 alt="Foto Profil" 
+                                 class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg mx-auto profile-image"
+                                 onerror="this.onerror=null;this.src='/images/default-profile.png';">
+                            <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-500 rounded-full border-2 border-white flex items-center justify-center">
+                                <i class="fas fa-check text-white text-xs"></i>
+                            </div>
                         </div>
+                        <h3 class="mt-3 text-lg font-semibold text-gray-900" th:text="${psych.user.fullName}">Nama Psikolog</h3>
+                        <p class="text-sm text-gray-600" th:text="${psych.specialization}">Spesialisasi</p>
                     </div>
-                    <h3 class="mt-3 text-lg font-semibold text-gray-900" th:text="${psych.user.fullName}">Nama Psikolog</h3>
-                    <p class="text-sm text-gray-600" th:text="${psych.specialization}">Spesialisasi</p>
-                </div>
 
-                <!-- Card Body -->
-                <div class="p-6 space-y-4">
-                    <!-- License & Experience -->
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="info-item">
-                            <label class="text-xs font-medium text-gray-500 uppercase tracking-wider">Lisensi</label>
-                            <p class="mt-1 text-sm font-medium text-gray-900" th:text="${psych.licenseNumber}">LIC001</p>
+                    <!-- Card Body -->
+                    <div class="p-6 space-y-4">
+                        <!-- License & Experience -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="info-item">
+                                <label class="text-xs font-medium text-gray-500 uppercase tracking-wider">Lisensi</label>
+                                <p class="mt-1 text-sm font-medium text-gray-900" th:text="${psych.licenseNumber}">LIC001</p>
+                            </div>
+                            <div class="info-item">
+                                <label class="text-xs font-medium text-gray-500 uppercase tracking-wider">Pengalaman</label>
+                                <p class="mt-1 text-sm font-medium text-gray-900">
+                                    <span th:text="${psych.experienceYears}">5</span> tahun
+                                </p>
+                            </div>
                         </div>
+
+                        <!-- Price -->
                         <div class="info-item">
-                            <label class="text-xs font-medium text-gray-500 uppercase tracking-wider">Pengalaman</label>
-                            <p class="mt-1 text-sm font-medium text-gray-900">
-                                <span th:text="${psych.experienceYears}">5</span> tahun
+                            <label class="text-xs font-medium text-gray-500 uppercase tracking-wider">Tarif Konsultasi</label>
+                            <p class="mt-1 text-lg font-bold text-teal-600">
+                                Rp <span th:text="${#numbers.formatDecimal(psych.price, 0, 'COMMA', 2, 'POINT')}">150.000</span>
                             </p>
                         </div>
                     </div>
 
-                    <!-- Price -->
-                    <div class="info-item">
-                        <label class="text-xs font-medium text-gray-500 uppercase tracking-wider">Tarif Konsultasi</label>
-                        <p class="mt-1 text-lg font-bold text-teal-600">
-                            Rp <span th:text="${#numbers.formatDecimal(psych.price, 0, 'COMMA', 2, 'POINT')}">150.000</span>
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Card Footer with Actions -->
-                <div class="px-6 py-4 bg-gray-50 border-t border-gray-100">
-                    <div class="flex items-center justify-between space-x-2">
-                        <a th:href="@{'/admin/psychologists/edit/' + ${psych.id}}" 
-                           class="btn-secondary flex-1 inline-flex items-center justify-center px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300">
-                            <i class="fas fa-edit mr-1"></i>
-                            Edit
-                        </a>
-                        <button onclick="confirmDelete(this)" 
-                                th:data-url="@{'/admin/psychologists/delete/' + ${psych.id}}"
-                                th:data-name="${psych.user.fullName}"
-                                class="btn-danger inline-flex items-center justify-center px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-300">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                    <!-- Card Footer with Actions -->
+                    <div class="px-6 py-4 bg-gray-50 border-t border-gray-100">
+                        <div class="flex items-center justify-between space-x-2">
+                            <a th:href="@{'/admin/psychologists/edit/' + ${psych.id}}" 
+                               class="btn-secondary flex-1 inline-flex items-center justify-center px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300">
+                                <i class="fas fa-edit mr-1"></i>
+                                Edit
+                            </a>
+                            <button onclick="confirmDelete(this)" 
+                                    th:data-url="@{'/admin/psychologists/delete/' + ${psych.id}}"
+                                    th:data-name="${psych.user.fullName}"
+                                    class="btn-danger inline-flex items-center justify-center px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-300">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Empty State -->
-        <div th:if="${psychologists.isEmpty()}" class="text-center py-12">
-            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="fas fa-user-md text-gray-400 text-3xl"></i>
+            <!-- Empty State -->
+            <div th:if="${psychologists.isEmpty()}" class="text-center py-12">
+                <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-user-md text-gray-400 text-3xl"></i>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">Belum ada psikolog terdaftar</h3>
+                <p class="text-gray-600 mb-6">Mulai dengan menambahkan psikolog pertama ke sistem</p>
+                <a href="/admin/psychologists/create" class="btn-primary inline-flex items-center px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-all duration-300">
+                    <i class="fas fa-plus mr-2"></i>
+                    Tambah Psikolog Pertama
+                </a>
             </div>
-            <h3 class="text-lg font-medium text-gray-900 mb-2">Belum ada psikolog terdaftar</h3>
-            <p class="text-gray-600 mb-6">Mulai dengan menambahkan psikolog pertama ke sistem</p>
-            <a href="/admin/psychologists/create" class="btn-primary inline-flex items-center px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-all duration-300">
-                <i class="fas fa-plus mr-2"></i>
-                Tambah Psikolog Pertama
-            </a>
         </div>
-    </main>
+    </div>
 
     <!-- Delete Confirmation Modal -->
     <div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
@@ -189,7 +193,68 @@
         </div>
     </div>
 
-        <script>
+    <script>
+        // Initialize logout functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeLogout();
+        });
+
+        function initializeLogout() {
+            const logoutBtn = document.getElementById('logoutBtn');
+            const alertOverlay = document.getElementById('alertOverlay');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const confirmBtn = document.getElementById('confirmBtn');
+
+            // Show logout confirmation
+            logoutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                showLogoutAlert();
+            });
+
+            // Cancel logout
+            cancelBtn.addEventListener('click', function() {
+                hideLogoutAlert();
+            });
+
+            // Confirm logout
+            confirmBtn.addEventListener('click', function() {
+                hideLogoutAlert();
+                // Redirect to logout endpoint
+                window.location.href = '/logout';
+            });
+
+            // Close modal when clicking overlay
+            alertOverlay.addEventListener('click', function(e) {
+                if (e.target === alertOverlay) {
+                    hideLogoutAlert();
+                }
+            });
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && alertOverlay.classList.contains('show')) {
+                    hideLogoutAlert();
+                }
+            });
+        }
+
+        function showLogoutAlert() {
+            const alertOverlay = document.getElementById('alertOverlay');
+            alertOverlay.classList.add('show');
+            document.body.style.overflow = 'hidden';
+            
+            // Focus on cancel button for accessibility
+            setTimeout(() => {
+                document.getElementById('cancelBtn').focus();
+            }, 100);
+        }
+
+        function hideLogoutAlert() {
+            const alertOverlay = document.getElementById('alertOverlay');
+            alertOverlay.classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
         function confirmDelete(button) {
             const modal = document.getElementById('deleteModal');
             const psychologistName = button.getAttribute('data-name');
@@ -223,6 +288,6 @@
                 closeDeleteModal();
             }
         });
-        </script>
+    </script>
 </body>
 </html>

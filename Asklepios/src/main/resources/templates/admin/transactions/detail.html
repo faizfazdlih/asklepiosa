@@ -38,13 +38,28 @@
                     <a href="/admin/consultations" class="nav-link">
                         <i class="fas fa-comments mr-2"></i>Konsultasi
                     </a>
-                    <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-colors duration-300">
-                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                    </a>
+                    <button id="logoutBtn" class="logout-button">
+                        <i class="fas fa-sign-out-alt mr-2"></i><span>Logout</span>
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
+
+    <!-- Custom Alert Modal -->
+    <div id="alertOverlay" class="alert-overlay">
+        <div class="alert-modal">
+            <div class="alert-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 class="alert-title">Logout</h3>
+            <p class="alert-message">Yakin ingin keluar?</p>
+            <div class="alert-buttons">
+                <button id="cancelBtn" class="alert-button alert-button-cancel">Batal</button>
+                <button id="confirmBtn" class="alert-button alert-button-confirm">Ya, Keluar</button>
+            </div>
+        </div>
+    </div>
 
     <div class="pt-24 pb-8">
         <div class="container mx-auto px-6">
@@ -323,3 +338,65 @@
     </script>
 </body>
 </html>
+
+
+// Initialize logout functionality
+document.addEventListener('DOMContentLoaded', function() {
+    initializeLogout();
+});
+
+function initializeLogout() {
+    const logoutBtn = document.getElementById('logoutBtn');
+    const alertOverlay = document.getElementById('alertOverlay');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const confirmBtn = document.getElementById('confirmBtn');
+
+    // Show logout confirmation
+    logoutBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        showLogoutAlert();
+    });
+
+    // Cancel logout
+    cancelBtn.addEventListener('click', function() {
+        hideLogoutAlert();
+    });
+
+    // Confirm logout
+    confirmBtn.addEventListener('click', function() {
+        hideLogoutAlert();
+        // Redirect to logout endpoint
+        window.location.href = '/logout';
+    });
+
+    // Close modal when clicking overlay
+    alertOverlay.addEventListener('click', function(e) {
+        if (e.target === alertOverlay) {
+            hideLogoutAlert();
+        }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && alertOverlay.classList.contains('show')) {
+            hideLogoutAlert();
+        }
+    });
+}
+
+function showLogoutAlert() {
+    const alertOverlay = document.getElementById('alertOverlay');
+    alertOverlay.classList.add('show');
+    document.body.style.overflow = 'hidden';
+    
+    // Focus on cancel button for accessibility
+    setTimeout(() => {
+        document.getElementById('cancelBtn').focus();
+    }, 100);
+}
+
+function hideLogoutAlert() {
+    const alertOverlay = document.getElementById('alertOverlay');
+    alertOverlay.classList.remove('show');
+    document.body.style.overflow = 'auto';
+}
